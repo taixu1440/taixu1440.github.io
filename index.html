@@ -1088,7 +1088,7 @@ highlight_file(__FILE__);
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-19 18:05:19" itemprop="dateModified" datetime="2026-01-19T18:05:19+08:00">2026-01-19</time>
+                <time title="修改时间：2026-01-19 18:11:38" itemprop="dateModified" datetime="2026-01-19T18:11:38+08:00">2026-01-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1111,7 +1111,7 @@ highlight_file(__FILE__);
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="第二章-RCE-与正则表达式"><a href="#第二章-RCE-与正则表达式" class="headerlink" title="第二章 RCE 与正则表达式"></a>第二章 RCE 与正则表达式</h1><h1 id="第二章-RCE-与正则表达式-1"><a href="#第二章-RCE-与正则表达式-1" class="headerlink" title="第二章 RCE 与正则表达式"></a>第二章 RCE 与正则表达式</h1><h1 id="PHP-命令执行-续上周的学习"><a href="#PHP-命令执行-续上周的学习" class="headerlink" title="PHP 命令执行(续上周的学习)"></a><strong>PHP 命令执行(续上周的学习)</strong></h1><p><em><em>个人的所有作业中,带</em>的小点为做题补充知识点</em></p>
+          <h1 id="PHP-命令执行-续上周的学习"><a href="#PHP-命令执行-续上周的学习" class="headerlink" title="PHP 命令执行(续上周的学习)"></a><strong>PHP 命令执行(续上周的学习)</strong></h1><p><em><em>个人的所有作业中,带</em>的小点为做题补充知识点</em></p>
 <h2 id="二-替换绕过函数过滤-即使用特定的函数或者不被过滤的函数执行命令"><a href="#二-替换绕过函数过滤-即使用特定的函数或者不被过滤的函数执行命令" class="headerlink" title="二 替换绕过函数过滤(即使用特定的函数或者不被过滤的函数执行命令)"></a>二 替换绕过函数过滤(即使用特定的函数或者不被过滤的函数执行命令)</h2><p><strong>1.记住常见的可执行函数</strong></p>
 <p><img src="/images/YTOjbBuyboX4EFxc64EcBL17n7c.png"></p>
 <p><strong>2.LD_PRELOAD(修改库文件)绕过(用于面对禁用函数者过多的情况)</strong></p>
@@ -1200,467 +1200,201 @@ highlight_file(__FILE__);
 <h1 id="PHP-函数安全"><a href="#PHP-函数安全" class="headerlink" title="PHP 函数安全"></a>PHP 函数安全</h1><p>在 PHP 中，除了上周学的⼏个命令执⾏函数，还有⼀些危险函数存在⼀些攻击点，也是 ctf ⽐较常⻅的出题点.</p>
 <h2 id="1-is-numeric-绕过"><a href="#1-is-numeric-绕过" class="headerlink" title="1.is_numeric 绕过"></a>1.is_numeric 绕过</h2><p>作用：检测变量是否是数字或数字字符串 返回值为 bool。</p>
 <p>e.g.</p>
-<?php
-
-$a = $_GET['a'];
-
-if (is_numeric($a)) {
-
-    exit();
-
-} elseif ($a == 404) {
-
-    echo "flag";
-
-}
-
-我们要将$a用get方式更改为404 但该函数能够检测变量是数字
-
-通过在数字前面或者后面加上%0a %0b %0c %0d %09等文件名过滤绕过的方法绕过
-
-
-
-## 2.PHP精度
-
-可使用IEEE 754 标准在线转换网站：https://tooltt.com/floatconverter/
-
-进行进制转换.
-
-(注:基本上所有语言双精度格式都采用 IEEE 754)
-
-用精度漏洞可用x.99999999999999999来绕过对x+1数字的限制.
-
-
-
-## 3.比较和类型转换漏洞
-
-PHP 包含 松散 和 严格 比较
-
-松散比较（==）比较值，但不比较类型，严格比较（===）即比较值也比较类型
-
-echo (123 == "123")?1:0;
-
-返回:1
-
-echo (123 === "123")?1:0;
-
-返回:0
-
-
-
-注： 字符串转成数字后会是 0,而不是对应的ASCII码值.
-
-
-
-var_dump(0 == "a");
-
-返回： 1（0 & 0 自然为1）
-
-
-
-$id = intval("12312a");
-
-var_dump($id);
-
-输出：12312
-
-在 PHP 中类型转换有一定的缺陷，如果一个 字符串 要转成数值类型，首先对字符串进行一个判断，
-
-如果字符串包含 e 、. 、E 则会作为 float 来取值，否则则为 int ，上述例子由于 a 没有包含任何东西，
-
-所以被当作 int 来处理了，
-
-这里要说明的是，如果字符串起始部分为 数值 ，则采用 起始的数值 ，否则一律为 0
-
-
-
-需要注意的是科学计数法和十六进制也会被识别出来
-
-var_dump(100 == "1e2"); #采用科学计数法
-
-返回：true
-
-var_dump(23333 == "0x5b25"); #采用十六进制
-
-返回：true
-
-
-
-在 PHP8.0.0 之前（最新版本已修复），如果 字符串 与 数字 或者 数字字符串 进行比较，
-
-则会先进行 类型转换 再进行比较。
-
-最新版本直接识别为string string==0会返回false了.
-
-
-
-
-
-## 4.PHP 弱类型比较
-
-判断原始变量类型的函数(注意 PHP的变量不存在先声明后定义 一定要定义)
-
-#### **(1)gettype($var)返回变量的「原始类型字符串」**
-
-直接告诉你变量是什么类型（如 int、string、null 等）。
-
-(必须传已定义的变量)
-
-#### **(2)empty($var) —— “空值检测器”**
-
-判断变量是否为「空值」（宽松判断，不区分类型，只要是 “无意义” 的值都算空）。
-
-以下值会被判定为「空」，返回 true，其余返回 false：
-
-未定义的变量（$var 没声明）；
-
-null（显式赋值为 null）；
-
-布尔值 false；
-
-数值 0、0.0（整数 0、浮点数 0）；
-
-空字符串 ""、字符串 "0"（注意：仅 "0" 算空， "00"、"false" 不算）；
-
-空数组 []（count($var) == 0）；
-
-(可以传未定义的变量)
-
-#### **(3)is_null($var) —— “严格 null 判断器”**
-
-核心作用：仅判断变量是否为「严格的 null」（比 empty 严格 10 倍，只认 null）。
-
-(必须传已定义的变量)
-
-#### **(4)isset($var) —— “变量存在检测器”**
-
-判断变量「是否已定义」且「值不为 null」（重点：检测 “存在性”，而非 “空值”）。
-
-已定义但值为 null → 返回 false；
-
-已定义且值不为 null → 返回 true（即使值是 0、""、[] 等空值也返回 true）；
-
-支持多变量判断：isset($a, $b, $c) → 所有变量都存在且非 null 才返回 true。
-
-(可以传未定义的变量,返回 false（不报错）；)
-
-#### **(5)if($x) —— 布尔值隐式转换（“真值检测器”）**
-
-将变量 $x 隐式转换为布尔值 true/false，判断变量是否为「真值」
-
-（逻辑和 empty() 几乎相反，但有细微差异）。
-
-以下值会被转为 false（和 empty() 判定为 “空” 的规则一致）：
-
-null、false、0、0.0、""、"0"、[]；
-
-其余值（如 " "、1、"abc"、["a"] 等）都会转为 true。
-
-(必须传已定义的变量)
-
-#### **(6)弱类型比较表格**
-
-https://www.php.net/manual/zh/types.comparisons.php#types.comparisions-loose
-
-(最重要的:0==Null true)
-
-#### **(7)strcmp函数**
-
-描述：strcmp(str1, str2)
-
-如果 str1 小于 str2 返回 < 0； 如果 str1 大于 str2 返回 > 0；如果两者相等，返回 0。
-
-(注： 在 php5.0 以前，strcmp 返回的是 str2 第一位字母转成 ascii 后减去 str1 第一位字母。)
-
-当 strcmp 比较出错后，会返回 null，null 则为 0，举个例子
-
-
-
-$flag = 'flag{123}';
-
-if (strcmp($flag, $_GET['str']) == 0) {
-
-    echo $flag;
-
-}else{
-
-    echo "Out!";
-
-}
-
-
-
-为了使 strcmp 比较出错，可以传入一个数组
-
-非空数组和变量无法正常比较.
-
-#### **(8)is_numeric函数**
-
-is_numeric() 用于检测数值是否为数值，如果遇到这个函数，可以用上述转换类型的特性
-
-（版本小于 8.0.0），如果传入的是字符串，会先将字符串转换成数值:
-
-(在 PHP8.0.0 之前（最新版本已修复），如果 字符串 与 数字 或者 数字字符串 进行比较，
-
-则会先进行 类型转换 再进行比较。
-
-最新版本直接识别为string string==0会返回false了.)
-
-
-
-$flag = 'flag{111}';
-
-$id = $_GET['id'];
-
-if(is_numeric($id) > 0){
-
-    echo 'Out!';
-
-}else{
-
-    if ($id > 233) {
-        echo $flag;
-
-    }
-
-}
-
-
-
-Payload: ?id=2333,
-
-Payload: ?id=2333%00
-
-Payload: ?id=2333A
-
-#### **(9)is_switch函数**
-
-is_switch()¶
-
-
-
-这个方法和类型转换一样大同小异，case 会自动将字符转换成数值。这里来个例子就知道了
-
-
-
-$a = "233a"; # 注意这里
-
-$flag = "flag{Give you FLAG}";
-
-switch ($a) {
-    case 1:
-        echo "No Flag";
-        break;
-    case 2:
-        echo "No Flag";
-        break;
-    case 233:
-        echo $flag;
-
-        break;
-
-    default:
-
-        $a = 233;
-
-        echo "Haha...";
-
-}
-
-
-
-输出：flag{Give you FLAG}
-
-#### **(10)sha1()函数**
-
-sha1() 是 PHP 中用于计算字符串 SHA-1 哈希值 的内置函数，属于哈希算法的一种，
-
-核心用途是将任意长度的字符串转换为固定长度（40 个字符）的 16 进制字符串
-
-sha1 的参数不能为数组，传入数组会返回 NULL，所以先传一个数组使得 sha1 函数报错，
-
-接着再左右两边传入不一样的内容，两边条件自然 =1，相等即可绕过.
-
-$flag = "flag{Chain!}";
-
-$get = $_GET['get'];
-
-$teg = $_GET['teg'];
-
-if ($get != $teg && sha1($get) === sha1($teg)) {
-
-#if ($get != $teg && sha1($get) == sha1($teg)) {
-
-    echo $flag;
-
-}else{
-
-    echo 'Out!';
-
-}
-
-
-
-Payload: ?get[]=&teg[]=1
-
-
-
-### **5.md5哈希值问题**
-
-描述：md5(字符串,字符串,var2)
-
-计算 字符串 的 MD5 散列值，如果 var2 为真将返回 16 字符长度的原始二进制格式
-
-md5 在处理哈希字符串的时候，如果 md5 编码后的哈希值时 0e （科学计数法）开头的，都一律解释为 0，
-
-所以当两个不同的值经过哈希编码后他们的值都是以 0e 开头的，则每个值都是 0
-
-(他们用松散等于是相等的 但严格等于未必!)
-
-var_dump(0e912 == 0e112?1:0);
-
-输出：1
-
-常见 md5 以 0e 开头的值
-
-数值型
-
-240610708 0e462097431906509019562988736854 返回：0
-
-314282422 0e990995504821699494520356953734 返回：0
-
-571579406 0e972379832854295224118025748221 返回：0
-
-903251147 0e174510503823932942361353209384 返回：0
-
-
-
-字母型
-
-QLTHNDT 0e405967825401955372549139051580 返回：0
-
-QNKCDZO 0e830400451993494058024219903391 返回：0
-
-EEIZDOI 0e782601363539291779881938479162 返回：0
-
-TUFEPMC 0e839407194569345277863905212547 返回：0
-
-
-
-#### **==弱类型比较的处理方法**
-
-$flag = "flag{THIS_IS_REAL_FLAG}";
-
-$v1 = $_GET['gat'];
-
-$v2 = $_GET['tag'];
-
-if ($v1 != $v2 && md5($v1) == md5($v2)) {
-
-    echo $flag;
-
-}else{
-
-    echo "Out!";
-
-}
-
-
-
-v1 和 v2 是两个参数变量，首先 v1 不等于 v2，意思就是两个值必须不相同，
-
-其次 md5 后的 v1 和 md5 后的 v2 必须相同，这时候就可以使用上述 0e 方法构造 Payload，
-
-只需找出哪个值经过 md5 编码后以 0e 开头即可
-
-
-
-Payload: ?gat=240610708&tag=314282422
-
-
-
-#### **数组比较法绕过===强比较**
-
-如果遇到下列程序
-
-
-
-$flag = "flag{THIS_IS_REAL_FLAG}";
-
-$str1 = $_GET['gat'];
-
-$str2 = $_GET['tag'];
-
-if (md5($str1) === md5($str2)) {
-
+<p>$a &#x3D; $_GET[‘a’];</p>
+<p>if (is_numeric($a)) {</p>
+<pre><code>exit();
+</code></pre>
+<p>} elseif ($a &#x3D;&#x3D; 404) {</p>
+<pre><code>echo &quot;flag&quot;;
+</code></pre>
+<p>}</p>
+<p>我们要将$a用get方式更改为404 但该函数能够检测变量是数字</p>
+<p>通过在数字前面或者后面加上%0a %0b %0c %0d %09等文件名过滤绕过的方法绕过</p>
+<h2 id="2-PHP精度"><a href="#2-PHP精度" class="headerlink" title="2.PHP精度"></a>2.PHP精度</h2><p>可使用IEEE 754 标准在线转换网站：<a target="_blank" rel="noopener" href="https://tooltt.com/floatconverter/">https://tooltt.com/floatconverter/</a></p>
+<p>进行进制转换.</p>
+<p>(注:基本上所有语言双精度格式都采用 IEEE 754)</p>
+<p>用精度漏洞可用x.99999999999999999来绕过对x+1数字的限制.</p>
+<h2 id="3-比较和类型转换漏洞"><a href="#3-比较和类型转换漏洞" class="headerlink" title="3.比较和类型转换漏洞"></a>3.比较和类型转换漏洞</h2><p>PHP 包含 松散 和 严格 比较</p>
+<p>松散比较（&#x3D;&#x3D;）比较值，但不比较类型，严格比较（&#x3D;&#x3D;&#x3D;）即比较值也比较类型</p>
+<p>echo (123 &#x3D;&#x3D; “123”)?1:0;</p>
+<p>返回:1</p>
+<p>echo (123 &#x3D;&#x3D;&#x3D; “123”)?1:0;</p>
+<p>返回:0</p>
+<p>注： 字符串转成数字后会是 0,而不是对应的ASCII码值.</p>
+<p>var_dump(0 &#x3D;&#x3D; “a”);</p>
+<p>返回： 1（0 &amp; 0 自然为1）</p>
+<p>$id &#x3D; intval(“12312a”);</p>
+<p>var_dump($id);</p>
+<p>输出：12312</p>
+<p>在 PHP 中类型转换有一定的缺陷，如果一个 字符串 要转成数值类型，首先对字符串进行一个判断，</p>
+<p>如果字符串包含 e 、. 、E 则会作为 float 来取值，否则则为 int ，上述例子由于 a 没有包含任何东西，</p>
+<p>所以被当作 int 来处理了，</p>
+<p>这里要说明的是，如果字符串起始部分为 数值 ，则采用 起始的数值 ，否则一律为 0</p>
+<p>需要注意的是科学计数法和十六进制也会被识别出来</p>
+<p>var_dump(100 &#x3D;&#x3D; “1e2”); #采用科学计数法</p>
+<p>返回：true</p>
+<p>var_dump(23333 &#x3D;&#x3D; “0x5b25”); #采用十六进制</p>
+<p>返回：true</p>
+<p>在 PHP8.0.0 之前（最新版本已修复），如果 字符串 与 数字 或者 数字字符串 进行比较，</p>
+<p>则会先进行 类型转换 再进行比较。</p>
+<p>最新版本直接识别为string string&#x3D;&#x3D;0会返回false了.</p>
+<h2 id="4-PHP-弱类型比较"><a href="#4-PHP-弱类型比较" class="headerlink" title="4.PHP 弱类型比较"></a>4.PHP 弱类型比较</h2><p>判断原始变量类型的函数(注意 PHP的变量不存在先声明后定义 一定要定义)</p>
+<h4 id="1-gettype-var-返回变量的「原始类型字符串」"><a href="#1-gettype-var-返回变量的「原始类型字符串」" class="headerlink" title="(1)gettype($var)返回变量的「原始类型字符串」"></a><strong>(1)gettype($var)返回变量的「原始类型字符串」</strong></h4><p>直接告诉你变量是什么类型（如 int、string、null 等）。</p>
+<p>(必须传已定义的变量)</p>
+<h4 id="2-empty-var-——-“空值检测器”"><a href="#2-empty-var-——-“空值检测器”" class="headerlink" title="(2)empty($var) —— “空值检测器”"></a><strong>(2)empty($var) —— “空值检测器”</strong></h4><p>判断变量是否为「空值」（宽松判断，不区分类型，只要是 “无意义” 的值都算空）。</p>
+<p>以下值会被判定为「空」，返回 true，其余返回 false：</p>
+<p>未定义的变量（$var 没声明）；</p>
+<p>null（显式赋值为 null）；</p>
+<p>布尔值 false；</p>
+<p>数值 0、0.0（整数 0、浮点数 0）；</p>
+<p>空字符串 “”、字符串 “0”（注意：仅 “0” 算空， “00”、”false” 不算）；</p>
+<p>空数组 []（count($var) &#x3D;&#x3D; 0）；</p>
+<p>(可以传未定义的变量)</p>
+<h4 id="3-is-null-var-——-“严格-null-判断器”"><a href="#3-is-null-var-——-“严格-null-判断器”" class="headerlink" title="(3)is_null($var) —— “严格 null 判断器”"></a><strong>(3)is_null($var) —— “严格 null 判断器”</strong></h4><p>核心作用：仅判断变量是否为「严格的 null」（比 empty 严格 10 倍，只认 null）。</p>
+<p>(必须传已定义的变量)</p>
+<h4 id="4-isset-var-——-“变量存在检测器”"><a href="#4-isset-var-——-“变量存在检测器”" class="headerlink" title="(4)isset($var) —— “变量存在检测器”"></a><strong>(4)isset($var) —— “变量存在检测器”</strong></h4><p>判断变量「是否已定义」且「值不为 null」（重点：检测 “存在性”，而非 “空值”）。</p>
+<p>已定义但值为 null → 返回 false；</p>
+<p>已定义且值不为 null → 返回 true（即使值是 0、””、[] 等空值也返回 true）；</p>
+<p>支持多变量判断：isset($a, $b, $c) → 所有变量都存在且非 null 才返回 true。</p>
+<p>(可以传未定义的变量,返回 false（不报错）；)</p>
+<h4 id="5-if-x-——-布尔值隐式转换（“真值检测器”）"><a href="#5-if-x-——-布尔值隐式转换（“真值检测器”）" class="headerlink" title="(5)if($x) —— 布尔值隐式转换（“真值检测器”）"></a><strong>(5)if($x) —— 布尔值隐式转换（“真值检测器”）</strong></h4><p>将变量 $x 隐式转换为布尔值 true&#x2F;false，判断变量是否为「真值」</p>
+<p>（逻辑和 empty() 几乎相反，但有细微差异）。</p>
+<p>以下值会被转为 false（和 empty() 判定为 “空” 的规则一致）：</p>
+<p>null、false、0、0.0、””、”0”、[]；</p>
+<p>其余值（如 “ “、1、”abc”、[“a”] 等）都会转为 true。</p>
+<p>(必须传已定义的变量)</p>
+<h4 id="6-弱类型比较表格"><a href="#6-弱类型比较表格" class="headerlink" title="(6)弱类型比较表格"></a><strong>(6)弱类型比较表格</strong></h4><p><a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/types.comparisons.php#types.comparisions-loose">https://www.php.net/manual/zh/types.comparisons.php#types.comparisions-loose</a></p>
+<p>(最重要的:0&#x3D;&#x3D;Null true)</p>
+<h4 id="7-strcmp函数"><a href="#7-strcmp函数" class="headerlink" title="(7)strcmp函数"></a><strong>(7)strcmp函数</strong></h4><p>描述：strcmp(str1, str2)</p>
+<p>如果 str1 小于 str2 返回 &lt; 0； 如果 str1 大于 str2 返回 &gt; 0；如果两者相等，返回 0。</p>
+<p>(注： 在 php5.0 以前，strcmp 返回的是 str2 第一位字母转成 ascii 后减去 str1 第一位字母。)</p>
+<p>当 strcmp 比较出错后，会返回 null，null 则为 0，举个例子</p>
+<p>$flag &#x3D; ‘flag{123}’;</p>
+<p>if (strcmp($flag, $_GET[‘str’]) &#x3D;&#x3D; 0) {</p>
+<pre><code>echo $flag;
+</code></pre>
+<p>}else{</p>
+<pre><code>echo &quot;Out!&quot;;
+</code></pre>
+<p>}</p>
+<p>为了使 strcmp 比较出错，可以传入一个数组</p>
+<p>非空数组和变量无法正常比较.</p>
+<h4 id="8-is-numeric函数"><a href="#8-is-numeric函数" class="headerlink" title="(8)is_numeric函数"></a><strong>(8)is_numeric函数</strong></h4><p>is_numeric() 用于检测数值是否为数值，如果遇到这个函数，可以用上述转换类型的特性</p>
+<p>（版本小于 8.0.0），如果传入的是字符串，会先将字符串转换成数值:</p>
+<p>(在 PHP8.0.0 之前（最新版本已修复），如果 字符串 与 数字 或者 数字字符串 进行比较，</p>
+<p>则会先进行 类型转换 再进行比较。</p>
+<p>最新版本直接识别为string string&#x3D;&#x3D;0会返回false了.)</p>
+<p>$flag &#x3D; ‘flag{111}’;</p>
+<p>$id &#x3D; $_GET[‘id’];</p>
+<p>if(is_numeric($id) &gt; 0){</p>
+<pre><code>echo &#39;Out!&#39;;
+</code></pre>
+<p>}else{</p>
+<pre><code>if ($id &gt; 233) {
     echo $flag;
 
 }
+</code></pre>
+<p>}</p>
+<p>Payload: ?id&#x3D;2333,</p>
+<p>Payload: ?id&#x3D;2333%00</p>
+<p>Payload: ?id&#x3D;2333A</p>
+<h4 id="9-is-switch函数"><a href="#9-is-switch函数" class="headerlink" title="(9)is_switch函数"></a><strong>(9)is_switch函数</strong></h4><p>is_switch()¶</p>
+<p>这个方法和类型转换一样大同小异，case 会自动将字符转换成数值。这里来个例子就知道了</p>
+<p>$a &#x3D; “233a”; # 注意这里</p>
+<p>$flag &#x3D; “flag{Give you FLAG}”;</p>
+<p>switch ($a) {<br>    case 1:<br>        echo “No Flag”;<br>        break;<br>    case 2:<br>        echo “No Flag”;<br>        break;<br>    case 233:<br>        echo $flag;</p>
+<pre><code>    break;
 
+default:
 
+    $a = 233;
 
-用上述 0e 方法自然是不可行的（注意：===），这时候就得使用数组来绕过了
-
-如果传入一个数组的值，会报出错误（md5 只能使用字符串），报错后就相当于绕过===这个条件了
-
-(注： 在 PHP 8.0.0 时，该方法行不通了)
-
-
-
-#### **md5 碰撞问题**
-
-**(即md5相同而内容完全不一样的字符串)**
-
-如果遇到不能传入数组，只能传入字符串的时候，如下例
-
-
-
-$flag = "flag{THIS_IS_REAL_FLAG}";
-
-$str1 = $_GET["gat"];
-
-$str2 = $_GET["tag"];
-
-if((string)$str1 !== (string)$str2 && md5($str1)===md5($str2)){
-
-    echo "flag{THIS_IS_REAL_FLAG}";
-
-}else{
-
-    echo "Out!";
-
-}
-
-
-
-这时候就得需要 md5 碰撞((string)转化让第二个条件===无法返回null,不然也可以用第二点的数组绕过)，
-
-上面判断条件的意思是，str1 和 str2 内容必须不同，但是 md5 必须相同。
-
-这里可以使用工具构造
-
-240610708
-
-314282422
-
-存在MD5碰撞漏洞
-
-
-
-### **6.变量覆盖漏洞**
-
-变量如果未被初始化，且能够被用户所控制，那么很可能会导致安全问题，前提是环境开启了
-
-
-
-register_globals=ON
-
-
-
-如果传入一个参数 ?id=1，并且这个参数把原有的变量值给覆盖掉了则叫做 变量覆盖漏洞
-
-例如
-
+    echo &quot;Haha...&quot;;
+</code></pre>
+<p>}</p>
+<p>输出：flag{Give you FLAG}</p>
+<h4 id="10-sha1-函数"><a href="#10-sha1-函数" class="headerlink" title="(10)sha1()函数"></a><strong>(10)sha1()函数</strong></h4><p>sha1() 是 PHP 中用于计算字符串 SHA-1 哈希值 的内置函数，属于哈希算法的一种，</p>
+<p>核心用途是将任意长度的字符串转换为固定长度（40 个字符）的 16 进制字符串</p>
+<p>sha1 的参数不能为数组，传入数组会返回 NULL，所以先传一个数组使得 sha1 函数报错，</p>
+<p>接着再左右两边传入不一样的内容，两边条件自然 &#x3D;1，相等即可绕过.</p>
+<p>$flag &#x3D; “flag{Chain!}”;</p>
+<p>$get &#x3D; $_GET[‘get’];</p>
+<p>$teg &#x3D; $_GET[‘teg’];</p>
+<p>if ($get !&#x3D; $teg &amp;&amp; sha1($get) &#x3D;&#x3D;&#x3D; sha1($teg)) {</p>
+<p>#if ($get !&#x3D; $teg &amp;&amp; sha1($get) &#x3D;&#x3D; sha1($teg)) {</p>
+<pre><code>echo $flag;
+</code></pre>
+<p>}else{</p>
+<pre><code>echo &#39;Out!&#39;;
+</code></pre>
+<p>}</p>
+<p>Payload: ?get[]&#x3D;&amp;teg[]&#x3D;1</p>
+<h3 id="5-md5哈希值问题"><a href="#5-md5哈希值问题" class="headerlink" title="5.md5哈希值问题"></a><strong>5.md5哈希值问题</strong></h3><p>描述：md5(字符串,字符串,var2)</p>
+<p>计算 字符串 的 MD5 散列值，如果 var2 为真将返回 16 字符长度的原始二进制格式</p>
+<p>md5 在处理哈希字符串的时候，如果 md5 编码后的哈希值时 0e （科学计数法）开头的，都一律解释为 0，</p>
+<p>所以当两个不同的值经过哈希编码后他们的值都是以 0e 开头的，则每个值都是 0</p>
+<p>(他们用松散等于是相等的 但严格等于未必!)</p>
+<p>var_dump(0e912 &#x3D;&#x3D; 0e112?1:0);</p>
+<p>输出：1</p>
+<p>常见 md5 以 0e 开头的值</p>
+<p>数值型</p>
+<p>240610708 0e462097431906509019562988736854 返回：0</p>
+<p>314282422 0e990995504821699494520356953734 返回：0</p>
+<p>571579406 0e972379832854295224118025748221 返回：0</p>
+<p>903251147 0e174510503823932942361353209384 返回：0</p>
+<p>字母型</p>
+<p>QLTHNDT 0e405967825401955372549139051580 返回：0</p>
+<p>QNKCDZO 0e830400451993494058024219903391 返回：0</p>
+<p>EEIZDOI 0e782601363539291779881938479162 返回：0</p>
+<p>TUFEPMC 0e839407194569345277863905212547 返回：0</p>
+<h4 id="弱类型比较的处理方法"><a href="#弱类型比较的处理方法" class="headerlink" title="&#x3D;&#x3D;弱类型比较的处理方法"></a><strong>&#x3D;&#x3D;弱类型比较的处理方法</strong></h4><p>$flag &#x3D; “flag{THIS_IS_REAL_FLAG}”;</p>
+<p>$v1 &#x3D; $_GET[‘gat’];</p>
+<p>$v2 &#x3D; $_GET[‘tag’];</p>
+<p>if ($v1 !&#x3D; $v2 &amp;&amp; md5($v1) &#x3D;&#x3D; md5($v2)) {</p>
+<pre><code>echo $flag;
+</code></pre>
+<p>}else{</p>
+<pre><code>echo &quot;Out!&quot;;
+</code></pre>
+<p>}</p>
+<p>v1 和 v2 是两个参数变量，首先 v1 不等于 v2，意思就是两个值必须不相同，</p>
+<p>其次 md5 后的 v1 和 md5 后的 v2 必须相同，这时候就可以使用上述 0e 方法构造 Payload，</p>
+<p>只需找出哪个值经过 md5 编码后以 0e 开头即可</p>
+<p>Payload: ?gat&#x3D;240610708&amp;tag&#x3D;314282422</p>
+<h4 id="数组比较法绕过-强比较"><a href="#数组比较法绕过-强比较" class="headerlink" title="数组比较法绕过&#x3D;&#x3D;&#x3D;强比较"></a><strong>数组比较法绕过&#x3D;&#x3D;&#x3D;强比较</strong></h4><p>如果遇到下列程序</p>
+<p>$flag &#x3D; “flag{THIS_IS_REAL_FLAG}”;</p>
+<p>$str1 &#x3D; $_GET[‘gat’];</p>
+<p>$str2 &#x3D; $_GET[‘tag’];</p>
+<p>if (md5($str1) &#x3D;&#x3D;&#x3D; md5($str2)) {</p>
+<pre><code>echo $flag;
+</code></pre>
+<p>}</p>
+<p>用上述 0e 方法自然是不可行的（注意：&#x3D;&#x3D;&#x3D;），这时候就得使用数组来绕过了</p>
+<p>如果传入一个数组的值，会报出错误（md5 只能使用字符串），报错后就相当于绕过&#x3D;&#x3D;&#x3D;这个条件了</p>
+<p>(注： 在 PHP 8.0.0 时，该方法行不通了)</p>
+<h4 id="md5-碰撞问题"><a href="#md5-碰撞问题" class="headerlink" title="md5 碰撞问题"></a><strong>md5 碰撞问题</strong></h4><p><strong>(即md5相同而内容完全不一样的字符串)</strong></p>
+<p>如果遇到不能传入数组，只能传入字符串的时候，如下例</p>
+<p>$flag &#x3D; “flag{THIS_IS_REAL_FLAG}”;</p>
+<p>$str1 &#x3D; $_GET[“gat”];</p>
+<p>$str2 &#x3D; $_GET[“tag”];</p>
+<p>if((string)$str1 !&#x3D;&#x3D; (string)$str2 &amp;&amp; md5($str1)&#x3D;&#x3D;&#x3D;md5($str2)){</p>
+<pre><code>echo &quot;flag{THIS_IS_REAL_FLAG}&quot;;
+</code></pre>
+<p>}else{</p>
+<pre><code>echo &quot;Out!&quot;;
+</code></pre>
+<p>}</p>
+<p>这时候就得需要 md5 碰撞((string)转化让第二个条件&#x3D;&#x3D;&#x3D;无法返回null,不然也可以用第二点的数组绕过)，</p>
+<p>上面判断条件的意思是，str1 和 str2 内容必须不同，但是 md5 必须相同。</p>
+<p>这里可以使用工具构造</p>
+<p>240610708</p>
+<p>314282422</p>
+<p>存在MD5碰撞漏洞</p>
+<h3 id="6-变量覆盖漏洞"><a href="#6-变量覆盖漏洞" class="headerlink" title="6.变量覆盖漏洞"></a><strong>6.变量覆盖漏洞</strong></h3><p>变量如果未被初始化，且能够被用户所控制，那么很可能会导致安全问题，前提是环境开启了</p>
+<p>register_globals&#x3D;ON</p>
+<p>如果传入一个参数 ?id&#x3D;1，并且这个参数把原有的变量值给覆盖掉了则叫做 变量覆盖漏洞</p>
+<p>例如</p>
 <?php
 
 $flag = "flag{Chain!}";
