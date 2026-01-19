@@ -1450,12 +1450,12 @@ EXTR_PREFIX_SAME - 如果有冲突，在变量名前加上前缀 prefix。（需
 <p>$c &#x3D; US</p>
 <p>(注意:extract($_POST); 的核心意思是：将前端通过 POST 请求提交的所有数据（存储在 $_POST 关联数组中）</p>
 <p>批量转为当前作用域的 PHP 变量—— 数组的「键名」会变成变量名，数组的「键值」会变成变量值。)</p>
-<p>(假设前端通过表单 &#x2F; POST 请求发送了 3 个变量：username&#x3D;张三、age&#x3D;25、email&#x3D;<a href="mailto:&#x7a;&#x68;&#x61;&#x6e;&#103;&#x73;&#x61;&#110;&#64;&#101;&#x78;&#97;&#x6d;&#x70;&#108;&#101;&#x2e;&#99;&#111;&#109;">zhangsan@example.com</a>，那么 PHP 接收后：</p>
-<p>$_POST 数组的结构是：[“username” &#x3D;&gt; “张三”, “age” &#x3D;&gt; 25, “email” &#x3D;&gt; “<a href="mailto:&#x7a;&#104;&#x61;&#110;&#x67;&#x73;&#x61;&#x6e;&#64;&#x65;&#x78;&#x61;&#109;&#112;&#108;&#x65;&#x2e;&#99;&#x6f;&#109;">zhangsan@example.com</a>“]</p>
+<p>(假设前端通过表单 &#x2F; POST 请求发送了 3 个变量：username&#x3D;张三、age&#x3D;25、email&#x3D;<a href="mailto:&#122;&#104;&#x61;&#110;&#103;&#115;&#x61;&#110;&#64;&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;">zhangsan@example.com</a>，那么 PHP 接收后：</p>
+<p>$_POST 数组的结构是：[“username” &#x3D;&gt; “张三”, “age” &#x3D;&gt; 25, “email” &#x3D;&gt; “<a href="mailto:&#122;&#x68;&#x61;&#110;&#x67;&#x73;&#97;&#x6e;&#64;&#x65;&#120;&#97;&#109;&#x70;&#108;&#x65;&#x2e;&#99;&#x6f;&#109;">zhangsan@example.com</a>“]</p>
 <p>执行 extract($_POST); 后，会自动创建 3 个变量：</p>
 <p>$username &#x3D; “张三”（键名 username → 变量名 $username，键值为值）</p>
 <p>$age &#x3D; 25（键名 age → 变量名 $age）</p>
-<p>$email &#x3D; “<a href="mailto:&#x7a;&#104;&#x61;&#x6e;&#x67;&#x73;&#x61;&#110;&#x40;&#x65;&#120;&#x61;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;">zhangsan@example.com</a>“（键名 email → 变量名 $email）</p>
+<p>$email &#x3D; “<a href="mailto:&#x7a;&#104;&#x61;&#110;&#103;&#x73;&#97;&#110;&#64;&#x65;&#120;&#97;&#x6d;&#x70;&#x6c;&#x65;&#x2e;&#99;&#111;&#x6d;">zhangsan@example.com</a>“（键名 email → 变量名 $email）</p>
 <p>之后你可以直接用 $username、$age 访问数据，无需再写 $_POST[‘username’]。)</p>
 <h4 id="parse-str-str-函数"><a href="#parse-str-str-函数" class="headerlink" title="parse_str(str)函数"></a><strong>parse_str(str)函数</strong></h4><p>描述：parse_str(str) 用于将字符串解析成多个变量(也可以为单个变量)，没有返回值\</p>
 <p>parse_str(“username&#x3D;A&amp;password&#x3D;123456”);</p>
