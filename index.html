@@ -1088,7 +1088,7 @@ highlight_file(__FILE__);
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-19 17:25:16" itemprop="dateModified" datetime="2026-01-19T17:25:16+08:00">2026-01-19</time>
+                <time title="修改时间：2026-01-19 18:05:19" itemprop="dateModified" datetime="2026-01-19T18:05:19+08:00">2026-01-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1111,9 +1111,9 @@ highlight_file(__FILE__);
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="PHP-命令执行-续上周的学习"><a href="#PHP-命令执行-续上周的学习" class="headerlink" title="PHP 命令执行(续上周的学习)"></a><strong>PHP 命令执行(续上周的学习)</strong></h1><p><em><em>个人的所有作业中,带</em>的小点为做题补充知识点</em></p>
+          <h1 id="第二章-RCE-与正则表达式"><a href="#第二章-RCE-与正则表达式" class="headerlink" title="第二章 RCE 与正则表达式"></a>第二章 RCE 与正则表达式</h1><h1 id="第二章-RCE-与正则表达式-1"><a href="#第二章-RCE-与正则表达式-1" class="headerlink" title="第二章 RCE 与正则表达式"></a>第二章 RCE 与正则表达式</h1><h1 id="PHP-命令执行-续上周的学习"><a href="#PHP-命令执行-续上周的学习" class="headerlink" title="PHP 命令执行(续上周的学习)"></a><strong>PHP 命令执行(续上周的学习)</strong></h1><p><em><em>个人的所有作业中,带</em>的小点为做题补充知识点</em></p>
 <h2 id="二-替换绕过函数过滤-即使用特定的函数或者不被过滤的函数执行命令"><a href="#二-替换绕过函数过滤-即使用特定的函数或者不被过滤的函数执行命令" class="headerlink" title="二 替换绕过函数过滤(即使用特定的函数或者不被过滤的函数执行命令)"></a>二 替换绕过函数过滤(即使用特定的函数或者不被过滤的函数执行命令)</h2><p><strong>1.记住常见的可执行函数</strong></p>
-<p><img src="/static/YTOjbBuyboX4EFxc64EcBL17n7c.png"></p>
+<p><img src="/images/YTOjbBuyboX4EFxc64EcBL17n7c.png"></p>
 <p><strong>2.LD_PRELOAD(修改库文件)绕过(用于面对禁用函数者过多的情况)</strong></p>
 <p>它可以影响程序的运行时的链接,允许你定义在程序运行前优先加载的动态链接库。</p>
 <p>因而可以向库文件种中注入恶意程序</p>
@@ -1300,13 +1300,13 @@ var_dump(23333 == "0x5b25"); #采用十六进制
 
 判断原始变量类型的函数(注意 PHP的变量不存在先声明后定义 一定要定义)
 
-**(1)gettype($var)返回变量的「原始类型字符串」，**
+#### **(1)gettype($var)返回变量的「原始类型字符串」**
 
 直接告诉你变量是什么类型（如 int、string、null 等）。
 
 (必须传已定义的变量)
 
-**(2)empty($var) —— “空值检测器”**
+#### **(2)empty($var) —— “空值检测器”**
 
 判断变量是否为「空值」（宽松判断，不区分类型，只要是 “无意义” 的值都算空）。
 
@@ -1326,13 +1326,13 @@ null（显式赋值为 null）；
 
 (可以传未定义的变量)
 
-**(3)is_null($var) —— “严格 null 判断器”**
+#### **(3)is_null($var) —— “严格 null 判断器”**
 
 核心作用：仅判断变量是否为「严格的 null」（比 empty 严格 10 倍，只认 null）。
 
 (必须传已定义的变量)
 
-**(4)isset($var) —— “变量存在检测器”**
+#### **(4)isset($var) —— “变量存在检测器”**
 
 判断变量「是否已定义」且「值不为 null」（重点：检测 “存在性”，而非 “空值”）。
 
@@ -1344,7 +1344,7 @@ null（显式赋值为 null）；
 
 (可以传未定义的变量,返回 false（不报错）；)
 
-**(5)if($x) —— 布尔值隐式转换（“真值检测器”）**
+#### **(5)if($x) —— 布尔值隐式转换（“真值检测器”）**
 
 将变量 $x 隐式转换为布尔值 true/false，判断变量是否为「真值」
 
@@ -1358,13 +1358,13 @@ null、false、0、0.0、""、"0"、[]；
 
 (必须传已定义的变量)
 
-**(6)弱类型比较表格**
+#### **(6)弱类型比较表格**
 
 https://www.php.net/manual/zh/types.comparisons.php#types.comparisions-loose
 
 (最重要的:0==Null true)
 
-**(7)strcmp函数**
+#### **(7)strcmp函数**
 
 描述：strcmp(str1, str2)
 
@@ -1394,7 +1394,7 @@ if (strcmp($flag, $_GET['str']) == 0) {
 
 非空数组和变量无法正常比较.
 
-**(8)is_numeric函数**
+#### **(8)is_numeric函数**
 
 is_numeric() 用于检测数值是否为数值，如果遇到这个函数，可以用上述转换类型的特性
 
@@ -1433,7 +1433,7 @@ Payload: ?id=2333%00
 
 Payload: ?id=2333A
 
-**(9)is_switch函数**
+#### **(9)is_switch函数**
 
 is_switch()¶
 
@@ -1471,7 +1471,7 @@ switch ($a) {
 
 输出：flag{Give you FLAG}
 
-**(10)sha1()函数**
+#### **(10)sha1()函数**
 
 sha1() 是 PHP 中用于计算字符串 SHA-1 哈希值 的内置函数，属于哈希算法的一种，
 
@@ -1505,7 +1505,7 @@ Payload: ?get[]=&teg[]=1
 
 
 
-**(11)md5**
+### **5.md5哈希值问题**
 
 描述：md5(字符串,字符串,var2)
 
@@ -1547,7 +1547,7 @@ TUFEPMC 0e839407194569345277863905212547 返回：0
 
 
 
-**(11.1)==弱类型比较的处理方法**
+#### **==弱类型比较的处理方法**
 
 $flag = "flag{THIS_IS_REAL_FLAG}";
 
@@ -1579,7 +1579,7 @@ Payload: ?gat=240610708&tag=314282422
 
 
 
-**(11.2)数组比较法绕过===比较**
+#### **数组比较法绕过===强比较**
 
 如果遇到下列程序
 
@@ -1607,7 +1607,9 @@ if (md5($str1) === md5($str2)) {
 
 
 
-**(11.3)md5 碰撞(即md5相同而内容完全不一样的字符串)**
+#### **md5 碰撞问题**
+
+**(即md5相同而内容完全不一样的字符串)**
 
 如果遇到不能传入数组，只能传入字符串的时候，如下例
 
@@ -1645,7 +1647,7 @@ if((string)$str1 !== (string)$str2 && md5($str1)===md5($str2)){
 
 
 
-**(12)变量覆盖漏洞**
+### **6.变量覆盖漏洞**
 
 变量如果未被初始化，且能够被用户所控制，那么很可能会导致安全问题，前提是环境开启了
 
@@ -1708,7 +1710,7 @@ import_request_variables() 使用不当
 
 
 
-**(12.2)extract()**
+#### **extract()函数**
 
 描述：extract(array,flags,prefix)
 
@@ -1790,7 +1792,7 @@ $email = "zhangsan@example.com"（键名 email → 变量名 $email）
 
 之后你可以直接用 $username、$age 访问数据，无需再写 $_POST['username']。)
 
-**(12.3)parse_str(str)**
+#### **parse_str(str)函数**
 
 描述：parse_str(str) 用于将字符串解析成多个变量(也可以为单个变量)，没有返回值\
 
@@ -1850,7 +1852,7 @@ Payload: ?id=a[0]=240610708
 
 
 
-**(12.4)register_globals**
+#### **register_globals环境变量问题**
 
 register_globals 设置为 on 的时候，传递的参数会 自动注册 为全局变量。
 
@@ -1860,7 +1862,7 @@ echo $a;
 
 
 
-**(13)伪协议**
+### **(略)伪协议问题**
 
 (基础不足，暂时略过)
 
