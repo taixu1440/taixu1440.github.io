@@ -1088,7 +1088,7 @@ highlight_file(__FILE__);
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-19 18:11:38" itemprop="dateModified" datetime="2026-01-19T18:11:38+08:00">2026-01-19</time>
+                <time title="修改时间：2026-01-19 18:14:26" itemprop="dateModified" datetime="2026-01-19T18:14:26+08:00">2026-01-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1395,322 +1395,147 @@ default:
 <p>register_globals&#x3D;ON</p>
 <p>如果传入一个参数 ?id&#x3D;1，并且这个参数把原有的变量值给覆盖掉了则叫做 变量覆盖漏洞</p>
 <p>例如</p>
-<?php
-
-$flag = "flag{Chain!}";
-
-$a = "A";
-
-$b = "B";
-
-echo "$a" . "\n";
-
-echo "$b" . "\n";
-
-$a = $_GET['get'];  # $a 变量被我们传入的get给覆盖掉了
-
-echo $a . "\n";
-
-echo $b . "\n";
-
-
-
-传入参数：?get=Genshin，返回
-
-a:A
-
-b:B
-
-a:Genshin
-
-b:B
-
-
-
-漏洞产生原因大致有:
-
-register_globals（全局变量）为 On
-
-$$ 使用不恰当
-extract() 函数使用不当
-parse_str() 使用不当
-import_request_variables() 使用不当
-
-(12.1)$$
-
-在 PHP 中，$$ 是可变变量（Variable Variables） 的语法，核心作用是：用一个变量的值作为另一个变量的名称。
-
-简单说：如果有一个变量 $a = "name"，那么 $$a 就等价于 $name（把 $a 的值 "name" 当作了新变量的名称）。
-
-
-
-#### **extract()函数**
-
-描述：extract(array,flags,prefix)
-
-
-
-array：数组
-
-flags(相当于模式的选择)：
-
-    EXTR_OVERWRITE - 如果有冲突，覆盖已有的变量。（默认）
-
-    EXTR_SKIP - 如果有冲突，不覆盖已有的变量。
-
-    EXTR_PREFIX_SAME - 如果有冲突，在变量名前加上前缀 prefix。（需要第 prefix 参数）
-
-    …
-
-prefix：该参数规定了前缀。前缀和数组键名之间会自动加上一个下划线。
-
-即若数组中有"a"=>"STR"
-
-变量又存在"a"="STR2"
-
-则EXTR_PREFIX_SAME模式下不会把STR赋给a,而会创建一个<前缀>_a的变量并把值赋给他    
-
-extract 用来将变量从数组中导入到当前的符号表中，并返回成功导入到符号表中的变量数目
-
-例
-
-$a = "Source";
-
-$array = array(
-
-    "a"=>"JP",
-
-    "b"=>"RU",
-
-    "c"=>"US",
-
-);
-
-extract($array);
-
-echo "\$a = " . $a . "<br>"; # 注意这里，a原本是有内容的
-
-echo "\$b = " . $b . "<br>";
-
-echo "\$c = " . $c . "<br>";
-
-
-
-返回
-
-
-
-$a = JP
-
-$b = RU
-
-$c = US
-
-
-
-(注意:extract($_POST); 的核心意思是：将前端通过 POST 请求提交的所有数据（存储在 $_POST 关联数组中）
-
-批量转为当前作用域的 PHP 变量—— 数组的「键名」会变成变量名，数组的「键值」会变成变量值。)
-
-(假设前端通过表单 / POST 请求发送了 3 个变量：username=张三、age=25、email=zhangsan@example.com，那么 PHP 接收后：
-
-$_POST 数组的结构是：["username" => "张三", "age" => 25, "email" => "zhangsan@example.com"]
-
-执行 extract($_POST); 后，会自动创建 3 个变量：
-
-$username = "张三"（键名 username → 变量名 $username，键值为值）
-
-$age = 25（键名 age → 变量名 $age）
-
-$email = "zhangsan@example.com"（键名 email → 变量名 $email）
-
-之后你可以直接用 $username、$age 访问数据，无需再写 $_POST['username']。)
-
-#### **parse_str(str)函数**
-
-描述：parse_str(str) 用于将字符串解析成多个变量(也可以为单个变量)，没有返回值\
-
-
-
-parse_str("username=A&password=123456");
-
-echo "Username: " . $username . "<br>";
-
-echo "Password: " . $password;
-
-
-
-输出
-
-
-
-Username: A
-
-Password: 123456
-
-
-
-原本这个函数有 array 参数的，但在 7.2 后废除了，array 变量会以数组元素的形式存入到这个数组，作为替代
-
-
-
-来到例题
-
-
-
-$UIUCTF = "UIUCTF Hacker.";
-
-$id = $_GET['id'];
-
-@parse_str($id);
-
-if ($a[0] != 'QNKCDZO' && md5($a[0]) == md5('QNKCDZO')) {
-
-    echo $flag;
-
-}else{
-
-    echo "Out!";
-
-}
-
-#QNKCDZO = 0e830400451993494058024219903391
-
-
-
-注意第四行，和前面的 md5 比较有关系，但不同的是这里加入了 parse_str 这个函数，这段代码大致意思就和上面 md5 绕过的意思一样，如果 md5 编码后的哈希值时 0e （科学计数法）开头的，都一律解释为 0，所以当两个不同的值经过哈希编码后他们的值都是以 0e 开头的，则每个值都是 0，与众不同的是我们要覆盖掉 a[0] 这个变量
-
-
-
-Payload: ?id=a[0]=240610708
-
-
-
-#### **register_globals环境变量问题**
-
-register_globals 设置为 on 的时候，传递的参数会 自动注册 为全局变量。
-
-ini_set("register_globals", "On");
-
-echo $a;
-
-
-
-### **(略)伪协议问题**
-
-(基础不足，暂时略过)
-
-
-
-# 正则表达式基本语法 
-
-正则表达式是⼀种⽤于匹配和操作⽂本的强⼤⼯具，它是由⼀系列字符和特殊字符组成的模式，⽤于 
-
-描述要匹配的⽂本模式。 
-
-正则表达式可以在⽂本中查找、替换、提取和验证特定的模式。 
-
-例如： 
-
-• runoo+b，可以匹配 runoob、runooob、runoooooob 等，+ 号代表前⾯的字符必须⾄少出现⼀ 
-
-次（
-
-1次或多次） 
-
-• runoo*b，可以匹配 runob、runoob、runoooooob 等，* 号代表前⾯的字符可以不出现，也可 
-
-以出现⼀次或者多次（
-
-0次、或1次、或多次） 
-
-• colou?r 可以匹配 color 或者 colour，? 问号代表前⾯的字符最多只可以出现⼀次（
-
-0次或1次） 
-
-正则分隔符:（
-
-PHP 正则需⽤ / 或 # 等包裹）例如/runoo*b/ 
-
-⼦表达式:不加括号的时候是前⼀个字符,加括号时是前⼀个括号内的字符 
-
-例如colo(ur)?可以匹配colo. 
-
-## **正则表达式的基本语法与应用**
-
-**(1)指定⼦表达式的出现次数 **
-
-除了上⾯举例中的?,*和+外,还有⼀些⽅式可以指定⼦表达式的出现次数. 
-
-ab{2}c 表⽰指定ac之中出现b的次数为2次 
-
-ab{2,6}c 表⽰指定ac之中出现b的次数为2-6次 
-
-ac{2,}c 即为表⽰指定ac之中出现b的次数⼤于等于2次 
-
-**(2)正则表达式的逻辑运算符 **
-
-|表⽰或 配合()⼀起使⽤ 例如a(b|c),匹配ab或ac 
-
-**(3)字符类运算符 **
-
-[]+ ⽅括号的内容表⽰匹配的字符只能取⾃他们,注意是每⼀个字符,不是字符串 
-
-_(这⾥可以思考⼀下preg_match函数中()和[]的区别,|⽤在哪个地⽅会使()和[]等价) _
-
-不同字符中间也不需要分隔 
-
-[abc]+ 能匹配到abc aabbcc等 
-
-[a-z]+ 能匹配到所有带有⼩写字⺟的字符串 
-
-[a-zA-z0-9]+ 能匹配到所有带有⼩写字⺟,⼤写字⺟或数字的字符串 
-
-如果在⽅括号最开始加^,即代表否定,[^abc],则代表匹配⽆三个字⺟abc的字符串注:带⽅括号的整体为⼀整个⼦表达式 
-
-如可按照\a[abc]{1}\匹配到aa ab ac. 
-
-可按照\1[0-4][0-9]\匹配到⼩于15 
-
-0的数字 
-
-**(4)元字符 **
-
-正则表达式的⼤部分元字符都以\开头 
-
-\d数字字符 相当于[0-9] 
-
-\w单词字符 代表所有的字⺟ 数字 下划线 相当于[a-zA-z0-9] 
-
-\s空⽩符 代表tab和空⽩符 
-
-\D ⾮数字字符 
-
-\W ⾮单词字符 
-
-\S ⾮空⽩字符 
-
-. 代表除换⾏符以外的任意字符(如果要匹配.这个符号,可以⽤\.) 
-
-^(⼦表达式) 只匹配字符⾸ ^a只匹配⾏头的a 
-
-$(⼦表达式) 只匹配字符尾 $a只匹配⾏尾的a 
-
-这⾥要和[^abc]区分,那个只是字符类运算符! 
-
-**(5)正则表达式中的其他概念 **
-
-贪婪与懒惰匹配 
-
-*,+和{},会默认匹配尽可能多的字符,称贪婪匹配 
-
-在其后加? 则切换为懒惰匹配 
-
-例如<.+> +能够匹配⼦表达式.,即任意的⾮换⾏字符,因⽽整个正则表达式可以匹配除了换⾏符以外的整 
-
-个⽂本 
-
-<.+?><p> +还是能够匹配⼦表达式.但是由于?的存在,+只会选择.代表的⽂本中第⼀个字符匹配</p>
+<p>$flag &#x3D; “flag{Chain!}”;</p>
+<p>$a &#x3D; “A”;</p>
+<p>$b &#x3D; “B”;</p>
+<p>echo “$a” . “\n”;</p>
+<p>echo “$b” . “\n”;</p>
+<p>$a &#x3D; $_GET[‘get’];  # $a 变量被我们传入的get给覆盖掉了</p>
+<p>echo $a . “\n”;</p>
+<p>echo $b . “\n”;</p>
+<p>传入参数：?get&#x3D;Genshin，返回</p>
+<p>a:A</p>
+<p>b:B</p>
+<p>a:Genshin</p>
+<p>b:B</p>
+<p>漏洞产生原因大致有:</p>
+<p>register_globals（全局变量）为 On</p>
+<p>$$ 使用不恰当<br>extract() 函数使用不当<br>parse_str() 使用不当<br>import_request_variables() 使用不当</p>
+<p>(12.1)$$</p>
+<p>在 PHP 中，$$ 是可变变量（Variable Variables） 的语法，核心作用是：用一个变量的值作为另一个变量的名称。</p>
+<p>简单说：如果有一个变量 $a &#x3D; “name”，那么 $$a 就等价于 $name（把 $a 的值 “name” 当作了新变量的名称）。</p>
+<h4 id="extract-函数"><a href="#extract-函数" class="headerlink" title="extract()函数"></a><strong>extract()函数</strong></h4><p>描述：extract(array,flags,prefix)</p>
+<p>array：数组</p>
+<p>flags(相当于模式的选择)：</p>
+<pre><code>EXTR_OVERWRITE - 如果有冲突，覆盖已有的变量。（默认）
+
+EXTR_SKIP - 如果有冲突，不覆盖已有的变量。
+
+EXTR_PREFIX_SAME - 如果有冲突，在变量名前加上前缀 prefix。（需要第 prefix 参数）
+
+…
+</code></pre>
+<p>prefix：该参数规定了前缀。前缀和数组键名之间会自动加上一个下划线。</p>
+<p>即若数组中有”a”&#x3D;&gt;”STR”</p>
+<p>变量又存在”a”&#x3D;”STR2”</p>
+<p>则EXTR_PREFIX_SAME模式下不会把STR赋给a,而会创建一个&lt;前缀&gt;_a的变量并把值赋给他    </p>
+<p>extract 用来将变量从数组中导入到当前的符号表中，并返回成功导入到符号表中的变量数目</p>
+<p>例</p>
+<p>$a &#x3D; “Source”;</p>
+<p>$array &#x3D; array(</p>
+<pre><code>&quot;a&quot;=&gt;&quot;JP&quot;,
+
+&quot;b&quot;=&gt;&quot;RU&quot;,
+
+&quot;c&quot;=&gt;&quot;US&quot;,
+</code></pre>
+<p>);</p>
+<p>extract($array);</p>
+<p>echo “$a &#x3D; “ . $a . “<br>“; # 注意这里，a原本是有内容的</p>
+<p>echo “$b &#x3D; “ . $b . “<br>“;</p>
+<p>echo “$c &#x3D; “ . $c . “<br>“;</p>
+<p>返回</p>
+<p>$a &#x3D; JP</p>
+<p>$b &#x3D; RU</p>
+<p>$c &#x3D; US</p>
+<p>(注意:extract($_POST); 的核心意思是：将前端通过 POST 请求提交的所有数据（存储在 $_POST 关联数组中）</p>
+<p>批量转为当前作用域的 PHP 变量—— 数组的「键名」会变成变量名，数组的「键值」会变成变量值。)</p>
+<p>(假设前端通过表单 &#x2F; POST 请求发送了 3 个变量：username&#x3D;张三、age&#x3D;25、email&#x3D;<a href="mailto:&#x7a;&#x68;&#x61;&#x6e;&#103;&#x73;&#x61;&#110;&#64;&#101;&#x78;&#97;&#x6d;&#x70;&#108;&#101;&#x2e;&#99;&#111;&#109;">zhangsan@example.com</a>，那么 PHP 接收后：</p>
+<p>$_POST 数组的结构是：[“username” &#x3D;&gt; “张三”, “age” &#x3D;&gt; 25, “email” &#x3D;&gt; “<a href="mailto:&#x7a;&#104;&#x61;&#110;&#x67;&#x73;&#x61;&#x6e;&#64;&#x65;&#x78;&#x61;&#109;&#112;&#108;&#x65;&#x2e;&#99;&#x6f;&#109;">zhangsan@example.com</a>“]</p>
+<p>执行 extract($_POST); 后，会自动创建 3 个变量：</p>
+<p>$username &#x3D; “张三”（键名 username → 变量名 $username，键值为值）</p>
+<p>$age &#x3D; 25（键名 age → 变量名 $age）</p>
+<p>$email &#x3D; “<a href="mailto:&#x7a;&#104;&#x61;&#x6e;&#x67;&#x73;&#x61;&#110;&#x40;&#x65;&#120;&#x61;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;">zhangsan@example.com</a>“（键名 email → 变量名 $email）</p>
+<p>之后你可以直接用 $username、$age 访问数据，无需再写 $_POST[‘username’]。)</p>
+<h4 id="parse-str-str-函数"><a href="#parse-str-str-函数" class="headerlink" title="parse_str(str)函数"></a><strong>parse_str(str)函数</strong></h4><p>描述：parse_str(str) 用于将字符串解析成多个变量(也可以为单个变量)，没有返回值\</p>
+<p>parse_str(“username&#x3D;A&amp;password&#x3D;123456”);</p>
+<p>echo “Username: “ . $username . “<br>“;</p>
+<p>echo “Password: “ . $password;</p>
+<p>输出</p>
+<p>Username: A</p>
+<p>Password: 123456</p>
+<p>原本这个函数有 array 参数的，但在 7.2 后废除了，array 变量会以数组元素的形式存入到这个数组，作为替代</p>
+<p>来到例题</p>
+<p>$UIUCTF &#x3D; “UIUCTF Hacker.”;</p>
+<p>$id &#x3D; $_GET[‘id’];</p>
+<p>@parse_str($id);</p>
+<p>if ($a[0] !&#x3D; ‘QNKCDZO’ &amp;&amp; md5($a[0]) &#x3D;&#x3D; md5(‘QNKCDZO’)) {</p>
+<pre><code>echo $flag;
+</code></pre>
+<p>}else{</p>
+<pre><code>echo &quot;Out!&quot;;
+</code></pre>
+<p>}</p>
+<p>#QNKCDZO &#x3D; 0e830400451993494058024219903391</p>
+<p>注意第四行，和前面的 md5 比较有关系，但不同的是这里加入了 parse_str 这个函数，这段代码大致意思就和上面 md5 绕过的意思一样，如果 md5 编码后的哈希值时 0e （科学计数法）开头的，都一律解释为 0，所以当两个不同的值经过哈希编码后他们的值都是以 0e 开头的，则每个值都是 0，与众不同的是我们要覆盖掉 a[0] 这个变量</p>
+<p>Payload: ?id&#x3D;a[0]&#x3D;240610708</p>
+<h4 id="register-globals环境变量问题"><a href="#register-globals环境变量问题" class="headerlink" title="register_globals环境变量问题"></a><strong>register_globals环境变量问题</strong></h4><p>register_globals 设置为 on 的时候，传递的参数会 自动注册 为全局变量。</p>
+<p>ini_set(“register_globals”, “On”);</p>
+<p>echo $a;</p>
+<h3 id="略-伪协议问题"><a href="#略-伪协议问题" class="headerlink" title="(略)伪协议问题"></a><strong>(略)伪协议问题</strong></h3><p>(基础不足，暂时略过)</p>
+<h1 id="正则表达式基本语法"><a href="#正则表达式基本语法" class="headerlink" title="正则表达式基本语法"></a>正则表达式基本语法</h1><p>正则表达式是⼀种⽤于匹配和操作⽂本的强⼤⼯具，它是由⼀系列字符和特殊字符组成的模式，⽤于 </p>
+<p>描述要匹配的⽂本模式。 </p>
+<p>正则表达式可以在⽂本中查找、替换、提取和验证特定的模式。 </p>
+<p>例如： </p>
+<p>• runoo+b，可以匹配 runoob、runooob、runoooooob 等，+ 号代表前⾯的字符必须⾄少出现⼀ </p>
+<p>次（</p>
+<p>1次或多次） </p>
+<p>• runoo<em>b，可以匹配 runob、runoob、runoooooob 等，</em> 号代表前⾯的字符可以不出现，也可 </p>
+<p>以出现⼀次或者多次（</p>
+<p>0次、或1次、或多次） </p>
+<p>• colou?r 可以匹配 color 或者 colour，? 问号代表前⾯的字符最多只可以出现⼀次（</p>
+<p>0次或1次） </p>
+<p>正则分隔符:（</p>
+<p>PHP 正则需⽤ &#x2F; 或 # 等包裹）例如&#x2F;runoo*b&#x2F; </p>
+<p>⼦表达式:不加括号的时候是前⼀个字符,加括号时是前⼀个括号内的字符 </p>
+<p>例如colo(ur)?可以匹配colo. </p>
+<h2 id="正则表达式的基本语法与应用"><a href="#正则表达式的基本语法与应用" class="headerlink" title="正则表达式的基本语法与应用"></a><strong>正则表达式的基本语法与应用</strong></h2><p>**(1)指定⼦表达式的出现次数 **</p>
+<p>除了上⾯举例中的?,*和+外,还有⼀些⽅式可以指定⼦表达式的出现次数. </p>
+<p>ab{2}c 表⽰指定ac之中出现b的次数为2次 </p>
+<p>ab{2,6}c 表⽰指定ac之中出现b的次数为2-6次 </p>
+<p>ac{2,}c 即为表⽰指定ac之中出现b的次数⼤于等于2次 </p>
+<p>**(2)正则表达式的逻辑运算符 **</p>
+<p>|表⽰或 配合()⼀起使⽤ 例如a(b|c),匹配ab或ac </p>
+<p>**(3)字符类运算符 **</p>
+<p>[]+ ⽅括号的内容表⽰匹配的字符只能取⾃他们,注意是每⼀个字符,不是字符串 </p>
+<p>_(这⾥可以思考⼀下preg_match函数中()和[]的区别,|⽤在哪个地⽅会使()和[]等价) _</p>
+<p>不同字符中间也不需要分隔 </p>
+<p>[abc]+ 能匹配到abc aabbcc等 </p>
+<p>[a-z]+ 能匹配到所有带有⼩写字⺟的字符串 </p>
+<p>[a-zA-z0-9]+ 能匹配到所有带有⼩写字⺟,⼤写字⺟或数字的字符串 </p>
+<p>如果在⽅括号最开始加^,即代表否定,[^abc],则代表匹配⽆三个字⺟abc的字符串注:带⽅括号的整体为⼀整个⼦表达式 </p>
+<p>如可按照\a[abc]{1}\匹配到aa ab ac. </p>
+<p>可按照\1[0-4][0-9]\匹配到⼩于15 </p>
+<p>0的数字 </p>
+<p>**(4)元字符 **</p>
+<p>正则表达式的⼤部分元字符都以\开头 </p>
+<p>\d数字字符 相当于[0-9] </p>
+<p>\w单词字符 代表所有的字⺟ 数字 下划线 相当于[a-zA-z0-9] </p>
+<p>\s空⽩符 代表tab和空⽩符 </p>
+<p>\D ⾮数字字符 </p>
+<p>\W ⾮单词字符 </p>
+<p>\S ⾮空⽩字符 </p>
+<p>. 代表除换⾏符以外的任意字符(如果要匹配.这个符号,可以⽤.) </p>
+<p>^(⼦表达式) 只匹配字符⾸ ^a只匹配⾏头的a </p>
+<p>$(⼦表达式) 只匹配字符尾 $a只匹配⾏尾的a </p>
+<p>这⾥要和[^abc]区分,那个只是字符类运算符! </p>
+<p>**(5)正则表达式中的其他概念 **</p>
+<p>贪婪与懒惰匹配 </p>
+<p>*,+和{},会默认匹配尽可能多的字符,称贪婪匹配 </p>
+<p>在其后加? 则切换为懒惰匹配 </p>
+<p>例如&lt;.+&gt; +能够匹配⼦表达式.,即任意的⾮换⾏字符,因⽽整个正则表达式可以匹配除了换⾏符以外的整 </p>
+<p>个⽂本 </p>
+<p>&lt;.+?&gt; +还是能够匹配⼦表达式.但是由于?的存在,+只会选择.代表的⽂本中第⼀个字符匹配</p>
 <p>例如⽂本为 abc def efg agh</p>
 <p>&lt;.+&gt; 能匹配整个⽂本</p>
 <p>&lt;.+?&gt; 只能以懒惰匹配识别包含于.的 a,匹配带有 a 的字符串.</p>
