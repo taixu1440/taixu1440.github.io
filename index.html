@@ -165,6 +165,241 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/01/21/%E7%AC%AC%E4%B8%80%E7%AB%A0-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="legend1440">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拂云观 · legend1440">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/01/21/%E7%AC%AC%E4%B8%80%E7%AB%A0-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86/" class="post-title-link" itemprop="url">第一章-预备知识</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-01-21 01:16:35 / 修改时间：01:18:56" itemprop="dateCreated datePublished" datetime="2026-01-21T01:16:35+08:00">2026-01-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="HTTP协议"><a href="#HTTP协议" class="headerlink" title="HTTP协议"></a>HTTP协议</h2><h3 id="1-概念与简介"><a href="#1-概念与简介" class="headerlink" title="1.概念与简介"></a>1.概念与简介</h3><p>HTTP协议是Hyper TextTransfer Protocol(超文本传输协议)的缩写，主要用于网页的传输，现在也常应用网络<br>API的开发（Restful API）。</p>
+<p>浏览器通过HTTP协议和服务器交流。<br>浏览器作为HTTP客户端通过URL向HTTP服务端即WEB服务器发送所有请求。</p>
+<p>HTTP默认端口号为80，但是你也可以改为8080或者其他端口。</p>
+<p>HTTP是无连接的：无连接的含义是限制每次连接只处理一个请求。服务器处理完客户的请求，并收到客户的应<br>答后，即断开连接。采用这种方式可以节省传输时间。</p>
+<p>HTTP是媒体独立的：这意味着，只要客户端和服务器知道如何处理的数据内容，任何类型的数据都可以<br>通过HTTP发送。客户端以及服务器指定使用适合的MIME-type内容类型。</p>
+<p>HTTP是无状态的：HTTP协议是无状态协议。无状态是指协议对于事务处理没有记忆能力。缺少状态意味着如果<br>后续处理需要前面的信息，则它必须重传，这样可能导致每次连接传送的数据量增大。另一方面，在服务器不<br>需要先前信息时它的应答就较快。</p>
+<h3 id="2-开发者工具的使用"><a href="#2-开发者工具的使用" class="headerlink" title="2.开发者工具的使用"></a>2.开发者工具的使用</h3><p>NetWork板块 记录了浏览器与服务器的所有通信</p>
+<h3 id="3-http的消息结构-请求与响应"><a href="#3-http的消息结构-请求与响应" class="headerlink" title="3.http的消息结构 请求与响应"></a>3.http的消息结构 请求与响应</h3><p>请求<br>地址和关键词: 例如 GET <a target="_blank" rel="noopener" href="https://www.baidu.com/">https://www.baidu.com</a><br>请求头（header)：用来描述请求和发送者的一些信息<br>请求参数：以百度为例，要搜索的关键词</p>
+<p>响应<br>响应代码：200表示成功，404表示不存在等<br>响应头 (header)：描述响应内容的一些信息<br>响应内容：HTML,JSON,图片等</p>
+<p>请求 响应均可以在F12-NetWork找到.</p>
+<p>一个很好用看请求的网站httpbin.org&#x2F;get<br>通过这个网站可以更简单的查看请求的详细信息。<br>可以通过Python代码模拟各种请求参数和header，发送给这个网站，再来验证发送的是否正确</p>
+<h3 id="4-完整的网页请求过程"><a href="#4-完整的网页请求过程" class="headerlink" title="4.完整的网页请求过程"></a>4.完整的网页请求过程</h3><p>一个网页，通常是分多次请求的，一般的过程为：<br>先请求网页文本，也就是HTML<br>根据HTML中的指定的地址，请求其他内容，最常见的是：样式表，JavaScript，图片等<br>所以在chrome中可以看到很多个请求.</p>
+<p>注意:我们用代码发送请求，一行代码只能发送一次请求，也就是获得了最基本的HTML。<br>有的网站在第一次的HTML中没有包含真实的数据，真实的数据是通过后续请求获得的，所以有时候你用代码<br>去请求发现获得的网页没有内容。</p>
+<p>解决这个问题办法通常有两个：<br>分析各个请求，找到关键的后续请求，用代码发送后续关键请求获取数据。通常，我们没必要像浏览器一样发<br>送所有后续靖求，找到关键请求就够了。<br>使用selenium等浏览器驱动，模拟真实的浏览器操作，发送后续所有请求。</p>
+<h3 id="5-请求的具体过程"><a href="#5-请求的具体过程" class="headerlink" title="5.请求的具体过程"></a>5.请求的具体过程</h3><h3 id="5-1请求行"><a href="#5-1请求行" class="headerlink" title="5.1请求行"></a>5.1请求行</h3><p>下面例子的第一行就是请求行(后面几行支持请求行)，它包含几个关键信息：<br>请求方法：例子中是GET，表示你要干什么<br>请求的资源地址：例子中是&#x2F;hello.txt，结合下面的Host(ww.example.com)就可以拼接处完整的地址<br>使用的HTTP协议的版本号<br>HTTP协议有多个版本，现在主要用1.1，HTTP2也有一些应用<br>例:<br>GET &#x2F;hello.txt HTTP&#x2F;1.1<br>User-Agent:cur1&#x2F;7.16.3 1ibcur1&#x2F;7.16.3 0penSsL&#x2F;0.9.71 zlib&#x2F;1.2.3<br>Host:<a target="_blank" rel="noopener" href="http://www.example.com/">www.example.com</a><br>Accept-Language: en, mi</p>
+<h3 id="5-2请求方法"><a href="#5-2请求方法" class="headerlink" title="5.2请求方法"></a>5.2请求方法</h3><p>根据HTTP标准，HTTP请求可以使用多种请求方法，这些方法表示这个请求要做什么。</p>
+<p>最常用的请求方法是：<br>GET请求表示不要获取内容，它不会修改服务器上的数据<br>POST请求表示要提交内容，通常会修改服务器上的内容</p>
+<p>GET请求的参数<br>GET请求的参数都是放在URL中的，只有GET请求才在网址上可见.<br>请求参数是以键值对的形式出现，一般形式为：<br>网址的后面紧跟着是一个问号<br>问号的后面是一对对参数，形式为：参数1&#x3D;参数1的值<br>多个参数之间用&amp;符号隔开<br>举例：<a target="_blank" rel="noopener" href="https://www.example.com/page1?%E5%8F%82%E6%95%B01=%E5%8F%82%E6%95%B01%E7%9A%84%E5%80%BC&%E5%8F%82%E6%95%B02=%E5%8F%82%E6%95%B02%E7%9A%84%E5%80%BC">https://www.example.com/page1?参数1=参数1的值&amp;参数2=参数2的值</a></p>
+<p>POST请求的参数<br>POST请求的参数放在请求体中<br>网页上看不见<br>但可以通过chrome开发者工具或者抓包工具看见<br>格式举例:<br>GET &#x2F;hello.txt HTTP&#x2F;1.1<br>User-Agent:cur1&#x2F;7.16.3 1ibcur1&#x2F;7.16.3 0penssL&#x2F;0.9.71 zlib&#x2F;1.2.3<br>Host: <a target="_blank" rel="noopener" href="http://www.example.com/">www.example.com</a><br>Accept-Language: en, mi<br>[name’：麦叔’，‘特征’：‘帅’，‘争标’：一个美丽的城市’}</p>
+<h3 id="5-3请求头"><a href="#5-3请求头" class="headerlink" title="5.3请求头"></a>5.3请求头</h3><p>服务器通常通过请求头来：判定请求是否合法，这是基本的反爬措施。<br>爬虫通常需要添加多个请求头来模拟真实的网页请求判断用户是否登陆了，<br>一般通过Cookie这个特殊的请求头的内容来判定，只要我们给出合理的Cookie，<br>服务器就认为我们是登录过了</p>
+<p>请求头最重要的几个是：<br>User-Agent 代表发起访问是什么浏览器。如果不写，基本会被判定为爬虫，直接被拒了<br>Cookie 里面记录了登录信息，或者上次请求服务端设置的信息，也是常用的反爬判定点<br>Referer 表示这次请求是从哪里点过来的，有的网站不允许你直接访问某个网页，必须是从它的其他网页点过<br>来才行、这时候就要设置一个Referer值，模拟是从别的网页点过来的情况</p>
+<h3 id="6-响应的具体过程"><a href="#6-响应的具体过程" class="headerlink" title="6.响应的具体过程"></a>6.响应的具体过程</h3><h3 id="6-1状态码"><a href="#6-1状态码" class="headerlink" title="6.1状态码"></a>6.1状态码</h3><p>当浏览者访问一个网页时，浏览者的浏览器会向网页所在服务器发出请求。当浏览器接收并显示网页前，此网页所<br>在的服务器会返回一个包含HTTP状态码的信息头（server header）用以响应浏览器的请求。<br>HTTP状态码的英文为HTTP Status Code。</p>
+<p>下面是常见的HTTP状态码：<br>200-请求成功<br>301-资源(网页等）被永久转移到其它URL<br>404-请求的资源（网页等）不存在<br>500-内部服务器错误</p>
+<p>HTTP状态码由三个数字组成，第一个数字定义了状态码的类型，后两个数字表示具体的状态。HTTP状态码共分为<br>5种类型：<br>分类<br>分类描述<br>1**<br>信息，服务器收到请求，需要请求者继续执行操作<br>2**<br>成功，操作被成功接收并处理<br>3**<br>重定向，需要进一步的操作以完成请求<br>4**<br>客户端错误，请求包含语法错误或无法完成请求<br>5**<br>服务器错误，服务器在处理请求的过程中发生了错误</p>
+<h3 id="6-2响应头"><a href="#6-2响应头" class="headerlink" title="6.2响应头"></a>6.2响应头</h3><p>同请求头 需要则查表.</p>
+<h3 id="7-黑神话CTF-WP"><a href="#7-黑神话CTF-WP" class="headerlink" title="7.黑神话CTF WP"></a>7.黑神话CTF WP</h3><p>点击”开始挑战”后,依次按图片修改网页的参数即可.<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a6c408daa.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a6c2e9554.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a6c1e7b1f.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a6c095a5e.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a6c1781a2.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a6c607e3d.png" alt="这是图片" title="Magic Gardens"></p>
+<h2 id="PHP基础语法"><a href="#PHP基础语法" class="headerlink" title="PHP基础语法"></a>PHP基础语法</h2><h3 id="环境的配置-由于有C-基础-从序号一开始只叙述PHP与C-相比需要注意之处"><a href="#环境的配置-由于有C-基础-从序号一开始只叙述PHP与C-相比需要注意之处" class="headerlink" title="环境的配置 (由于有C++基础,从序号一开始只叙述PHP与C++相比需要注意之处:)"></a>环境的配置 (由于有C++基础,从序号一开始只叙述PHP与C++相比需要注意之处:)</h3><p><img src="https://youke1.picui.cn/s1/2025/10/31/6903a843efe7d.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a8446512f.png" alt="这是图片" title="Magic Gardens"></p>
+<h3 id="1-PHP基础格式"><a href="#1-PHP基础格式" class="headerlink" title="1.PHP基础格式"></a>1.PHP基础格式</h3><?php
+    //执行的相关PHP代码
+?>
+
+<h3 id="2-变量定义"><a href="#2-变量定义" class="headerlink" title="2.变量定义"></a>2.变量定义</h3><p> $&lt;变量名&gt;&#x3D; (无需输入数据类型)</p>
+<p>PHP的主要执行对象更多是字符串 不是字符</p>
+<h3 id="3-运算符"><a href="#3-运算符" class="headerlink" title="3.运算符"></a>3.运算符</h3><p>x xor y 代表异或 	<br>如果 x 和 y 有且仅有一个为 true，则返回 true</p>
+<p>类型比较<br>松散比较：使用两个等号 &#x3D;&#x3D; 比较，只比较值，不比较类型。<br>严格比较：用三个等号 &#x3D;&#x3D;&#x3D; 比较，除了比较值，也比较类型。</p>
+<h3 id="4-输出"><a href="#4-输出" class="headerlink" title="4.输出"></a>4.输出</h3><p>echo 可以输出一个或多个字符串<br>print 只允许输出一个字符串，返回值总为 1<br>print_r()：专门用于打印变量的详细信息，尤其适合数组和对象，会以可读性强的格式展示其内部结构,且执行时返回true</p>
+<h3 id="5-数组"><a href="#5-数组" class="headerlink" title="5.数组"></a>5.数组</h3><p>$cars&#x3D;array(“Hello”,”CTF”);<br>echo “I like “ . $cars[0] . “ “ . $cars[1] . “.”;(体现了echo输出多个字符串.)</p>
+<p>除了用array,还可以使用 [] 定义数组</p>
+<p>$z &#x3D; [‘H’,’e’,’l’, ‘l’, ‘o’];<br>$z[0] &#x3D; ‘H’;<br>$z[1] &#x3D; ‘r’;<br>$z[2] &#x3D; ‘l’;<br>$z[3] &#x3D; ‘l’;<br>$z[4] &#x3D; ‘o’;</p>
+<h3 id="6-魔术常量"><a href="#6-魔术常量" class="headerlink" title="6.魔术常量"></a>6.魔术常量</h3><p>形如 <strong>FILE</strong> 这样的 <strong>XXX</strong> 预定义常量，被称为魔术常量。<br><strong>FILE</strong> &#x2F;&#x2F;返回文件的完整路径和文件名</p>
+<p>highlight_file(<strong>FILE</strong>); &#x2F;&#x2F;代码高亮的显示当前文件内容</p>
+<h3 id="7-表单数据-‘变量名’"><a href="#7-表单数据-‘变量名’" class="headerlink" title="7.表单数据 $_&lt;名称&gt;[‘变量名’]"></a>7.表单数据 $_&lt;名称&gt;[‘变量名’]</h3><p>$_GET —— 接受 GET 请求传递的参数。</p>
+<p>示例：example.com&#x2F;index.php?book&#x3D;HELLOCTF，你可以使用 $_GET[‘book’] 来获取相应的值。</p>
+<p>$_POST —— 接受 POST 请求传递的参数。</p>
+<p>示例：对 example.com&#x2F;index.php 进行 POST 传参，参数名为 book 内容为 HelloCTF，你可以使用 $_POST[‘book’] 来获取相应的值。</p>
+<p>$_REQUEST —— 接受 GET 和 POST 以及 Cookie 请求传递的参数。</p>
+<p>示例：</p>
+<pre><code>如果你通过 URL 传递了一个参数 example.com/index.php?key=value_from_get，你可以通过 $_REQUEST[&#39;key&#39;] 获取这个值。
+如果你通过 POST 方法提交了一个表单，其中有一个名为 key 的字段且其值为 value_from_post，你也可以通过 $_REQUEST[&#39;key&#39;] 获取这个值。
+同时，如果你设置了一个名为 key 的 cookie，其值为 value_from_cookie，你还是可以使用 $_REQUEST[&#39;key&#39;] 来获取这个值。
+</code></pre>
+<h3 id="8-内建函数"><a href="#8-内建函数" class="headerlink" title="8.内建函数"></a>8.内建函数</h3><p>文件操作函数：</p>
+<pre><code>include(): 导入并执行(着重,是并执行!)指定的 PHP 文件。例如：include(&#39;config.php&#39;); 会导入并执行 config.php 文件中的代码。
+
+require(): 类似于 include()，但如果文件不存在，则会产生致命错误。
+
+include_once(), require_once(): 与 include 和 require 类似，但只导入文件一次。
+
+fopen(): 打开一个文件或 URL(而不执行)。例如：$file = fopen(&quot;test.txt&quot;, &quot;r&quot;); 会以只读模式打开 test.txt。
+
+file_get_contents(): 读取文件的全部内容到一个字符串。例如：$content = file_get_contents(&quot;test.txt&quot;);
+
+file_put_contents(): 将一个字符串写入文件。例如：file_put_contents(&quot;test.txt&quot;, &quot;Hello World!&quot;);
+</code></pre>
+<p>代码执行函数：</p>
+<pre><code>eval(): 执行字符串中的 PHP 代码。例如：eval(&#39;$x = 5;&#39;); 会设置变量 $x 的值为 5。
+
+assert(): 用于调试，检查一个条件是否为 true。
+
+system(), shell_exec(), exec(), passthru(): 执行外部程序或系统命令。例如：system(&quot;ls&quot;); 会执行 ls 命令并显示输出。
+</code></pre>
+<p>反序列化函数：</p>
+<pre><code>unserialize(): 将一个已序列化的字符串转换回 PHP 的值。例如：$array = unserialize($serializedStr); 可以将一个序列化的数组字符串转换为数组。
+</code></pre>
+<p>数据库操作函数：</p>
+<pre><code>mysql_query(), mysqli_query(): 发送一个 MySQL 查询。例如：$result = mysql_query(&quot;SELECT * FROM users&quot;);
+</code></pre>
+<p>其他函数：</p>
+<pre><code>preg_replace(): 执行正则表达式搜索和替换。例如：$newStr = preg_replace(&quot;/apple/i&quot;, &quot;orange&quot;, $str); 会将 $str 中的 &quot;apple&quot; 替换为 &quot;orange&quot;。
+
+create_function(): 创建匿名的 lambda 函数。例如：$func = create_function(&#39;$x&#39;, &#39;return $x + 1;&#39;);
+
+preg_match(&#39;/PHP/&#39;, $str)字符串匹配
+
+cat 路径 阅读文件
+</code></pre>
+<h2 id="PHP命令执行"><a href="#PHP命令执行" class="headerlink" title="PHP命令执行"></a>PHP命令执行</h2><h3 id="一-命令执行函数介绍-怎么运行-运行条件-参数-重点-能否回显-重点"><a href="#一-命令执行函数介绍-怎么运行-运行条件-参数-重点-能否回显-重点" class="headerlink" title="一 命令执行函数介绍(怎么运行,运行条件,参数(重点),能否回显(重点))"></a>一 命令执行函数介绍(怎么运行,运行条件,参数(重点),能否回显(重点))</h3><p>(相似函数:1,3;2,4,5;6,7)<br>1.system函数(执行命令并体现返回值)<br>system(string $command,int &amp;$return_var &#x3D;?(该参数可选))<br>command:执行command参数所指定的命令，并且输出执行结果(的所有行).<br>如果提供return_var参数，则外部命令执行后的返回状态(1&#x2F;0等)将会被设置到此变量中。</p>
+<p>2.exec函数(执行指令并体现执行的输出和返回值(不直接打印))<br>exec(string $command,array &amp;$output &#x3D;?(可选),int &amp;$return var&#x3D;?(可选))<br>command参数:要执行的命令。注意:单独使用时只有最后一行结果返回并且打印，其他的行不会回显<br>output 参数:用命令执行的输出填充此数组,每行输出填充数组中的一个元素。即逐行填充数组。<br>return_var参数:同上 表示返回值.<br>后两个参数可以借用print_r输出结果.<br>exec(ls);<br>print_r(output);<br>即可显示ls的输出结果</p>
+<p>3.passthru函数(执行命令并输出二进制数据.在安全渗透测试中与system无差别.)<br>passthru(string $command, int &amp;$return_var &#x3D;?)<br>command参数：执行的命令，并且输出执行结果(的所有行)。<br>输出二进制数据，并且需要直接传送到浏览器。</p>
+<p>4.shell_exec函数(执行命令,返回命令的输出(为值但不直接打印))<br>shell_exec(string cmd)<br>cmd参数：要执行的命令。<br>环境执行命令，并且将完整的输出以字符串的方式返回。<br>借用echo、print等输出结果<br>echo shell_exec(cmd)</p>
+<p>5.&#96;&#96;函数<br>与shell_exec功能相同,这里不赘述.</p>
+<p>6.popen函数(执行命令,返回值特殊)<br>popen(string $command, string $mode)<br>command参数：要执行的命令。<br>mode参数：模式。r表示阅读，w表示写入。<br>popen函数返回值是一个写入的文档,遵循fgets获取内容→print_r输出内容<br>a &#x3D; popen(“ls”,’r’);<br>$s&#x3D;fgets($a);<br>print_r($s);<br>才可以把内容输出</p>
+<p>7.proc_open函数(执行命令,返回值特殊)<br>proc_open($command,$descriptor_spec,$pipes,<br>$cwd,$env_vars,$options)<br>一般只修改command参数<br>不直接回显</p>
+<p>8.pcntl_ехес(使用前需安装模块)<br>pcntl_exec(string $path, array $args &#x3D;?,array<br>$envs &#x3D;?)<br>path必须时可执行二进制文件路径或一个在文<br>件第一行指定了一个可执行文件路径标头的<br>脚本(比如文件第一行是#!&#x2F;usr&#x2F;local&#x2F;bin&#x2F;perl<br>的perl脚本）。<br>args是一个要传递给程序的参数的字符串数组。<br>envs是一个要传递给程序作为环境变量的字符<br>串数组。这个数组是key&#x3D;&gt;value格式的，key<br>代表要传递的环境变量的名称，value代表该<br>环境变量值。<br>在当前进程空间执行指定程序。</p>
+<h3 id="二-RCE-Level0-8-WP"><a href="#二-RCE-Level0-8-WP" class="headerlink" title="二 RCE Level0-8 WP"></a>二 RCE Level0-8 WP</h3><p>0 进入界面即得flag<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a91b84dde.png" alt="这是图片" title="Magic Gardens"><br>1 post修改如图变量<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a91b67395.png" alt="这是图片" title="Magic Gardens"><br>2 先用get改action为’r’,获得随机的函数,再改成submit并用该函数的正确语法填充content,提交即得<br>flag<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a91b50f10.png" alt="这是图片" title="Magic Gardens"><br>3 post修改如图变量<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a91b4258c.png" alt="这是图片" title="Magic Gardens"><br>4 输ip加分号使得两个命令先后运行,获得flag<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a91b6c54f.png" alt="这是图片" title="Magic Gardens"><br>5 get修改如图变量<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a9246543c.png" alt="这是图片" title="Magic Gardens"><br>6 用八进制避开字符检测键入命令,先找到flag的路径,再获得flag<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a92570e4f.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a92609a92.png" alt="这是图片" title="Magic Gardens"><br>7 空格符如图代替 其余同第六题 抓住检测的字符是什么以尝试替换<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a92660e75.png" alt="这是图片" title="Magic Gardens"><br>8 get修改a变量 后加分号屏蔽代码中的屏蔽<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a926bdec7.png" alt="这是图片" title="Magic Gardens"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/01/21/%E5%BA%8F%E7%AB%A0-%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="legend1440">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拂云观 · legend1440">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/01/21/%E5%BA%8F%E7%AB%A0-%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">序章-工具的安装与使用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-01-21 01:16:16 / 修改时间：01:18:05" itemprop="dateCreated datePublished" datetime="2026-01-21T01:16:16+08:00">2026-01-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><h3 id="1-浏览器开发者工具F12-浏览器自带无需安装"><a href="#1-浏览器开发者工具F12-浏览器自带无需安装" class="headerlink" title="1.浏览器开发者工具F12(浏览器自带无需安装)"></a>1.浏览器开发者工具F12(浏览器自带无需安装)</h3><p><img src="https://youke1.picui.cn/s1/2025/10/26/68fe369827833.png" alt="这是图片" title="Magic Gardens"></p>
+<h3 id="2-Hackbar安装"><a href="#2-Hackbar安装" class="headerlink" title="2.Hackbar安装"></a>2.Hackbar安装</h3><p>在火狐中找到附加组件管理器,搜索本组件并进入安装.<br><img src="https://youke1.picui.cn/s1/2025/10/26/68fe37cae91e4.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/26/68fe387e408ca.png" alt="这是图片" title="Magic Gardens"></p>
+<h3 id="3-Burp-Suite安装"><a href="#3-Burp-Suite安装" class="headerlink" title="3.Burp Suite安装"></a>3.Burp Suite安装</h3><p>这是安装和破解的完成图<br><img src="https://youke1.picui.cn/s1/2025/10/26/68fe456315937.png" alt="这是图片" title="Magic Gardens"></p>
+<h3 id="4-AI使用"><a href="#4-AI使用" class="headerlink" title="4.AI使用"></a>4.AI使用</h3><p>详见下文 AI写脚本</p>
+<h3 id="5-攻防世界"><a href="#5-攻防世界" class="headerlink" title="5.攻防世界"></a>5.攻防世界</h3><p>第一题 F12获取即可<br><img src="https://youke1.picui.cn/s1/2025/10/26/68fe3c58db256.png" alt="这是图片" title="Magic Gardens"><br>第二题<br>先在url中添加相应的参数<br><img src="https://youke1.picui.cn/s1/2025/10/27/68fe472a7a61a.png" alt="这是图片" title="Magic Gardens"><br>再使用开发者工具-HackBar输入地址与参数,点execute即可<br><img src="https://youke1.picui.cn/s1/2025/10/27/68fe481c2215a.png" alt="这是图片" title="Magic Gardens"></p>
+<h3 id="6-AI写脚本"><a href="#6-AI写脚本" class="headerlink" title="6.AI写脚本"></a>6.AI写脚本</h3><p><img src="https://youke1.picui.cn/s1/2025/10/26/68fe3e6171208.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/26/68fe3f1c876d8.png" alt="这是图片" title="Magic Gardens"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/01/18/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2328,511 +2563,11 @@ highlight_file(__FILE__);
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2025/10/29/%E7%AC%AC%E4%BA%8C%E7%AB%A0-RCE%E4%B8%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="legend1440">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拂云观 · legend1440">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/10/29/%E7%AC%AC%E4%BA%8C%E7%AB%A0-RCE%E4%B8%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="post-title-link" itemprop="url">第二章-RCE与正则表达式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-10-29 10:00:00" itemprop="dateCreated datePublished" datetime="2025-10-29T10:00:00+08:00">2025-10-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-21 01:13:03" itemprop="dateModified" datetime="2026-01-21T01:13:03+08:00">2026-01-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="PHP-命令执行-续上周的学习"><a href="#PHP-命令执行-续上周的学习" class="headerlink" title="PHP 命令执行(续上周的学习)"></a><strong>PHP 命令执行(续上周的学习)</strong></h1><p><em><em>个人的所有作业中,带</em>的小点为做题补充知识点</em></p>
-<h2 id="二-替换绕过函数过滤-即使用特定的函数或者不被过滤的函数执行命令"><a href="#二-替换绕过函数过滤-即使用特定的函数或者不被过滤的函数执行命令" class="headerlink" title="二 替换绕过函数过滤(即使用特定的函数或者不被过滤的函数执行命令)"></a>二 替换绕过函数过滤(即使用特定的函数或者不被过滤的函数执行命令)</h2><p><strong>1.记住常见的可执行函数</strong></p>
-<p><img src="/images/YTOjbBuyboX4EFxc64EcBL17n7c.png"></p>
-<p><strong>2.LD_PRELOAD(修改库文件)绕过(用于面对禁用函数者过多的情况)</strong></p>
-<p>它可以影响程序的运行时的链接,允许你定义在程序运行前优先加载的动态链接库。</p>
-<p>因而可以向库文件种中注入恶意程序</p>
-<p>putenv(“LD_PRELOAD&#x3D;文件路径”) 这个语句就代表加载动态链接库.</p>
-<p>我们需要的就是修改动态链接库中代表某个 php 函数的动作.</p>
-<p>再运行这个函数时 便可以运行恶意程序.</p>
-<p>下面以经典的修改库文件函数 mail 为例叙述具体流程:</p>
-<p>(1)在修改库文件时，先要找出 mail 函数调用了子进程的什么内容(子进程的运行则基于一些以 C 语言为基础的函数).</p>
-<p>我们在名为 demo.php 程序中写入 mail 函数并运行</p>
-<p>(2)再从 cmd 上输入 strace -o 1.txt -f php demo.php(修改的是 mail 函数普适执行的程序,因此在控制台下进行)</p>
-<p>把 demo.php 执行的动作，以文本方式放在 1.txt</p>
-<p>(3)再用#cat 1.txt | grep execve 获取 1.txt 的内容,用后面的参数独一地检查调用了哪些子进程</p>
-<p>发现在调用的”sendmail”子进程可能代表的是 mail 函数,并且看到了 sendmail 的路径</p>
-<p>(4)最后使用 readelf -Ws&#x2F;usr&#x2F;sbin&#x2F;sendmail</p>
-<p>查看 sendmail 调用了哪些函数</p>
-<p>找到一个明显可以修改定义的函数 getuid()</p>
-<p>(5)用#vim demo2.c 手写一个 getuid()的定义,再用#gcc -shared -fPIC demo2.c-O demo2.so</p>
-<p>将带有命令的 c 文件编译成为.so 文件，生成动态链接库文件并用上文所提的 putenv 手动添加库文件</p>
-<p>(注意:库文件一般以.so 为后缀,但内容为 C 代码)</p>
-<p>这样就改变了 mail 函数的进程.</p>
-<p>综上 就有一些绕过条件</p>
-<p>第一是能够上传自己的.so 文件；</p>
-<p>第二是能够控制环境变量的值（设置 LD_PRELOAD 变量），比如 putenv 函数并且未被禁止；</p>
-<p>(实际上 可使用蚁剑上的插件直接绕过函数过滤[disable_function]),让过滤的函数有用.上文是为了解释原理.)</p>
-<h2 id="三-操作系统连接符"><a href="#三-操作系统连接符" class="headerlink" title="三 操作系统连接符"></a>三 操作系统连接符</h2><p>在 php 命令执行函数中,字符串代表的命令是可用的,字符串中的链接符亦然有用.</p>
-<p>所以若出现 system(“ls”.$_GET(a))</p>
-<p>可以在 a 前加操作系统链接符以执行 ls 和 a 代表的命令.</p>
-<p>&amp;&amp;（逻辑与运算符）: 只有当第一个命令 cmd_1 执行成功（返回值为 0）时，才会执行第二个命令 cmd_2。例:  mkdir test &amp;&amp; cd test</p>
-<p>||（逻辑或运算符）: 只有当第一个命令 cmd_1 执行失败（返回值不为 0）时，才会执行第二个命令 cmd_2。例:  cd nonexistent_directory || echo “Directory not found”</p>
-<p>&amp;（后台运行符）: 将命令 cmd_1 放到后台执行，Shell 立即执行 cmd_2，两个命令并行执行。例:  sleep 10 &amp; echo “This will run immediately.”</p>
-<p>;（命令分隔符,推荐）: 无论前一个命令 cmd_1 是否成功，都会执行下一个命令 cmd_2。例:  echo “Hello” ; echo “World”</p>
-<h2 id="四-空格过滤绕过"><a href="#四-空格过滤绕过" class="headerlink" title="四 空格过滤绕过"></a>四 空格过滤绕过</h2><p><strong>1.preg_replace 函数</strong></p>
-<p>preg_replace(“M”,”N”,$a)</p>
-<p>将 $a 变量中##中间的 M 字符(串)或者字符串替换为 N 字符</p>
-<p>并且返回值为替换后的 $a.</p>
-<p>注意 如果要替换空格 M 要换成# #</p>
-<p><strong>2.用大括号的形式绕过空格</strong></p>
-<p>cmd&#x3D;{ls,-l},逗号代表空格,也可以正常执行 ls -l.</p>
-<p><strong>3.IFS(内部字段分隔符)代替空格；</strong></p>
-<p>$IFS ${IFS}(推荐) $IFS$9 都可以代替空格.</p>
-<p><strong>4.UR 编码 09%</strong></p>
-<p>09% 代表 tab 键表示的空格,可以绕过正常的空格</p>
-<h2 id="五-文件名过滤绕过"><a href="#五-文件名过滤绕过" class="headerlink" title="五 文件名过滤绕过"></a>五 文件名过滤绕过</h2><p><strong>0.如果是换命令 换成其他的能够执行命令的函数</strong></p>
-<p><strong>1.通配符?绕过</strong></p>
-<p>fl?g 代表?位置的字符不确定 可以绕过 flag 一整个字符串的过滤.</p>
-<p><strong>2.通配符*绕过</strong></p>
-<p>fl* *ag *可以代表任何字符串</p>
-<p>cat *可以查看全部的文件</p>
-<p><strong>3.在匹配字符串的时候添加””或者’’</strong></p>
-<p>fl’’ag 也可以绕过 flag 一整个字符串的过滤</p>
-<p>*<em>4.用转义字符*</em></p>
-<p>\在过滤字符的时候会被包含 但是执行指令的时候不会</p>
-<p>注意+字符可能会有其他含义 要规避</p>
-<p><strong>5.用 $+ 数字&#x2F;@&#x2F;</strong>*</p>
-<p>代表的为空 相当于单引号或双引号.</p>
-<p><strong>6.内联执行</strong></p>
-<p>自定义字符串，再拼接起来.</p>
-<p>a&#x3D;f;d&#x3D;ag;c&#x3D;l;cat $a$c$d.txt</p>
-<p><strong>7.在环境变量中提取字符</strong></p>
-<p>已知环境变量 PATH 为一个路径,且第五个字符为 l</p>
-<p>#echo f${PATH:5:1}</p>
-<p>可以使用环境变量 PATH 里的第五个字符，（从 0 开始计数，l 为第五个字符）</p>
-<p>来显示 1 个字符；</p>
-<p>fl</p>
-<h2 id="六-常见文件读取指令绕过-通常为过滤-cat"><a href="#六-常见文件读取指令绕过-通常为过滤-cat" class="headerlink" title="六 常见文件读取指令绕过(通常为过滤 cat)"></a>六 常见文件读取指令绕过(通常为过滤 cat)</h2><p>1.tac 反向显示 将倒数第一行显示为第一行 以此类推 但是同一行中的方向不变</p>
-<p>2.more 按页显示 敲空格往后翻页</p>
-<p>3.less 与 more 同理</p>
-<p>4.tail 查看末尾若干行</p>
-<p>5.nl 显示的时候顺便显示行号</p>
-<p>6.od&#x2F;xxd 以二进制形式读取</p>
-<p>7.sort 用于排序文件 效果与 cat 也相似.</p>
-<p>8.uniq:报告或删除文件中重复的行 与 cat 效果相似.</p>
-<p>9.执行错误的 php 文件(通常只有 flag 这一行的 php 文件是错误的.),并使用 file -f 报错出具体的内容.</p>
-<p>例如 passthru(“file -f flag.php”); flag.php 没有办法执行 因此会报错出这个程序的具体内容 其中可能包含 flag</p>
-<p>10.grep：在文本中查找指定的字符串所对应的行 并输出这一行</p>
-<p>例如 cmd&#x3D;passthru(“grep fla fla*”);</p>
-<p>从 fla*文本文件中搜索包含”fla”字符串的行.</p>
-<h2 id="七-编码绕过-对提交的命令进行编码"><a href="#七-编码绕过-对提交的命令进行编码" class="headerlink" title="七 编码绕过(对提交的命令进行编码)"></a>七 编码绕过(对提交的命令进行编码)</h2><p>(基础不足 暂时略过)</p>
-<h2 id="八-斜杠绕过"><a href="#八-斜杠绕过" class="headerlink" title="*八 斜杠绕过"></a>*八 斜杠绕过</h2><p>这种情况通常为文件路径无法输入 可以用 cd 更换工作目录</p>
-<p>再用 cat 直接加文件名进行文件输出</p>
-<h2 id="九-多个指令的执行"><a href="#九-多个指令的执行" class="headerlink" title="*九 多个指令的执行"></a>*九 多个指令的执行</h2><p>不仅可以用;还可以用 %0a(推荐,对应换行符) %0d(回车符) %0D%0A 作为多个指令的分隔同时执行多个指令.</p>
-<p>注意:回车符（%0d）本身不换行，仅光标回行首；换行符（%0a）仅光标下移一行。</p>
-<p>两者组合（%0d%0a，即 \r\n）才是「完整的换行逻辑」，也是最通用的跨场景换行格式.</p>
-<h1 id="PHP-函数安全"><a href="#PHP-函数安全" class="headerlink" title="PHP 函数安全"></a>PHP 函数安全</h1><p>在 PHP 中，除了上周学的⼏个命令执⾏函数，还有⼀些危险函数存在⼀些攻击点，也是 ctf ⽐较常⻅的出题点.</p>
-<h2 id="1-is-numeric-绕过"><a href="#1-is-numeric-绕过" class="headerlink" title="1.is_numeric 绕过"></a>1.is_numeric 绕过</h2><p>作用：检测变量是否是数字或数字字符串 返回值为 bool。</p>
-<p>e.g.</p>
-<p>$a &#x3D; $_GET[‘a’];</p>
-<p>if (is_numeric($a)) {</p>
-<pre><code>exit();
-</code></pre>
-<p>} elseif ($a &#x3D;&#x3D; 404) {</p>
-<pre><code>echo &quot;flag&quot;;
-</code></pre>
-<p>}</p>
-<p>我们要将$a用get方式更改为404 但该函数能够检测变量是数字</p>
-<p>通过在数字前面或者后面加上%0a %0b %0c %0d %09等文件名过滤绕过的方法绕过</p>
-<h2 id="2-PHP精度"><a href="#2-PHP精度" class="headerlink" title="2.PHP精度"></a>2.PHP精度</h2><p>可使用IEEE 754 标准在线转换网站：<a target="_blank" rel="noopener" href="https://tooltt.com/floatconverter/">https://tooltt.com/floatconverter/</a></p>
-<p>进行进制转换.</p>
-<p>(注:基本上所有语言双精度格式都采用 IEEE 754)</p>
-<p>用精度漏洞可用x.99999999999999999来绕过对x+1数字的限制.</p>
-<h2 id="3-比较和类型转换漏洞"><a href="#3-比较和类型转换漏洞" class="headerlink" title="3.比较和类型转换漏洞"></a>3.比较和类型转换漏洞</h2><p>PHP 包含 松散 和 严格 比较</p>
-<p>松散比较（&#x3D;&#x3D;）比较值，但不比较类型，严格比较（&#x3D;&#x3D;&#x3D;）即比较值也比较类型</p>
-<p>echo (123 &#x3D;&#x3D; “123”)?1:0;</p>
-<p>返回:1</p>
-<p>echo (123 &#x3D;&#x3D;&#x3D; “123”)?1:0;</p>
-<p>返回:0</p>
-<p>注： 字符串转成数字后会是 0,而不是对应的ASCII码值.</p>
-<p>var_dump(0 &#x3D;&#x3D; “a”);</p>
-<p>返回： 1（0 &amp; 0 自然为1）</p>
-<p>$id &#x3D; intval(“12312a”);</p>
-<p>var_dump($id);</p>
-<p>输出：12312</p>
-<p>在 PHP 中类型转换有一定的缺陷，如果一个 字符串 要转成数值类型，首先对字符串进行一个判断，</p>
-<p>如果字符串包含 e 、. 、E 则会作为 float 来取值，否则则为 int ，上述例子由于 a 没有包含任何东西，</p>
-<p>所以被当作 int 来处理了，</p>
-<p>这里要说明的是，如果字符串起始部分为 数值 ，则采用 起始的数值 ，否则一律为 0</p>
-<p>需要注意的是科学计数法和十六进制也会被识别出来</p>
-<p>var_dump(100 &#x3D;&#x3D; “1e2”); #采用科学计数法</p>
-<p>返回：true</p>
-<p>var_dump(23333 &#x3D;&#x3D; “0x5b25”); #采用十六进制</p>
-<p>返回：true</p>
-<p>在 PHP8.0.0 之前（最新版本已修复），如果 字符串 与 数字 或者 数字字符串 进行比较，</p>
-<p>则会先进行 类型转换 再进行比较。</p>
-<p>最新版本直接识别为string string&#x3D;&#x3D;0会返回false了.</p>
-<h2 id="4-PHP-弱类型比较"><a href="#4-PHP-弱类型比较" class="headerlink" title="4.PHP 弱类型比较"></a>4.PHP 弱类型比较</h2><p>判断原始变量类型的函数(注意 PHP的变量不存在先声明后定义 一定要定义)</p>
-<h4 id="1-gettype-var-返回变量的「原始类型字符串」"><a href="#1-gettype-var-返回变量的「原始类型字符串」" class="headerlink" title="(1)gettype($var)返回变量的「原始类型字符串」"></a><strong>(1)gettype($var)返回变量的「原始类型字符串」</strong></h4><p>直接告诉你变量是什么类型（如 int、string、null 等）。</p>
-<p>(必须传已定义的变量)</p>
-<h4 id="2-empty-var-——-“空值检测器”"><a href="#2-empty-var-——-“空值检测器”" class="headerlink" title="(2)empty($var) —— “空值检测器”"></a><strong>(2)empty($var) —— “空值检测器”</strong></h4><p>判断变量是否为「空值」（宽松判断，不区分类型，只要是 “无意义” 的值都算空）。</p>
-<p>以下值会被判定为「空」，返回 true，其余返回 false：</p>
-<p>未定义的变量（$var 没声明）；</p>
-<p>null（显式赋值为 null）；</p>
-<p>布尔值 false；</p>
-<p>数值 0、0.0（整数 0、浮点数 0）；</p>
-<p>空字符串 “”、字符串 “0”（注意：仅 “0” 算空， “00”、”false” 不算）；</p>
-<p>空数组 []（count($var) &#x3D;&#x3D; 0）；</p>
-<p>(可以传未定义的变量)</p>
-<h4 id="3-is-null-var-——-“严格-null-判断器”"><a href="#3-is-null-var-——-“严格-null-判断器”" class="headerlink" title="(3)is_null($var) —— “严格 null 判断器”"></a><strong>(3)is_null($var) —— “严格 null 判断器”</strong></h4><p>核心作用：仅判断变量是否为「严格的 null」（比 empty 严格 10 倍，只认 null）。</p>
-<p>(必须传已定义的变量)</p>
-<h4 id="4-isset-var-——-“变量存在检测器”"><a href="#4-isset-var-——-“变量存在检测器”" class="headerlink" title="(4)isset($var) —— “变量存在检测器”"></a><strong>(4)isset($var) —— “变量存在检测器”</strong></h4><p>判断变量「是否已定义」且「值不为 null」（重点：检测 “存在性”，而非 “空值”）。</p>
-<p>已定义但值为 null → 返回 false；</p>
-<p>已定义且值不为 null → 返回 true（即使值是 0、””、[] 等空值也返回 true）；</p>
-<p>支持多变量判断：isset($a, $b, $c) → 所有变量都存在且非 null 才返回 true。</p>
-<p>(可以传未定义的变量,返回 false（不报错）；)</p>
-<h4 id="5-if-x-——-布尔值隐式转换（“真值检测器”）"><a href="#5-if-x-——-布尔值隐式转换（“真值检测器”）" class="headerlink" title="(5)if($x) —— 布尔值隐式转换（“真值检测器”）"></a><strong>(5)if($x) —— 布尔值隐式转换（“真值检测器”）</strong></h4><p>将变量 $x 隐式转换为布尔值 true&#x2F;false，判断变量是否为「真值」</p>
-<p>（逻辑和 empty() 几乎相反，但有细微差异）。</p>
-<p>以下值会被转为 false（和 empty() 判定为 “空” 的规则一致）：</p>
-<p>null、false、0、0.0、””、”0”、[]；</p>
-<p>其余值（如 “ “、1、”abc”、[“a”] 等）都会转为 true。</p>
-<p>(必须传已定义的变量)</p>
-<h4 id="6-弱类型比较表格"><a href="#6-弱类型比较表格" class="headerlink" title="(6)弱类型比较表格"></a><strong>(6)弱类型比较表格</strong></h4><p><a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/types.comparisons.php#types.comparisions-loose">https://www.php.net/manual/zh/types.comparisons.php#types.comparisions-loose</a></p>
-<p>(最重要的:0&#x3D;&#x3D;Null true)</p>
-<h4 id="7-strcmp函数"><a href="#7-strcmp函数" class="headerlink" title="(7)strcmp函数"></a><strong>(7)strcmp函数</strong></h4><p>描述：strcmp(str1, str2)</p>
-<p>如果 str1 小于 str2 返回 &lt; 0； 如果 str1 大于 str2 返回 &gt; 0；如果两者相等，返回 0。</p>
-<p>(注： 在 php5.0 以前，strcmp 返回的是 str2 第一位字母转成 ascii 后减去 str1 第一位字母。)</p>
-<p>当 strcmp 比较出错后，会返回 null，null 则为 0，举个例子</p>
-<p>$flag &#x3D; ‘flag{123}’;</p>
-<p>if (strcmp($flag, $_GET[‘str’]) &#x3D;&#x3D; 0) {</p>
-<pre><code>echo $flag;
-</code></pre>
-<p>}else{</p>
-<pre><code>echo &quot;Out!&quot;;
-</code></pre>
-<p>}</p>
-<p>为了使 strcmp 比较出错，可以传入一个数组</p>
-<p>非空数组和变量无法正常比较.</p>
-<h4 id="8-is-numeric函数"><a href="#8-is-numeric函数" class="headerlink" title="(8)is_numeric函数"></a><strong>(8)is_numeric函数</strong></h4><p>is_numeric() 用于检测数值是否为数值，如果遇到这个函数，可以用上述转换类型的特性</p>
-<p>（版本小于 8.0.0），如果传入的是字符串，会先将字符串转换成数值:</p>
-<p>(在 PHP8.0.0 之前（最新版本已修复），如果 字符串 与 数字 或者 数字字符串 进行比较，</p>
-<p>则会先进行 类型转换 再进行比较。</p>
-<p>最新版本直接识别为string string&#x3D;&#x3D;0会返回false了.)</p>
-<p>$flag &#x3D; ‘flag{111}’;</p>
-<p>$id &#x3D; $_GET[‘id’];</p>
-<p>if(is_numeric($id) &gt; 0){</p>
-<pre><code>echo &#39;Out!&#39;;
-</code></pre>
-<p>}else{</p>
-<pre><code>if ($id &gt; 233) {
-    echo $flag;
-
-}
-</code></pre>
-<p>}</p>
-<p>Payload: ?id&#x3D;2333,</p>
-<p>Payload: ?id&#x3D;2333%00</p>
-<p>Payload: ?id&#x3D;2333A</p>
-<h4 id="9-is-switch函数"><a href="#9-is-switch函数" class="headerlink" title="(9)is_switch函数"></a><strong>(9)is_switch函数</strong></h4><p>is_switch()¶</p>
-<p>这个方法和类型转换一样大同小异，case 会自动将字符转换成数值。这里来个例子就知道了</p>
-<p>$a &#x3D; “233a”; # 注意这里</p>
-<p>$flag &#x3D; “flag{Give you FLAG}”;</p>
-<p>switch ($a) {<br>    case 1:<br>        echo “No Flag”;<br>        break;<br>    case 2:<br>        echo “No Flag”;<br>        break;<br>    case 233:<br>        echo $flag;</p>
-<pre><code>    break;
-
-default:
-
-    $a = 233;
-
-    echo &quot;Haha...&quot;;
-</code></pre>
-<p>}</p>
-<p>输出：flag{Give you FLAG}</p>
-<h4 id="10-sha1-函数"><a href="#10-sha1-函数" class="headerlink" title="(10)sha1()函数"></a><strong>(10)sha1()函数</strong></h4><p>sha1() 是 PHP 中用于计算字符串 SHA-1 哈希值 的内置函数，属于哈希算法的一种，</p>
-<p>核心用途是将任意长度的字符串转换为固定长度（40 个字符）的 16 进制字符串</p>
-<p>sha1 的参数不能为数组，传入数组会返回 NULL，所以先传一个数组使得 sha1 函数报错，</p>
-<p>接着再左右两边传入不一样的内容，两边条件自然 &#x3D;1，相等即可绕过.</p>
-<p>$flag &#x3D; “flag{Chain!}”;</p>
-<p>$get &#x3D; $_GET[‘get’];</p>
-<p>$teg &#x3D; $_GET[‘teg’];</p>
-<p>if ($get !&#x3D; $teg &amp;&amp; sha1($get) &#x3D;&#x3D;&#x3D; sha1($teg)) {</p>
-<p>#if ($get !&#x3D; $teg &amp;&amp; sha1($get) &#x3D;&#x3D; sha1($teg)) {</p>
-<pre><code>echo $flag;
-</code></pre>
-<p>}else{</p>
-<pre><code>echo &#39;Out!&#39;;
-</code></pre>
-<p>}</p>
-<p>Payload: ?get[]&#x3D;&amp;teg[]&#x3D;1</p>
-<h3 id="5-md5哈希值问题"><a href="#5-md5哈希值问题" class="headerlink" title="5.md5哈希值问题"></a><strong>5.md5哈希值问题</strong></h3><p>描述：md5(字符串,字符串,var2)</p>
-<p>计算 字符串 的 MD5 散列值，如果 var2 为真将返回 16 字符长度的原始二进制格式</p>
-<p>md5 在处理哈希字符串的时候，如果 md5 编码后的哈希值时 0e （科学计数法）开头的，都一律解释为 0，</p>
-<p>所以当两个不同的值经过哈希编码后他们的值都是以 0e 开头的，则每个值都是 0</p>
-<p>(他们用松散等于是相等的 但严格等于未必!)</p>
-<p>var_dump(0e912 &#x3D;&#x3D; 0e112?1:0);</p>
-<p>输出：1</p>
-<p>常见 md5 以 0e 开头的值</p>
-<p>数值型</p>
-<p>240610708 0e462097431906509019562988736854 返回：0</p>
-<p>314282422 0e990995504821699494520356953734 返回：0</p>
-<p>571579406 0e972379832854295224118025748221 返回：0</p>
-<p>903251147 0e174510503823932942361353209384 返回：0</p>
-<p>字母型</p>
-<p>QLTHNDT 0e405967825401955372549139051580 返回：0</p>
-<p>QNKCDZO 0e830400451993494058024219903391 返回：0</p>
-<p>EEIZDOI 0e782601363539291779881938479162 返回：0</p>
-<p>TUFEPMC 0e839407194569345277863905212547 返回：0</p>
-<h4 id="弱类型比较的处理方法"><a href="#弱类型比较的处理方法" class="headerlink" title="&#x3D;&#x3D;弱类型比较的处理方法"></a><strong>&#x3D;&#x3D;弱类型比较的处理方法</strong></h4><p>$flag &#x3D; “flag{THIS_IS_REAL_FLAG}”;</p>
-<p>$v1 &#x3D; $_GET[‘gat’];</p>
-<p>$v2 &#x3D; $_GET[‘tag’];</p>
-<p>if ($v1 !&#x3D; $v2 &amp;&amp; md5($v1) &#x3D;&#x3D; md5($v2)) {</p>
-<pre><code>echo $flag;
-</code></pre>
-<p>}else{</p>
-<pre><code>echo &quot;Out!&quot;;
-</code></pre>
-<p>}</p>
-<p>v1 和 v2 是两个参数变量，首先 v1 不等于 v2，意思就是两个值必须不相同，</p>
-<p>其次 md5 后的 v1 和 md5 后的 v2 必须相同，这时候就可以使用上述 0e 方法构造 Payload，</p>
-<p>只需找出哪个值经过 md5 编码后以 0e 开头即可</p>
-<p>Payload: ?gat&#x3D;240610708&amp;tag&#x3D;314282422</p>
-<h4 id="数组比较法绕过-强比较"><a href="#数组比较法绕过-强比较" class="headerlink" title="数组比较法绕过&#x3D;&#x3D;&#x3D;强比较"></a><strong>数组比较法绕过&#x3D;&#x3D;&#x3D;强比较</strong></h4><p>如果遇到下列程序</p>
-<p>$flag &#x3D; “flag{THIS_IS_REAL_FLAG}”;</p>
-<p>$str1 &#x3D; $_GET[‘gat’];</p>
-<p>$str2 &#x3D; $_GET[‘tag’];</p>
-<p>if (md5($str1) &#x3D;&#x3D;&#x3D; md5($str2)) {</p>
-<pre><code>echo $flag;
-</code></pre>
-<p>}</p>
-<p>用上述 0e 方法自然是不可行的（注意：&#x3D;&#x3D;&#x3D;），这时候就得使用数组来绕过了</p>
-<p>如果传入一个数组的值，会报出错误（md5 只能使用字符串），报错后就相当于绕过&#x3D;&#x3D;&#x3D;这个条件了</p>
-<p>(注： 在 PHP 8.0.0 时，该方法行不通了)</p>
-<h4 id="md5-碰撞问题"><a href="#md5-碰撞问题" class="headerlink" title="md5 碰撞问题"></a><strong>md5 碰撞问题</strong></h4><p><strong>(即md5相同而内容完全不一样的字符串)</strong></p>
-<p>如果遇到不能传入数组，只能传入字符串的时候，如下例</p>
-<p>$flag &#x3D; “flag{THIS_IS_REAL_FLAG}”;</p>
-<p>$str1 &#x3D; $_GET[“gat”];</p>
-<p>$str2 &#x3D; $_GET[“tag”];</p>
-<p>if((string)$str1 !&#x3D;&#x3D; (string)$str2 &amp;&amp; md5($str1)&#x3D;&#x3D;&#x3D;md5($str2)){</p>
-<pre><code>echo &quot;flag{THIS_IS_REAL_FLAG}&quot;;
-</code></pre>
-<p>}else{</p>
-<pre><code>echo &quot;Out!&quot;;
-</code></pre>
-<p>}</p>
-<p>这时候就得需要 md5 碰撞((string)转化让第二个条件&#x3D;&#x3D;&#x3D;无法返回null,不然也可以用第二点的数组绕过)，</p>
-<p>上面判断条件的意思是，str1 和 str2 内容必须不同，但是 md5 必须相同。</p>
-<p>这里可以使用工具构造</p>
-<p>240610708</p>
-<p>314282422</p>
-<p>存在MD5碰撞漏洞</p>
-<h3 id="6-变量覆盖漏洞"><a href="#6-变量覆盖漏洞" class="headerlink" title="6.变量覆盖漏洞"></a><strong>6.变量覆盖漏洞</strong></h3><p>变量如果未被初始化，且能够被用户所控制，那么很可能会导致安全问题，前提是环境开启了</p>
-<p>register_globals&#x3D;ON</p>
-<p>如果传入一个参数 ?id&#x3D;1，并且这个参数把原有的变量值给覆盖掉了则叫做 变量覆盖漏洞</p>
-<p>例如</p>
-<p>$flag &#x3D; “flag{Chain!}”;</p>
-<p>$a &#x3D; “A”;</p>
-<p>$b &#x3D; “B”;</p>
-<p>echo “$a” . “\n”;</p>
-<p>echo “$b” . “\n”;</p>
-<p>$a &#x3D; $_GET[‘get’];  # $a 变量被我们传入的get给覆盖掉了</p>
-<p>echo $a . “\n”;</p>
-<p>echo $b . “\n”;</p>
-<p>传入参数：?get&#x3D;Genshin，返回</p>
-<p>a:A</p>
-<p>b:B</p>
-<p>a:Genshin</p>
-<p>b:B</p>
-<p>漏洞产生原因大致有:</p>
-<p>register_globals（全局变量）为 On</p>
-<p>$$ 使用不恰当<br>extract() 函数使用不当<br>parse_str() 使用不当<br>import_request_variables() 使用不当</p>
-<p>(12.1)$$</p>
-<p>在 PHP 中，$$ 是可变变量（Variable Variables） 的语法，核心作用是：用一个变量的值作为另一个变量的名称。</p>
-<p>简单说：如果有一个变量 $a &#x3D; “name”，那么 $$a 就等价于 $name（把 $a 的值 “name” 当作了新变量的名称）。</p>
-<h4 id="extract-函数"><a href="#extract-函数" class="headerlink" title="extract()函数"></a><strong>extract()函数</strong></h4><p>描述：extract(array,flags,prefix)</p>
-<p>array：数组</p>
-<p>flags(相当于模式的选择)：</p>
-<pre><code>EXTR_OVERWRITE - 如果有冲突，覆盖已有的变量。（默认）
-
-EXTR_SKIP - 如果有冲突，不覆盖已有的变量。
-
-EXTR_PREFIX_SAME - 如果有冲突，在变量名前加上前缀 prefix。（需要第 prefix 参数）
-
-…
-</code></pre>
-<p>prefix：该参数规定了前缀。前缀和数组键名之间会自动加上一个下划线。</p>
-<p>即若数组中有”a”&#x3D;&gt;”STR”</p>
-<p>变量又存在”a”&#x3D;”STR2”</p>
-<p>则EXTR_PREFIX_SAME模式下不会把STR赋给a,而会创建一个&lt;前缀&gt;_a的变量并把值赋给他    </p>
-<p>extract 用来将变量从数组中导入到当前的符号表中，并返回成功导入到符号表中的变量数目</p>
-<p>例</p>
-<p>$a &#x3D; “Source”;</p>
-<p>$array &#x3D; array(</p>
-<pre><code>&quot;a&quot;=&gt;&quot;JP&quot;,
-
-&quot;b&quot;=&gt;&quot;RU&quot;,
-
-&quot;c&quot;=&gt;&quot;US&quot;,
-</code></pre>
-<p>);</p>
-<p>extract($array);</p>
-<p>echo “$a &#x3D; “ . $a . “<br>“; # 注意这里，a原本是有内容的</p>
-<p>echo “$b &#x3D; “ . $b . “<br>“;</p>
-<p>echo “$c &#x3D; “ . $c . “<br>“;</p>
-<p>返回</p>
-<p>$a &#x3D; JP</p>
-<p>$b &#x3D; RU</p>
-<p>$c &#x3D; US</p>
-<p>(注意:extract($_POST); 的核心意思是：将前端通过 POST 请求提交的所有数据（存储在 $_POST 关联数组中）</p>
-<p>批量转为当前作用域的 PHP 变量—— 数组的「键名」会变成变量名，数组的「键值」会变成变量值。)</p>
-<p>(假设前端通过表单 &#x2F; POST 请求发送了 3 个变量：username&#x3D;张三、age&#x3D;25、email&#x3D;<a href="mailto:&#x7a;&#104;&#x61;&#x6e;&#103;&#x73;&#x61;&#110;&#x40;&#101;&#x78;&#x61;&#109;&#x70;&#x6c;&#101;&#x2e;&#99;&#x6f;&#x6d;">zhangsan@example.com</a>，那么 PHP 接收后：</p>
-<p>$_POST 数组的结构是：[“username” &#x3D;&gt; “张三”, “age” &#x3D;&gt; 25, “email” &#x3D;&gt; “<a href="mailto:&#122;&#x68;&#97;&#110;&#103;&#115;&#97;&#x6e;&#x40;&#101;&#120;&#97;&#109;&#x70;&#x6c;&#101;&#46;&#x63;&#111;&#x6d;">zhangsan@example.com</a>“]</p>
-<p>执行 extract($_POST); 后，会自动创建 3 个变量：</p>
-<p>$username &#x3D; “张三”（键名 username → 变量名 $username，键值为值）</p>
-<p>$age &#x3D; 25（键名 age → 变量名 $age）</p>
-<p>$email &#x3D; “<a href="mailto:&#122;&#104;&#x61;&#110;&#103;&#x73;&#x61;&#110;&#x40;&#x65;&#120;&#97;&#109;&#x70;&#x6c;&#x65;&#x2e;&#99;&#111;&#x6d;">zhangsan@example.com</a>“（键名 email → 变量名 $email）</p>
-<p>之后你可以直接用 $username、$age 访问数据，无需再写 $_POST[‘username’]。)</p>
-<h4 id="parse-str-str-函数"><a href="#parse-str-str-函数" class="headerlink" title="parse_str(str)函数"></a><strong>parse_str(str)函数</strong></h4><p>描述：parse_str(str) 用于将字符串解析成多个变量(也可以为单个变量)，没有返回值\</p>
-<p>parse_str(“username&#x3D;A&amp;password&#x3D;123456”);</p>
-<p>echo “Username: “ . $username . “<br>“;</p>
-<p>echo “Password: “ . $password;</p>
-<p>输出</p>
-<p>Username: A</p>
-<p>Password: 123456</p>
-<p>原本这个函数有 array 参数的，但在 7.2 后废除了，array 变量会以数组元素的形式存入到这个数组，作为替代</p>
-<p>来到例题</p>
-<p>$UIUCTF &#x3D; “UIUCTF Hacker.”;</p>
-<p>$id &#x3D; $_GET[‘id’];</p>
-<p>@parse_str($id);</p>
-<p>if ($a[0] !&#x3D; ‘QNKCDZO’ &amp;&amp; md5($a[0]) &#x3D;&#x3D; md5(‘QNKCDZO’)) {</p>
-<pre><code>echo $flag;
-</code></pre>
-<p>}else{</p>
-<pre><code>echo &quot;Out!&quot;;
-</code></pre>
-<p>}</p>
-<p>#QNKCDZO &#x3D; 0e830400451993494058024219903391</p>
-<p>注意第四行，和前面的 md5 比较有关系，但不同的是这里加入了 parse_str 这个函数，这段代码大致意思就和上面 md5 绕过的意思一样，如果 md5 编码后的哈希值时 0e （科学计数法）开头的，都一律解释为 0，所以当两个不同的值经过哈希编码后他们的值都是以 0e 开头的，则每个值都是 0，与众不同的是我们要覆盖掉 a[0] 这个变量</p>
-<p>Payload: ?id&#x3D;a[0]&#x3D;240610708</p>
-<h4 id="register-globals环境变量问题"><a href="#register-globals环境变量问题" class="headerlink" title="register_globals环境变量问题"></a><strong>register_globals环境变量问题</strong></h4><p>register_globals 设置为 on 的时候，传递的参数会 自动注册 为全局变量。</p>
-<p>ini_set(“register_globals”, “On”);</p>
-<p>echo $a;</p>
-<h3 id="略-伪协议问题"><a href="#略-伪协议问题" class="headerlink" title="(略)伪协议问题"></a><strong>(略)伪协议问题</strong></h3><p>(基础不足，暂时略过)</p>
-<h1 id="正则表达式基本语法"><a href="#正则表达式基本语法" class="headerlink" title="正则表达式基本语法"></a>正则表达式基本语法</h1><p>正则表达式是⼀种⽤于匹配和操作⽂本的强⼤⼯具，它是由⼀系列字符和特殊字符组成的模式，⽤于 </p>
-<p>描述要匹配的⽂本模式。 </p>
-<p>正则表达式可以在⽂本中查找、替换、提取和验证特定的模式。 </p>
-<p>例如： </p>
-<p>• runoo+b，可以匹配 runoob、runooob、runoooooob 等，+ 号代表前⾯的字符必须⾄少出现⼀ </p>
-<p>次（</p>
-<p>1次或多次） </p>
-<p>• runoo<em>b，可以匹配 runob、runoob、runoooooob 等，</em> 号代表前⾯的字符可以不出现，也可 </p>
-<p>以出现⼀次或者多次（</p>
-<p>0次、或1次、或多次） </p>
-<p>• colou?r 可以匹配 color 或者 colour，? 问号代表前⾯的字符最多只可以出现⼀次（</p>
-<p>0次或1次） </p>
-<p>正则分隔符:（</p>
-<p>PHP 正则需⽤ &#x2F; 或 # 等包裹）例如&#x2F;runoo*b&#x2F; </p>
-<p>⼦表达式:不加括号的时候是前⼀个字符,加括号时是前⼀个括号内的字符 </p>
-<p>例如colo(ur)?可以匹配colo. </p>
-<h2 id="正则表达式的基本语法与应用"><a href="#正则表达式的基本语法与应用" class="headerlink" title="正则表达式的基本语法与应用"></a><strong>正则表达式的基本语法与应用</strong></h2><p>**(1)指定⼦表达式的出现次数 **</p>
-<p>除了上⾯举例中的?,*和+外,还有⼀些⽅式可以指定⼦表达式的出现次数. </p>
-<p>ab{2}c 表⽰指定ac之中出现b的次数为2次 </p>
-<p>ab{2,6}c 表⽰指定ac之中出现b的次数为2-6次 </p>
-<p>ac{2,}c 即为表⽰指定ac之中出现b的次数⼤于等于2次 </p>
-<p>**(2)正则表达式的逻辑运算符 **</p>
-<p>|表⽰或 配合()⼀起使⽤ 例如a(b|c),匹配ab或ac </p>
-<p>**(3)字符类运算符 **</p>
-<p>[]+ ⽅括号的内容表⽰匹配的字符只能取⾃他们,注意是每⼀个字符,不是字符串 </p>
-<p>_(这⾥可以思考⼀下preg_match函数中()和[]的区别,|⽤在哪个地⽅会使()和[]等价) _</p>
-<p>不同字符中间也不需要分隔 </p>
-<p>[abc]+ 能匹配到abc aabbcc等 </p>
-<p>[a-z]+ 能匹配到所有带有⼩写字⺟的字符串 </p>
-<p>[a-zA-z0-9]+ 能匹配到所有带有⼩写字⺟,⼤写字⺟或数字的字符串 </p>
-<p>如果在⽅括号最开始加^,即代表否定,[^abc],则代表匹配⽆三个字⺟abc的字符串注:带⽅括号的整体为⼀整个⼦表达式 </p>
-<p>如可按照\a[abc]{1}\匹配到aa ab ac. </p>
-<p>可按照\1[0-4][0-9]\匹配到⼩于15 </p>
-<p>0的数字 </p>
-<p>**(4)元字符 **</p>
-<p>正则表达式的⼤部分元字符都以\开头 </p>
-<p>\d数字字符 相当于[0-9] </p>
-<p>\w单词字符 代表所有的字⺟ 数字 下划线 相当于[a-zA-z0-9] </p>
-<p>\s空⽩符 代表tab和空⽩符 </p>
-<p>\D ⾮数字字符 </p>
-<p>\W ⾮单词字符 </p>
-<p>\S ⾮空⽩字符 </p>
-<p>. 代表除换⾏符以外的任意字符(如果要匹配.这个符号,可以⽤.) </p>
-<p>^(⼦表达式) 只匹配字符⾸ ^a只匹配⾏头的a </p>
-<p>$(⼦表达式) 只匹配字符尾 $a只匹配⾏尾的a </p>
-<p>这⾥要和[^abc]区分,那个只是字符类运算符! </p>
-<p>**(5)正则表达式中的其他概念 **</p>
-<p>贪婪与懒惰匹配 </p>
-<p>*,+和{},会默认匹配尽可能多的字符,称贪婪匹配 </p>
-<p>在其后加? 则切换为懒惰匹配 </p>
-<p>例如&lt;.+&gt; +能够匹配⼦表达式.,即任意的⾮换⾏字符,因⽽整个正则表达式可以匹配除了换⾏符以外的整 </p>
-<p>个⽂本 </p>
-<p>&lt;.+?&gt; +还是能够匹配⼦表达式.但是由于?的存在,+只会选择.代表的⽂本中第⼀个字符匹配</p>
-<p>例如⽂本为 abc def efg agh</p>
-<p>&lt;.+&gt; 能匹配整个⽂本</p>
-<p>&lt;.+?&gt; 只能以懒惰匹配识别包含于.的 a,匹配带有 a 的字符串.</p>
-<p>参考视频</p>
-<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1da4y1p7iZ/">https://www.bilibili.com/video/BV1da4y1p7iZ/</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
 
@@ -2897,7 +2632,7 @@ EXTR_PREFIX_SAME - 如果有冲突，在变量名前加上前缀 prefix。（需
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

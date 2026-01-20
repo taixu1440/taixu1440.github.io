@@ -20,34 +20,28 @@
     var CONFIG = {"hostname":"hnu-legend1440.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="PHP 命令执行(续上周的学习)个人的所有作业中,带的小点为做题补充知识点 二 替换绕过函数过滤(即使用特定的函数或者不被过滤的函数执行命令)1.记住常见的可执行函数  2.LD_PRELOAD(修改库文件)绕过(用于面对禁用函数者过多的情况) 它可以影响程序的运行时的链接,允许你定义在程序运行前优先加载的动态链接库。 因而可以向库文件种中注入恶意程序 putenv(“LD_PRELOAD&amp;#x3">
-<meta property="og:type" content="article">
-<meta property="og:title" content="第二章-RCE与正则表达式">
-<meta property="og:url" content="http://hnu-legend1440.com/2025/10/29/%E7%AC%AC%E4%BA%8C%E7%AB%A0-RCE%E4%B8%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="拂云观 · legend1440">
+<meta property="og:url" content="http://hnu-legend1440.com/page/2/index.html">
 <meta property="og:site_name" content="拂云观 · legend1440">
-<meta property="og:description" content="PHP 命令执行(续上周的学习)个人的所有作业中,带的小点为做题补充知识点 二 替换绕过函数过滤(即使用特定的函数或者不被过滤的函数执行命令)1.记住常见的可执行函数  2.LD_PRELOAD(修改库文件)绕过(用于面对禁用函数者过多的情况) 它可以影响程序的运行时的链接,允许你定义在程序运行前优先加载的动态链接库。 因而可以向库文件种中注入恶意程序 putenv(“LD_PRELOAD&amp;#x3">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://hnu-legend1440.com/images/YTOjbBuyboX4EFxc64EcBL17n7c.png">
-<meta property="article:published_time" content="2025-10-29T02:00:00.000Z">
-<meta property="article:modified_time" content="2026-01-20T17:13:03.141Z">
 <meta property="article:author" content="legend1440">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://hnu-legend1440.com/images/YTOjbBuyboX4EFxc64EcBL17n7c.png">
 
-<link rel="canonical" href="http://hnu-legend1440.com/2025/10/29/%E7%AC%AC%E4%BA%8C%E7%AB%A0-RCE%E4%B8%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
+<link rel="canonical" href="http://hnu-legend1440.com/page/2/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : false,
-    isPost : true,
+    isHome : true,
+    isPost : false,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>第二章-RCE与正则表达式 | 拂云观 · legend1440</title>
+  <title>拂云观 · legend1440</title>
   
 
 
@@ -165,10 +159,9 @@
         <div class="content-wrap">
           
 
-          <div class="content post posts-expand">
+          <div class="content index posts-expand">
             
-
-    
+      
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -184,9 +177,10 @@
       <meta itemprop="name" content="拂云观 · legend1440">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          第二章-RCE与正则表达式
-        </h1>
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/10/29/%E7%AC%AC%E4%BA%8C%E7%AB%A0-RCE%E4%B8%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="post-title-link" itemprop="url">第二章-RCE与正则表达式</a>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -215,13 +209,6 @@
             </span>
 
           
-            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
 
         </div>
       </header>
@@ -232,7 +219,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="PHP-命令执行-续上周的学习"><a href="#PHP-命令执行-续上周的学习" class="headerlink" title="PHP 命令执行(续上周的学习)"></a><strong>PHP 命令执行(续上周的学习)</strong></h1><p><em><em>个人的所有作业中,带</em>的小点为做题补充知识点</em></p>
+          <h1 id="PHP-命令执行-续上周的学习"><a href="#PHP-命令执行-续上周的学习" class="headerlink" title="PHP 命令执行(续上周的学习)"></a><strong>PHP 命令执行(续上周的学习)</strong></h1><p><em><em>个人的所有作业中,带</em>的小点为做题补充知识点</em></p>
 <h2 id="二-替换绕过函数过滤-即使用特定的函数或者不被过滤的函数执行命令"><a href="#二-替换绕过函数过滤-即使用特定的函数或者不被过滤的函数执行命令" class="headerlink" title="二 替换绕过函数过滤(即使用特定的函数或者不被过滤的函数执行命令)"></a>二 替换绕过函数过滤(即使用特定的函数或者不被过滤的函数执行命令)</h2><p><strong>1.记住常见的可执行函数</strong></p>
 <p><img src="/images/YTOjbBuyboX4EFxc64EcBL17n7c.png"></p>
 <p><strong>2.LD_PRELOAD(修改库文件)绕过(用于面对禁用函数者过多的情况)</strong></p>
@@ -663,31 +650,25 @@ EXTR_PREFIX_SAME - 如果有冲突，在变量名前加上前缀 prefix。（需
 <p>参考视频</p>
 <p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1da4y1p7iZ/">https://www.bilibili.com/video/BV1da4y1p7iZ/</a></p>
 
+      
     </div>
 
     
     
     
-
       <footer class="post-footer">
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item"></div>
-      <div class="post-nav-item">
-    <a href="/2025/11/04/%E7%AC%AC%E4%B8%89%E7%AB%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/" rel="next" title="第三章 文件包含">
-      第三章 文件包含 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
+        <div class="post-eof"></div>
       </footer>
-    
   </article>
   
   
   
+
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
 
 
@@ -739,7 +720,6 @@ EXTR_PREFIX_SAME - 如果有冲突，在变量名前加上前缀 prefix。（需
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PHP-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C-%E7%BB%AD%E4%B8%8A%E5%91%A8%E7%9A%84%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">PHP 命令执行(续上周的学习)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E6%9B%BF%E6%8D%A2%E7%BB%95%E8%BF%87%E5%87%BD%E6%95%B0%E8%BF%87%E6%BB%A4-%E5%8D%B3%E4%BD%BF%E7%94%A8%E7%89%B9%E5%AE%9A%E7%9A%84%E5%87%BD%E6%95%B0%E6%88%96%E8%80%85%E4%B8%8D%E8%A2%AB%E8%BF%87%E6%BB%A4%E7%9A%84%E5%87%BD%E6%95%B0%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">1.1.</span> <span class="nav-text">二 替换绕过函数过滤(即使用特定的函数或者不被过滤的函数执行命令)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E8%BF%9E%E6%8E%A5%E7%AC%A6"><span class="nav-number">1.2.</span> <span class="nav-text">三 操作系统连接符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B-%E7%A9%BA%E6%A0%BC%E8%BF%87%E6%BB%A4%E7%BB%95%E8%BF%87"><span class="nav-number">1.3.</span> <span class="nav-text">四 空格过滤绕过</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94-%E6%96%87%E4%BB%B6%E5%90%8D%E8%BF%87%E6%BB%A4%E7%BB%95%E8%BF%87"><span class="nav-number">1.4.</span> <span class="nav-text">五 文件名过滤绕过</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD-%E5%B8%B8%E8%A7%81%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%8C%87%E4%BB%A4%E7%BB%95%E8%BF%87-%E9%80%9A%E5%B8%B8%E4%B8%BA%E8%BF%87%E6%BB%A4-cat"><span class="nav-number">1.5.</span> <span class="nav-text">六 常见文件读取指令绕过(通常为过滤 cat)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83-%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87-%E5%AF%B9%E6%8F%90%E4%BA%A4%E7%9A%84%E5%91%BD%E4%BB%A4%E8%BF%9B%E8%A1%8C%E7%BC%96%E7%A0%81"><span class="nav-number">1.6.</span> <span class="nav-text">七 编码绕过(对提交的命令进行编码)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB-%E6%96%9C%E6%9D%A0%E7%BB%95%E8%BF%87"><span class="nav-number">1.7.</span> <span class="nav-text">*八 斜杠绕过</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D-%E5%A4%9A%E4%B8%AA%E6%8C%87%E4%BB%A4%E7%9A%84%E6%89%A7%E8%A1%8C"><span class="nav-number">1.8.</span> <span class="nav-text">*九 多个指令的执行</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PHP-%E5%87%BD%E6%95%B0%E5%AE%89%E5%85%A8"><span class="nav-number">2.</span> <span class="nav-text">PHP 函数安全</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-is-numeric-%E7%BB%95%E8%BF%87"><span class="nav-number">2.1.</span> <span class="nav-text">1.is_numeric 绕过</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-PHP%E7%B2%BE%E5%BA%A6"><span class="nav-number">2.2.</span> <span class="nav-text">2.PHP精度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%AF%94%E8%BE%83%E5%92%8C%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E6%BC%8F%E6%B4%9E"><span class="nav-number">2.3.</span> <span class="nav-text">3.比较和类型转换漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-PHP-%E5%BC%B1%E7%B1%BB%E5%9E%8B%E6%AF%94%E8%BE%83"><span class="nav-number">2.4.</span> <span class="nav-text">4.PHP 弱类型比较</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-gettype-var-%E8%BF%94%E5%9B%9E%E5%8F%98%E9%87%8F%E7%9A%84%E3%80%8C%E5%8E%9F%E5%A7%8B%E7%B1%BB%E5%9E%8B%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%8D"><span class="nav-number">2.4.1.</span> <span class="nav-text">(1)gettype($var)返回变量的「原始类型字符串」</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-empty-var-%E2%80%94%E2%80%94-%E2%80%9C%E7%A9%BA%E5%80%BC%E6%A3%80%E6%B5%8B%E5%99%A8%E2%80%9D"><span class="nav-number">2.4.2.</span> <span class="nav-text">(2)empty($var) —— “空值检测器”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-is-null-var-%E2%80%94%E2%80%94-%E2%80%9C%E4%B8%A5%E6%A0%BC-null-%E5%88%A4%E6%96%AD%E5%99%A8%E2%80%9D"><span class="nav-number">2.4.3.</span> <span class="nav-text">(3)is_null($var) —— “严格 null 判断器”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-isset-var-%E2%80%94%E2%80%94-%E2%80%9C%E5%8F%98%E9%87%8F%E5%AD%98%E5%9C%A8%E6%A3%80%E6%B5%8B%E5%99%A8%E2%80%9D"><span class="nav-number">2.4.4.</span> <span class="nav-text">(4)isset($var) —— “变量存在检测器”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-if-x-%E2%80%94%E2%80%94-%E5%B8%83%E5%B0%94%E5%80%BC%E9%9A%90%E5%BC%8F%E8%BD%AC%E6%8D%A2%EF%BC%88%E2%80%9C%E7%9C%9F%E5%80%BC%E6%A3%80%E6%B5%8B%E5%99%A8%E2%80%9D%EF%BC%89"><span class="nav-number">2.4.5.</span> <span class="nav-text">(5)if($x) —— 布尔值隐式转换（“真值检测器”）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E5%BC%B1%E7%B1%BB%E5%9E%8B%E6%AF%94%E8%BE%83%E8%A1%A8%E6%A0%BC"><span class="nav-number">2.4.6.</span> <span class="nav-text">(6)弱类型比较表格</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-strcmp%E5%87%BD%E6%95%B0"><span class="nav-number">2.4.7.</span> <span class="nav-text">(7)strcmp函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-is-numeric%E5%87%BD%E6%95%B0"><span class="nav-number">2.4.8.</span> <span class="nav-text">(8)is_numeric函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-is-switch%E5%87%BD%E6%95%B0"><span class="nav-number">2.4.9.</span> <span class="nav-text">(9)is_switch函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-sha1-%E5%87%BD%E6%95%B0"><span class="nav-number">2.4.10.</span> <span class="nav-text">(10)sha1()函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-md5%E5%93%88%E5%B8%8C%E5%80%BC%E9%97%AE%E9%A2%98"><span class="nav-number">2.4.11.</span> <span class="nav-text">5.md5哈希值问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%B1%E7%B1%BB%E5%9E%8B%E6%AF%94%E8%BE%83%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95"><span class="nav-number">2.4.11.1.</span> <span class="nav-text">&#x3D;&#x3D;弱类型比较的处理方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E6%AF%94%E8%BE%83%E6%B3%95%E7%BB%95%E8%BF%87-%E5%BC%BA%E6%AF%94%E8%BE%83"><span class="nav-number">2.4.11.2.</span> <span class="nav-text">数组比较法绕过&#x3D;&#x3D;&#x3D;强比较</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#md5-%E7%A2%B0%E6%92%9E%E9%97%AE%E9%A2%98"><span class="nav-number">2.4.11.3.</span> <span class="nav-text">md5 碰撞问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96%E6%BC%8F%E6%B4%9E"><span class="nav-number">2.4.12.</span> <span class="nav-text">6.变量覆盖漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#extract-%E5%87%BD%E6%95%B0"><span class="nav-number">2.4.12.1.</span> <span class="nav-text">extract()函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#parse-str-str-%E5%87%BD%E6%95%B0"><span class="nav-number">2.4.12.2.</span> <span class="nav-text">parse_str(str)函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#register-globals%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%97%AE%E9%A2%98"><span class="nav-number">2.4.12.3.</span> <span class="nav-text">register_globals环境变量问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%95%A5-%E4%BC%AA%E5%8D%8F%E8%AE%AE%E9%97%AE%E9%A2%98"><span class="nav-number">2.4.13.</span> <span class="nav-text">(略)伪协议问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">正则表达式基本语法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">3.1.</span> <span class="nav-text">正则表达式的基本语法与应用</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

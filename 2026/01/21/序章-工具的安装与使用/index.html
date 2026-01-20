@@ -20,21 +20,29 @@
     var CONFIG = {"hostname":"hnu-legend1440.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="期末突击-C 语言程序设计1.注释语句不可以嵌套 2.(int)强制类型转换要加括号 3.L 只用于长整型标识 1.111e3L 不合法 4.0x+ 数字表示十六进制整形常量,0 开头则为八进制整形常量 无位数限制，按类型范围截断 \x+ 数字作为字符转义 会返回 16 进制对应 ASCII 码值的字符 这里要注意不是\0x 取位限制两位至 255 +数字则是 8 进制 只取前三位 如果你要输出这">
+  <meta name="description" content="工具1.浏览器开发者工具F12(浏览器自带无需安装) 2.Hackbar安装在火狐中找到附加组件管理器,搜索本组件并进入安装. 3.Burp Suite安装这是安装和破解的完成图 4.AI使用详见下文 AI写脚本 5.攻防世界第一题 F12获取即可第二题先在url中添加相应的参数再使用开发者工具-HackBar输入地址与参数,点execute即可 6.AI写脚本">
 <meta property="og:type" content="article">
-<meta property="og:title" content="期末突击-C语言程序设计">
-<meta property="og:url" content="http://hnu-legend1440.com/2026/01/15/%E6%9C%9F%E6%9C%AB%E7%AA%81%E5%87%BB-C%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/index.html">
+<meta property="og:title" content="序章-工具的安装与使用">
+<meta property="og:url" content="http://hnu-legend1440.com/2026/01/21/%E5%BA%8F%E7%AB%A0-%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="拂云观 · legend1440">
-<meta property="og:description" content="期末突击-C 语言程序设计1.注释语句不可以嵌套 2.(int)强制类型转换要加括号 3.L 只用于长整型标识 1.111e3L 不合法 4.0x+ 数字表示十六进制整形常量,0 开头则为八进制整形常量 无位数限制，按类型范围截断 \x+ 数字作为字符转义 会返回 16 进制对应 ASCII 码值的字符 这里要注意不是\0x 取位限制两位至 255 +数字则是 8 进制 只取前三位 如果你要输出这">
+<meta property="og:description" content="工具1.浏览器开发者工具F12(浏览器自带无需安装) 2.Hackbar安装在火狐中找到附加组件管理器,搜索本组件并进入安装. 3.Burp Suite安装这是安装和破解的完成图 4.AI使用详见下文 AI写脚本 5.攻防世界第一题 F12获取即可第二题先在url中添加相应的参数再使用开发者工具-HackBar输入地址与参数,点execute即可 6.AI写脚本">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://hnu-legend1440.com/images/BMeNbMdT4ow1gvx3QzHcg9ZcnKg.png">
-<meta property="article:published_time" content="2026-01-15T07:20:00.000Z">
-<meta property="article:modified_time" content="2026-01-20T17:04:39.861Z">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/26/68fe369827833.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/26/68fe37cae91e4.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/26/68fe387e408ca.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/26/68fe456315937.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/26/68fe3c58db256.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/27/68fe472a7a61a.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/27/68fe481c2215a.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/26/68fe3e6171208.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/26/68fe3f1c876d8.png">
+<meta property="article:published_time" content="2026-01-20T17:16:16.000Z">
+<meta property="article:modified_time" content="2026-01-20T17:18:05.446Z">
 <meta property="article:author" content="legend1440">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://hnu-legend1440.com/images/BMeNbMdT4ow1gvx3QzHcg9ZcnKg.png">
+<meta name="twitter:image" content="https://youke1.picui.cn/s1/2025/10/26/68fe369827833.png">
 
-<link rel="canonical" href="http://hnu-legend1440.com/2026/01/15/%E6%9C%9F%E6%9C%AB%E7%AA%81%E5%87%BB-C%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">
+<link rel="canonical" href="http://hnu-legend1440.com/2026/01/21/%E5%BA%8F%E7%AB%A0-%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/">
 
 
 <script id="page-configurations">
@@ -47,7 +55,7 @@
   };
 </script>
 
-  <title>期末突击-C语言程序设计 | 拂云观 · legend1440</title>
+  <title>序章-工具的安装与使用 | 拂云观 · legend1440</title>
   
 
 
@@ -172,7 +180,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/01/15/%E6%9C%9F%E6%9C%AB%E7%AA%81%E5%87%BB-C%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">
+    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/01/21/%E5%BA%8F%E7%AB%A0-%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -185,7 +193,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          期末突击-C语言程序设计
+          序章-工具的安装与使用
         </h1>
 
         <div class="post-meta">
@@ -194,23 +202,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2026-01-15 15:20:00" itemprop="dateCreated datePublished" datetime="2026-01-15T15:20:00+08:00">2026-01-15</time>
+              <time title="创建时间：2026-01-21 01:16:16 / 修改时间：01:18:05" itemprop="dateCreated datePublished" datetime="2026-01-21T01:16:16+08:00">2026-01-21</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-21 01:04:39" itemprop="dateModified" datetime="2026-01-21T01:04:39+08:00">2026-01-21</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/schedule/" itemprop="url" rel="index"><span itemprop="name">-schedule</span></a>
+                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
                 </span>
             </span>
 
@@ -232,50 +234,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="期末突击-C-语言程序设计"><a href="#期末突击-C-语言程序设计" class="headerlink" title="期末突击-C 语言程序设计"></a>期末突击-C 语言程序设计</h1><p>1.注释语句不可以嵌套</p>
-<p>2.(int)强制类型转换要加括号</p>
-<p>3.L 只用于长整型标识 1.111e3L 不合法</p>
-<p>4.0x+ 数字表示十六进制整形常量,0 开头则为八进制整形常量 无位数限制，按类型范围截断</p>
-<p>\x+ 数字作为字符转义 <strong>会返回 16 进制对应 ASCII 码值的字符 这里要注意不是\0x 取位限制两位至 255</strong></p>
-<p>+数字则是 8 进制 <strong>只取前三位</strong></p>
-<p>如果你要输出这些进制的数，会直接输出，不会带这些符号</p>
-<p>例如用 %x 输出 16 输出的是 10 不是 0x10</p>
-<p>%x 十六进制 %o 八进制</p>
-<p>5.负数按补码存 源码取反再加一是补码</p>
-<p>6.scanf 中 %d 也是贪婪匹配</p>
-<p>7.%d 输出浮点类型直接 0，注意是不是用 %d 输出的</p>
-<p>但 %f 能输出整型，带.0</p>
-<p>8.整型常量的除法返回值一定是整型，无论接的变量的数据类型</p>
-<p>Float a&#x3D;2&#x2F;3 a 还是等于 0</p>
-<p>所以小数初始化除数一定一定要加.0 啊</p>
-<p>9.逗号表达式优先级最低，小于赋值表达式</p>
-<p>10.if 后紧跟 else 不能有别的语句</p>
-<p>if(a&#x3D;&#x3D;1)b&#x3D;2;c&#x3D;3;else d&#x3D;4;不合法</p>
-<p>11.符号常量可以用来声明数组</p>
-<p>12.static 改变的是函数的生存期 而非作用域;只是数值不刷新 还是不能域外引用</p>
-<p>13.关注函数中变量的初始值,有的根本不是 0</p>
-<p>14.阶乘用递归</p>
-<p>15.宏定义函数不会添括号，只是字符替换</p>
-<p>16.函数的形参会占用(栈区的)存储单元</p>
-<p>17.fwrite 专门向文件写入数据块</p>
-<p>18.scanf 的第一个参数一定是字符串常量</p>
-<p>19.<code>switch</code> 后的表达式必须是<strong>整型类型;</strong><code>case</code> 后的<strong>标签必须是整型常量表达式</strong>（比如 <code>10</code>、<code>&#39;a&#39;</code>、<code>3+5</code> 等），<strong>绝对不能是浮点数</strong>（如 <code>3.14</code>、<code>2.0</code>），也不能是变量、浮点表达式</p>
-<p>20.C 语言中 main 函数必须返回 int 类型值</p>
-<p>21.sizeof 是一个运算符 而不是函数 因为 sizeof 括号可选</p>
-<p>22.#include &lt;stdio.h&gt; 用于引入标准输入输出库</p>
-<p>23.文件指针的位置由打开方式决定 并不是总是从头开始</p>
-<p>24.C 语言中数组下标不能是负数</p>
-<p>25.C 语言中语句必须以;结尾</p>
-<p>26.scanf 函数的第一个参数必须是字符串常量</p>
-<p>27.在 C 语言中，<strong>所有函数之外定义的变量</strong> 被称为 <strong>全局变量</strong></p>
-<p>在函数内部才是自动变量</p>
-<p>28.C 语言中，**数组下标 <strong><strong>[]</strong></strong> 的优先级高于解引用 *******，所以声明一个指向含有 10 个元素的一维字符型数组的指针，即先用[]判断是不是数组 再用*判断是不是指针</p>
-<p><img src="/images/BMeNbMdT4ow1gvx3QzHcg9ZcnKg.png"></p>
-<p>29.指针相减返回的是元素个数，不是字节数</p>
-<p>30.gets,strcpy,scanf 都不会检查缓冲区溢出的问题</p>
-<p>31.malloc 返回的指针所指向的内存空间不会自动初始化</p>
-<p>32.C 语言中全局变量在程序中任何位置都可以访问</p>
-<p>33.<strong>和指针直接相关的操作里，</strong>******* 永远干不过 <strong><strong>[]</strong></strong>&#x2F;<strong><strong>()</strong></strong>&#x2F; 后置****++**—— 这就是为什么 <code>*p++</code> 是 <code>*(p++)</code>，<code>*arr[0]</code> 是 <code>*(arr[0])</code>，而不是你直觉里的 <code>(*p)++</code>&#x2F;<code>(*arr)[0]</code>。</p>
+        <h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><h3 id="1-浏览器开发者工具F12-浏览器自带无需安装"><a href="#1-浏览器开发者工具F12-浏览器自带无需安装" class="headerlink" title="1.浏览器开发者工具F12(浏览器自带无需安装)"></a>1.浏览器开发者工具F12(浏览器自带无需安装)</h3><p><img src="https://youke1.picui.cn/s1/2025/10/26/68fe369827833.png" alt="这是图片" title="Magic Gardens"></p>
+<h3 id="2-Hackbar安装"><a href="#2-Hackbar安装" class="headerlink" title="2.Hackbar安装"></a>2.Hackbar安装</h3><p>在火狐中找到附加组件管理器,搜索本组件并进入安装.<br><img src="https://youke1.picui.cn/s1/2025/10/26/68fe37cae91e4.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/26/68fe387e408ca.png" alt="这是图片" title="Magic Gardens"></p>
+<h3 id="3-Burp-Suite安装"><a href="#3-Burp-Suite安装" class="headerlink" title="3.Burp Suite安装"></a>3.Burp Suite安装</h3><p>这是安装和破解的完成图<br><img src="https://youke1.picui.cn/s1/2025/10/26/68fe456315937.png" alt="这是图片" title="Magic Gardens"></p>
+<h3 id="4-AI使用"><a href="#4-AI使用" class="headerlink" title="4.AI使用"></a>4.AI使用</h3><p>详见下文 AI写脚本</p>
+<h3 id="5-攻防世界"><a href="#5-攻防世界" class="headerlink" title="5.攻防世界"></a>5.攻防世界</h3><p>第一题 F12获取即可<br><img src="https://youke1.picui.cn/s1/2025/10/26/68fe3c58db256.png" alt="这是图片" title="Magic Gardens"><br>第二题<br>先在url中添加相应的参数<br><img src="https://youke1.picui.cn/s1/2025/10/27/68fe472a7a61a.png" alt="这是图片" title="Magic Gardens"><br>再使用开发者工具-HackBar输入地址与参数,点execute即可<br><img src="https://youke1.picui.cn/s1/2025/10/27/68fe481c2215a.png" alt="这是图片" title="Magic Gardens"></p>
+<h3 id="6-AI写脚本"><a href="#6-AI写脚本" class="headerlink" title="6.AI写脚本"></a>6.AI写脚本</h3><p><img src="https://youke1.picui.cn/s1/2025/10/26/68fe3e6171208.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/26/68fe3f1c876d8.png" alt="这是图片" title="Magic Gardens"></p>
 
     </div>
 
@@ -291,12 +255,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2026/01/15/%E6%9C%9F%E6%9C%AB%E7%AA%81%E5%87%BB-%E5%A4%A7%E5%AD%A6%E8%8B%B1%E8%AF%AD1/" rel="prev" title="期末突击-大学英语1">
-      <i class="fa fa-chevron-left"></i> 期末突击-大学英语1
+    <a href="/2026/01/18/hello-world/" rel="prev" title="欢迎大家前来阅读文章">
+      <i class="fa fa-chevron-left"></i> 欢迎大家前来阅读文章
     </a></div>
       <div class="post-nav-item">
-    <a href="/2026/01/16/%E6%9C%9F%E6%9C%AB%E7%AA%81%E5%87%BB-%E6%80%9D%E6%83%B3%E9%81%93%E5%BE%B7%E4%B8%8E%E6%B3%95%E6%B2%BB/" rel="next" title="期末突击-思想道德与法治">
-      期末突击-思想道德与法治 <i class="fa fa-chevron-right"></i>
+    <a href="/2026/01/21/%E7%AC%AC%E4%B8%80%E7%AB%A0-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86/" rel="next" title="第一章-预备知识">
+      第一章-预备知识 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -356,7 +320,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%9F%E6%9C%AB%E7%AA%81%E5%87%BB-C-%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.</span> <span class="nav-text">期末突击-C 语言程序设计</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7"><span class="nav-number">1.</span> <span class="nav-text">工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%B5%8F%E8%A7%88%E5%99%A8%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7F12-%E6%B5%8F%E8%A7%88%E5%99%A8%E8%87%AA%E5%B8%A6%E6%97%A0%E9%9C%80%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">1.浏览器开发者工具F12(浏览器自带无需安装)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Hackbar%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.</span> <span class="nav-text">2.Hackbar安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Burp-Suite%E5%AE%89%E8%A3%85"><span class="nav-number">1.3.</span> <span class="nav-text">3.Burp Suite安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-AI%E4%BD%BF%E7%94%A8"><span class="nav-number">1.4.</span> <span class="nav-text">4.AI使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C"><span class="nav-number">1.5.</span> <span class="nav-text">5.攻防世界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-AI%E5%86%99%E8%84%9A%E6%9C%AC"><span class="nav-number">1.6.</span> <span class="nav-text">6.AI写脚本</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

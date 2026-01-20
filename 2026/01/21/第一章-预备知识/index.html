@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/sign.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/small.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hnu-legend1440.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="HTTP协议1.概念与简介HTTP协议是Hyper TextTransfer Protocol(超文本传输协议)的缩写，主要用于网页的传输，现在也常应用网络API的开发（Restful API）。 浏览器通过HTTP协议和服务器交流。浏览器作为HTTP客户端通过URL向HTTP服务端即WEB服务器发送所有请求。 HTTP默认端口号为80，但是你也可以改为8080或者其他端口。 HTTP是无连接的：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第一章-预备知识">
+<meta property="og:url" content="http://hnu-legend1440.com/2026/01/21/%E7%AC%AC%E4%B8%80%E7%AB%A0-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86/index.html">
+<meta property="og:site_name" content="拂云观 · legend1440">
+<meta property="og:description" content="HTTP协议1.概念与简介HTTP协议是Hyper TextTransfer Protocol(超文本传输协议)的缩写，主要用于网页的传输，现在也常应用网络API的开发（Restful API）。 浏览器通过HTTP协议和服务器交流。浏览器作为HTTP客户端通过URL向HTTP服务端即WEB服务器发送所有请求。 HTTP默认端口号为80，但是你也可以改为8080或者其他端口。 HTTP是无连接的：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a6c408daa.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a6c2e9554.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a6c1e7b1f.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a6c095a5e.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a6c1781a2.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a6c607e3d.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a843efe7d.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a8446512f.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a91b84dde.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a91b67395.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a91b50f10.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a91b4258c.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a91b6c54f.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a9246543c.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a92570e4f.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a92609a92.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a92660e75.png">
+<meta property="og:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a926bdec7.png">
+<meta property="article:published_time" content="2026-01-20T17:16:35.000Z">
+<meta property="article:modified_time" content="2026-01-20T17:18:56.889Z">
+<meta property="article:author" content="legend1440">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://youke1.picui.cn/s1/2025/10/31/6903a6c408daa.png">
+
+<link rel="canonical" href="http://hnu-legend1440.com/2026/01/21/%E7%AC%AC%E4%B8%80%E7%AB%A0-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>第一章-预备知识 | 拂云观 · legend1440</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拂云观 · legend1440</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/categories/schedule/" rel="section"><i class="fa fa-skating fa-fw"></i>期末突击</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-chess fa-fw"></i>往世乐土</a>
+
+  </li>
+        <li class="menu-item menu-item-training">
+
+    <a href="/categories/training/" rel="section"><i class="fa fa-yin-yang fa-fw"></i>集训修行</a>
+
+  </li>
+        <li class="menu-item menu-item-wp">
+
+    <a href="/categories/WP/" rel="section"><i class="fa fa-feather fa-fw"></i>全面战场</a>
+
+  </li>
+        <li class="menu-item menu-item-puzzles">
+
+    <a href="/categories/puzzles/" rel="section"><i class="fa fa-spa fa-fw"></i>练习札记</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/01/21/%E7%AC%AC%E4%B8%80%E7%AB%A0-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="legend1440">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拂云观 · legend1440">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第一章-预备知识
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-01-21 01:16:35 / 修改时间：01:18:56" itemprop="dateCreated datePublished" datetime="2026-01-21T01:16:35+08:00">2026-01-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="HTTP协议"><a href="#HTTP协议" class="headerlink" title="HTTP协议"></a>HTTP协议</h2><h3 id="1-概念与简介"><a href="#1-概念与简介" class="headerlink" title="1.概念与简介"></a>1.概念与简介</h3><p>HTTP协议是Hyper TextTransfer Protocol(超文本传输协议)的缩写，主要用于网页的传输，现在也常应用网络<br>API的开发（Restful API）。</p>
+<p>浏览器通过HTTP协议和服务器交流。<br>浏览器作为HTTP客户端通过URL向HTTP服务端即WEB服务器发送所有请求。</p>
+<p>HTTP默认端口号为80，但是你也可以改为8080或者其他端口。</p>
+<p>HTTP是无连接的：无连接的含义是限制每次连接只处理一个请求。服务器处理完客户的请求，并收到客户的应<br>答后，即断开连接。采用这种方式可以节省传输时间。</p>
+<p>HTTP是媒体独立的：这意味着，只要客户端和服务器知道如何处理的数据内容，任何类型的数据都可以<br>通过HTTP发送。客户端以及服务器指定使用适合的MIME-type内容类型。</p>
+<p>HTTP是无状态的：HTTP协议是无状态协议。无状态是指协议对于事务处理没有记忆能力。缺少状态意味着如果<br>后续处理需要前面的信息，则它必须重传，这样可能导致每次连接传送的数据量增大。另一方面，在服务器不<br>需要先前信息时它的应答就较快。</p>
+<h3 id="2-开发者工具的使用"><a href="#2-开发者工具的使用" class="headerlink" title="2.开发者工具的使用"></a>2.开发者工具的使用</h3><p>NetWork板块 记录了浏览器与服务器的所有通信</p>
+<h3 id="3-http的消息结构-请求与响应"><a href="#3-http的消息结构-请求与响应" class="headerlink" title="3.http的消息结构 请求与响应"></a>3.http的消息结构 请求与响应</h3><p>请求<br>地址和关键词: 例如 GET <a target="_blank" rel="noopener" href="https://www.baidu.com/">https://www.baidu.com</a><br>请求头（header)：用来描述请求和发送者的一些信息<br>请求参数：以百度为例，要搜索的关键词</p>
+<p>响应<br>响应代码：200表示成功，404表示不存在等<br>响应头 (header)：描述响应内容的一些信息<br>响应内容：HTML,JSON,图片等</p>
+<p>请求 响应均可以在F12-NetWork找到.</p>
+<p>一个很好用看请求的网站httpbin.org&#x2F;get<br>通过这个网站可以更简单的查看请求的详细信息。<br>可以通过Python代码模拟各种请求参数和header，发送给这个网站，再来验证发送的是否正确</p>
+<h3 id="4-完整的网页请求过程"><a href="#4-完整的网页请求过程" class="headerlink" title="4.完整的网页请求过程"></a>4.完整的网页请求过程</h3><p>一个网页，通常是分多次请求的，一般的过程为：<br>先请求网页文本，也就是HTML<br>根据HTML中的指定的地址，请求其他内容，最常见的是：样式表，JavaScript，图片等<br>所以在chrome中可以看到很多个请求.</p>
+<p>注意:我们用代码发送请求，一行代码只能发送一次请求，也就是获得了最基本的HTML。<br>有的网站在第一次的HTML中没有包含真实的数据，真实的数据是通过后续请求获得的，所以有时候你用代码<br>去请求发现获得的网页没有内容。</p>
+<p>解决这个问题办法通常有两个：<br>分析各个请求，找到关键的后续请求，用代码发送后续关键请求获取数据。通常，我们没必要像浏览器一样发<br>送所有后续靖求，找到关键请求就够了。<br>使用selenium等浏览器驱动，模拟真实的浏览器操作，发送后续所有请求。</p>
+<h3 id="5-请求的具体过程"><a href="#5-请求的具体过程" class="headerlink" title="5.请求的具体过程"></a>5.请求的具体过程</h3><h3 id="5-1请求行"><a href="#5-1请求行" class="headerlink" title="5.1请求行"></a>5.1请求行</h3><p>下面例子的第一行就是请求行(后面几行支持请求行)，它包含几个关键信息：<br>请求方法：例子中是GET，表示你要干什么<br>请求的资源地址：例子中是&#x2F;hello.txt，结合下面的Host(ww.example.com)就可以拼接处完整的地址<br>使用的HTTP协议的版本号<br>HTTP协议有多个版本，现在主要用1.1，HTTP2也有一些应用<br>例:<br>GET &#x2F;hello.txt HTTP&#x2F;1.1<br>User-Agent:cur1&#x2F;7.16.3 1ibcur1&#x2F;7.16.3 0penSsL&#x2F;0.9.71 zlib&#x2F;1.2.3<br>Host:<a target="_blank" rel="noopener" href="http://www.example.com/">www.example.com</a><br>Accept-Language: en, mi</p>
+<h3 id="5-2请求方法"><a href="#5-2请求方法" class="headerlink" title="5.2请求方法"></a>5.2请求方法</h3><p>根据HTTP标准，HTTP请求可以使用多种请求方法，这些方法表示这个请求要做什么。</p>
+<p>最常用的请求方法是：<br>GET请求表示不要获取内容，它不会修改服务器上的数据<br>POST请求表示要提交内容，通常会修改服务器上的内容</p>
+<p>GET请求的参数<br>GET请求的参数都是放在URL中的，只有GET请求才在网址上可见.<br>请求参数是以键值对的形式出现，一般形式为：<br>网址的后面紧跟着是一个问号<br>问号的后面是一对对参数，形式为：参数1&#x3D;参数1的值<br>多个参数之间用&amp;符号隔开<br>举例：<a target="_blank" rel="noopener" href="https://www.example.com/page1?%E5%8F%82%E6%95%B01=%E5%8F%82%E6%95%B01%E7%9A%84%E5%80%BC&%E5%8F%82%E6%95%B02=%E5%8F%82%E6%95%B02%E7%9A%84%E5%80%BC">https://www.example.com/page1?参数1=参数1的值&amp;参数2=参数2的值</a></p>
+<p>POST请求的参数<br>POST请求的参数放在请求体中<br>网页上看不见<br>但可以通过chrome开发者工具或者抓包工具看见<br>格式举例:<br>GET &#x2F;hello.txt HTTP&#x2F;1.1<br>User-Agent:cur1&#x2F;7.16.3 1ibcur1&#x2F;7.16.3 0penssL&#x2F;0.9.71 zlib&#x2F;1.2.3<br>Host: <a target="_blank" rel="noopener" href="http://www.example.com/">www.example.com</a><br>Accept-Language: en, mi<br>[name’：麦叔’，‘特征’：‘帅’，‘争标’：一个美丽的城市’}</p>
+<h3 id="5-3请求头"><a href="#5-3请求头" class="headerlink" title="5.3请求头"></a>5.3请求头</h3><p>服务器通常通过请求头来：判定请求是否合法，这是基本的反爬措施。<br>爬虫通常需要添加多个请求头来模拟真实的网页请求判断用户是否登陆了，<br>一般通过Cookie这个特殊的请求头的内容来判定，只要我们给出合理的Cookie，<br>服务器就认为我们是登录过了</p>
+<p>请求头最重要的几个是：<br>User-Agent 代表发起访问是什么浏览器。如果不写，基本会被判定为爬虫，直接被拒了<br>Cookie 里面记录了登录信息，或者上次请求服务端设置的信息，也是常用的反爬判定点<br>Referer 表示这次请求是从哪里点过来的，有的网站不允许你直接访问某个网页，必须是从它的其他网页点过<br>来才行、这时候就要设置一个Referer值，模拟是从别的网页点过来的情况</p>
+<h3 id="6-响应的具体过程"><a href="#6-响应的具体过程" class="headerlink" title="6.响应的具体过程"></a>6.响应的具体过程</h3><h3 id="6-1状态码"><a href="#6-1状态码" class="headerlink" title="6.1状态码"></a>6.1状态码</h3><p>当浏览者访问一个网页时，浏览者的浏览器会向网页所在服务器发出请求。当浏览器接收并显示网页前，此网页所<br>在的服务器会返回一个包含HTTP状态码的信息头（server header）用以响应浏览器的请求。<br>HTTP状态码的英文为HTTP Status Code。</p>
+<p>下面是常见的HTTP状态码：<br>200-请求成功<br>301-资源(网页等）被永久转移到其它URL<br>404-请求的资源（网页等）不存在<br>500-内部服务器错误</p>
+<p>HTTP状态码由三个数字组成，第一个数字定义了状态码的类型，后两个数字表示具体的状态。HTTP状态码共分为<br>5种类型：<br>分类<br>分类描述<br>1**<br>信息，服务器收到请求，需要请求者继续执行操作<br>2**<br>成功，操作被成功接收并处理<br>3**<br>重定向，需要进一步的操作以完成请求<br>4**<br>客户端错误，请求包含语法错误或无法完成请求<br>5**<br>服务器错误，服务器在处理请求的过程中发生了错误</p>
+<h3 id="6-2响应头"><a href="#6-2响应头" class="headerlink" title="6.2响应头"></a>6.2响应头</h3><p>同请求头 需要则查表.</p>
+<h3 id="7-黑神话CTF-WP"><a href="#7-黑神话CTF-WP" class="headerlink" title="7.黑神话CTF WP"></a>7.黑神话CTF WP</h3><p>点击”开始挑战”后,依次按图片修改网页的参数即可.<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a6c408daa.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a6c2e9554.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a6c1e7b1f.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a6c095a5e.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a6c1781a2.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a6c607e3d.png" alt="这是图片" title="Magic Gardens"></p>
+<h2 id="PHP基础语法"><a href="#PHP基础语法" class="headerlink" title="PHP基础语法"></a>PHP基础语法</h2><h3 id="环境的配置-由于有C-基础-从序号一开始只叙述PHP与C-相比需要注意之处"><a href="#环境的配置-由于有C-基础-从序号一开始只叙述PHP与C-相比需要注意之处" class="headerlink" title="环境的配置 (由于有C++基础,从序号一开始只叙述PHP与C++相比需要注意之处:)"></a>环境的配置 (由于有C++基础,从序号一开始只叙述PHP与C++相比需要注意之处:)</h3><p><img src="https://youke1.picui.cn/s1/2025/10/31/6903a843efe7d.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a8446512f.png" alt="这是图片" title="Magic Gardens"></p>
+<h3 id="1-PHP基础格式"><a href="#1-PHP基础格式" class="headerlink" title="1.PHP基础格式"></a>1.PHP基础格式</h3><?php
+    //执行的相关PHP代码
+?>
+
+<h3 id="2-变量定义"><a href="#2-变量定义" class="headerlink" title="2.变量定义"></a>2.变量定义</h3><p> $&lt;变量名&gt;&#x3D; (无需输入数据类型)</p>
+<p>PHP的主要执行对象更多是字符串 不是字符</p>
+<h3 id="3-运算符"><a href="#3-运算符" class="headerlink" title="3.运算符"></a>3.运算符</h3><p>x xor y 代表异或 	<br>如果 x 和 y 有且仅有一个为 true，则返回 true</p>
+<p>类型比较<br>松散比较：使用两个等号 &#x3D;&#x3D; 比较，只比较值，不比较类型。<br>严格比较：用三个等号 &#x3D;&#x3D;&#x3D; 比较，除了比较值，也比较类型。</p>
+<h3 id="4-输出"><a href="#4-输出" class="headerlink" title="4.输出"></a>4.输出</h3><p>echo 可以输出一个或多个字符串<br>print 只允许输出一个字符串，返回值总为 1<br>print_r()：专门用于打印变量的详细信息，尤其适合数组和对象，会以可读性强的格式展示其内部结构,且执行时返回true</p>
+<h3 id="5-数组"><a href="#5-数组" class="headerlink" title="5.数组"></a>5.数组</h3><p>$cars&#x3D;array(“Hello”,”CTF”);<br>echo “I like “ . $cars[0] . “ “ . $cars[1] . “.”;(体现了echo输出多个字符串.)</p>
+<p>除了用array,还可以使用 [] 定义数组</p>
+<p>$z &#x3D; [‘H’,’e’,’l’, ‘l’, ‘o’];<br>$z[0] &#x3D; ‘H’;<br>$z[1] &#x3D; ‘r’;<br>$z[2] &#x3D; ‘l’;<br>$z[3] &#x3D; ‘l’;<br>$z[4] &#x3D; ‘o’;</p>
+<h3 id="6-魔术常量"><a href="#6-魔术常量" class="headerlink" title="6.魔术常量"></a>6.魔术常量</h3><p>形如 <strong>FILE</strong> 这样的 <strong>XXX</strong> 预定义常量，被称为魔术常量。<br><strong>FILE</strong> &#x2F;&#x2F;返回文件的完整路径和文件名</p>
+<p>highlight_file(<strong>FILE</strong>); &#x2F;&#x2F;代码高亮的显示当前文件内容</p>
+<h3 id="7-表单数据-‘变量名’"><a href="#7-表单数据-‘变量名’" class="headerlink" title="7.表单数据 $_&lt;名称&gt;[‘变量名’]"></a>7.表单数据 $_&lt;名称&gt;[‘变量名’]</h3><p>$_GET —— 接受 GET 请求传递的参数。</p>
+<p>示例：example.com&#x2F;index.php?book&#x3D;HELLOCTF，你可以使用 $_GET[‘book’] 来获取相应的值。</p>
+<p>$_POST —— 接受 POST 请求传递的参数。</p>
+<p>示例：对 example.com&#x2F;index.php 进行 POST 传参，参数名为 book 内容为 HelloCTF，你可以使用 $_POST[‘book’] 来获取相应的值。</p>
+<p>$_REQUEST —— 接受 GET 和 POST 以及 Cookie 请求传递的参数。</p>
+<p>示例：</p>
+<pre><code>如果你通过 URL 传递了一个参数 example.com/index.php?key=value_from_get，你可以通过 $_REQUEST[&#39;key&#39;] 获取这个值。
+如果你通过 POST 方法提交了一个表单，其中有一个名为 key 的字段且其值为 value_from_post，你也可以通过 $_REQUEST[&#39;key&#39;] 获取这个值。
+同时，如果你设置了一个名为 key 的 cookie，其值为 value_from_cookie，你还是可以使用 $_REQUEST[&#39;key&#39;] 来获取这个值。
+</code></pre>
+<h3 id="8-内建函数"><a href="#8-内建函数" class="headerlink" title="8.内建函数"></a>8.内建函数</h3><p>文件操作函数：</p>
+<pre><code>include(): 导入并执行(着重,是并执行!)指定的 PHP 文件。例如：include(&#39;config.php&#39;); 会导入并执行 config.php 文件中的代码。
+
+require(): 类似于 include()，但如果文件不存在，则会产生致命错误。
+
+include_once(), require_once(): 与 include 和 require 类似，但只导入文件一次。
+
+fopen(): 打开一个文件或 URL(而不执行)。例如：$file = fopen(&quot;test.txt&quot;, &quot;r&quot;); 会以只读模式打开 test.txt。
+
+file_get_contents(): 读取文件的全部内容到一个字符串。例如：$content = file_get_contents(&quot;test.txt&quot;);
+
+file_put_contents(): 将一个字符串写入文件。例如：file_put_contents(&quot;test.txt&quot;, &quot;Hello World!&quot;);
+</code></pre>
+<p>代码执行函数：</p>
+<pre><code>eval(): 执行字符串中的 PHP 代码。例如：eval(&#39;$x = 5;&#39;); 会设置变量 $x 的值为 5。
+
+assert(): 用于调试，检查一个条件是否为 true。
+
+system(), shell_exec(), exec(), passthru(): 执行外部程序或系统命令。例如：system(&quot;ls&quot;); 会执行 ls 命令并显示输出。
+</code></pre>
+<p>反序列化函数：</p>
+<pre><code>unserialize(): 将一个已序列化的字符串转换回 PHP 的值。例如：$array = unserialize($serializedStr); 可以将一个序列化的数组字符串转换为数组。
+</code></pre>
+<p>数据库操作函数：</p>
+<pre><code>mysql_query(), mysqli_query(): 发送一个 MySQL 查询。例如：$result = mysql_query(&quot;SELECT * FROM users&quot;);
+</code></pre>
+<p>其他函数：</p>
+<pre><code>preg_replace(): 执行正则表达式搜索和替换。例如：$newStr = preg_replace(&quot;/apple/i&quot;, &quot;orange&quot;, $str); 会将 $str 中的 &quot;apple&quot; 替换为 &quot;orange&quot;。
+
+create_function(): 创建匿名的 lambda 函数。例如：$func = create_function(&#39;$x&#39;, &#39;return $x + 1;&#39;);
+
+preg_match(&#39;/PHP/&#39;, $str)字符串匹配
+
+cat 路径 阅读文件
+</code></pre>
+<h2 id="PHP命令执行"><a href="#PHP命令执行" class="headerlink" title="PHP命令执行"></a>PHP命令执行</h2><h3 id="一-命令执行函数介绍-怎么运行-运行条件-参数-重点-能否回显-重点"><a href="#一-命令执行函数介绍-怎么运行-运行条件-参数-重点-能否回显-重点" class="headerlink" title="一 命令执行函数介绍(怎么运行,运行条件,参数(重点),能否回显(重点))"></a>一 命令执行函数介绍(怎么运行,运行条件,参数(重点),能否回显(重点))</h3><p>(相似函数:1,3;2,4,5;6,7)<br>1.system函数(执行命令并体现返回值)<br>system(string $command,int &amp;$return_var &#x3D;?(该参数可选))<br>command:执行command参数所指定的命令，并且输出执行结果(的所有行).<br>如果提供return_var参数，则外部命令执行后的返回状态(1&#x2F;0等)将会被设置到此变量中。</p>
+<p>2.exec函数(执行指令并体现执行的输出和返回值(不直接打印))<br>exec(string $command,array &amp;$output &#x3D;?(可选),int &amp;$return var&#x3D;?(可选))<br>command参数:要执行的命令。注意:单独使用时只有最后一行结果返回并且打印，其他的行不会回显<br>output 参数:用命令执行的输出填充此数组,每行输出填充数组中的一个元素。即逐行填充数组。<br>return_var参数:同上 表示返回值.<br>后两个参数可以借用print_r输出结果.<br>exec(ls);<br>print_r(output);<br>即可显示ls的输出结果</p>
+<p>3.passthru函数(执行命令并输出二进制数据.在安全渗透测试中与system无差别.)<br>passthru(string $command, int &amp;$return_var &#x3D;?)<br>command参数：执行的命令，并且输出执行结果(的所有行)。<br>输出二进制数据，并且需要直接传送到浏览器。</p>
+<p>4.shell_exec函数(执行命令,返回命令的输出(为值但不直接打印))<br>shell_exec(string cmd)<br>cmd参数：要执行的命令。<br>环境执行命令，并且将完整的输出以字符串的方式返回。<br>借用echo、print等输出结果<br>echo shell_exec(cmd)</p>
+<p>5.&#96;&#96;函数<br>与shell_exec功能相同,这里不赘述.</p>
+<p>6.popen函数(执行命令,返回值特殊)<br>popen(string $command, string $mode)<br>command参数：要执行的命令。<br>mode参数：模式。r表示阅读，w表示写入。<br>popen函数返回值是一个写入的文档,遵循fgets获取内容→print_r输出内容<br>a &#x3D; popen(“ls”,’r’);<br>$s&#x3D;fgets($a);<br>print_r($s);<br>才可以把内容输出</p>
+<p>7.proc_open函数(执行命令,返回值特殊)<br>proc_open($command,$descriptor_spec,$pipes,<br>$cwd,$env_vars,$options)<br>一般只修改command参数<br>不直接回显</p>
+<p>8.pcntl_ехес(使用前需安装模块)<br>pcntl_exec(string $path, array $args &#x3D;?,array<br>$envs &#x3D;?)<br>path必须时可执行二进制文件路径或一个在文<br>件第一行指定了一个可执行文件路径标头的<br>脚本(比如文件第一行是#!&#x2F;usr&#x2F;local&#x2F;bin&#x2F;perl<br>的perl脚本）。<br>args是一个要传递给程序的参数的字符串数组。<br>envs是一个要传递给程序作为环境变量的字符<br>串数组。这个数组是key&#x3D;&gt;value格式的，key<br>代表要传递的环境变量的名称，value代表该<br>环境变量值。<br>在当前进程空间执行指定程序。</p>
+<h3 id="二-RCE-Level0-8-WP"><a href="#二-RCE-Level0-8-WP" class="headerlink" title="二 RCE Level0-8 WP"></a>二 RCE Level0-8 WP</h3><p>0 进入界面即得flag<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a91b84dde.png" alt="这是图片" title="Magic Gardens"><br>1 post修改如图变量<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a91b67395.png" alt="这是图片" title="Magic Gardens"><br>2 先用get改action为’r’,获得随机的函数,再改成submit并用该函数的正确语法填充content,提交即得<br>flag<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a91b50f10.png" alt="这是图片" title="Magic Gardens"><br>3 post修改如图变量<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a91b4258c.png" alt="这是图片" title="Magic Gardens"><br>4 输ip加分号使得两个命令先后运行,获得flag<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a91b6c54f.png" alt="这是图片" title="Magic Gardens"><br>5 get修改如图变量<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a9246543c.png" alt="这是图片" title="Magic Gardens"><br>6 用八进制避开字符检测键入命令,先找到flag的路径,再获得flag<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a92570e4f.png" alt="这是图片" title="Magic Gardens"><br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a92609a92.png" alt="这是图片" title="Magic Gardens"><br>7 空格符如图代替 其余同第六题 抓住检测的字符是什么以尝试替换<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a92660e75.png" alt="这是图片" title="Magic Gardens"><br>8 get修改a变量 后加分号屏蔽代码中的屏蔽<br><img src="https://youke1.picui.cn/s1/2025/10/31/6903a926bdec7.png" alt="这是图片" title="Magic Gardens"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/01/21/%E5%BA%8F%E7%AB%A0-%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" rel="prev" title="序章-工具的安装与使用">
+      <i class="fa fa-chevron-left"></i> 序章-工具的安装与使用
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.</span> <span class="nav-text">HTTP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A6%82%E5%BF%B5%E4%B8%8E%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.</span> <span class="nav-text">1.概念与简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">2.开发者工具的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-http%E7%9A%84%E6%B6%88%E6%81%AF%E7%BB%93%E6%9E%84-%E8%AF%B7%E6%B1%82%E4%B8%8E%E5%93%8D%E5%BA%94"><span class="nav-number">1.3.</span> <span class="nav-text">3.http的消息结构 请求与响应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%AE%8C%E6%95%B4%E7%9A%84%E7%BD%91%E9%A1%B5%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B"><span class="nav-number">1.4.</span> <span class="nav-text">4.完整的网页请求过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%AF%B7%E6%B1%82%E7%9A%84%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="nav-number">1.5.</span> <span class="nav-text">5.请求的具体过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1%E8%AF%B7%E6%B1%82%E8%A1%8C"><span class="nav-number">1.6.</span> <span class="nav-text">5.1请求行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95"><span class="nav-number">1.7.</span> <span class="nav-text">5.2请求方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3%E8%AF%B7%E6%B1%82%E5%A4%B4"><span class="nav-number">1.8.</span> <span class="nav-text">5.3请求头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%93%8D%E5%BA%94%E7%9A%84%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="nav-number">1.9.</span> <span class="nav-text">6.响应的具体过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1%E7%8A%B6%E6%80%81%E7%A0%81"><span class="nav-number">1.10.</span> <span class="nav-text">6.1状态码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2%E5%93%8D%E5%BA%94%E5%A4%B4"><span class="nav-number">1.11.</span> <span class="nav-text">6.2响应头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E9%BB%91%E7%A5%9E%E8%AF%9DCTF-WP"><span class="nav-number">1.12.</span> <span class="nav-text">7.黑神话CTF WP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PHP%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">PHP基础语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E7%9A%84%E9%85%8D%E7%BD%AE-%E7%94%B1%E4%BA%8E%E6%9C%89C-%E5%9F%BA%E7%A1%80-%E4%BB%8E%E5%BA%8F%E5%8F%B7%E4%B8%80%E5%BC%80%E5%A7%8B%E5%8F%AA%E5%8F%99%E8%BF%B0PHP%E4%B8%8EC-%E7%9B%B8%E6%AF%94%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E4%B9%8B%E5%A4%84"><span class="nav-number">2.1.</span> <span class="nav-text">环境的配置 (由于有C++基础,从序号一开始只叙述PHP与C++相比需要注意之处:)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-PHP%E5%9F%BA%E7%A1%80%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.2.</span> <span class="nav-text">1.PHP基础格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%8F%98%E9%87%8F%E5%AE%9A%E4%B9%89"><span class="nav-number">2.3.</span> <span class="nav-text">2.变量定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">2.4.</span> <span class="nav-text">3.运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%BE%93%E5%87%BA"><span class="nav-number">2.5.</span> <span class="nav-text">4.输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%95%B0%E7%BB%84"><span class="nav-number">2.6.</span> <span class="nav-text">5.数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E9%AD%94%E6%9C%AF%E5%B8%B8%E9%87%8F"><span class="nav-number">2.7.</span> <span class="nav-text">6.魔术常量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E8%A1%A8%E5%8D%95%E6%95%B0%E6%8D%AE-%E2%80%98%E5%8F%98%E9%87%8F%E5%90%8D%E2%80%99"><span class="nav-number">2.8.</span> <span class="nav-text">7.表单数据 $_&lt;名称&gt;[‘变量名’]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E5%86%85%E5%BB%BA%E5%87%BD%E6%95%B0"><span class="nav-number">2.9.</span> <span class="nav-text">8.内建函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PHP%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="nav-number">3.</span> <span class="nav-text">PHP命令执行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%87%BD%E6%95%B0%E4%BB%8B%E7%BB%8D-%E6%80%8E%E4%B9%88%E8%BF%90%E8%A1%8C-%E8%BF%90%E8%A1%8C%E6%9D%A1%E4%BB%B6-%E5%8F%82%E6%95%B0-%E9%87%8D%E7%82%B9-%E8%83%BD%E5%90%A6%E5%9B%9E%E6%98%BE-%E9%87%8D%E7%82%B9"><span class="nav-number">3.1.</span> <span class="nav-text">一 命令执行函数介绍(怎么运行,运行条件,参数(重点),能否回显(重点))</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C-RCE-Level0-8-WP"><span class="nav-number">3.2.</span> <span class="nav-text">二 RCE Level0-8 WP</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">legend1440</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; Sun Jan 18 2026 08:00:00 GMT+0800 (GMT+08:00) – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">legend1440</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
