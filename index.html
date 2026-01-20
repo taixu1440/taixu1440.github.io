@@ -165,6 +165,389 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/01/21/%E7%AC%AC%E5%85%AD%E7%AB%A0-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="legend1440">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拂云观 · legend1440">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/01/21/%E7%AC%AC%E5%85%AD%E7%AB%A0-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="post-title-link" itemprop="url">第六章-文件上传</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-01-21 01:42:22 / 修改时间：01:46:00" itemprop="dateCreated datePublished" datetime="2026-01-21T01:42:22+08:00">2026-01-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>飞书链接:<a target="_blank" rel="noopener" href="https://icnewi51k2yp.feishu.cn/wiki/EIIywCXJOif6XmksNIfcbsq4nbf?from=from_copylink">https://icnewi51k2yp.feishu.cn/wiki/EIIywCXJOif6XmksNIfcbsq4nbf?from=from_copylink</a></p>
+<h1 id="Week6-1-蚁剑安装和文件上传绪论"><a href="#Week6-1-蚁剑安装和文件上传绪论" class="headerlink" title="[Week6.1]蚁剑安装和文件上传绪论"></a>[Week6.1]蚁剑安装和文件上传绪论</h1><h2 id="蚁剑安装"><a href="#蚁剑安装" class="headerlink" title="蚁剑安装"></a>蚁剑安装</h2><p>对 CTF Web 学习者，蚁剑是<strong>上传后门文件</strong>后的核心管理工具。它能帮你可视化浏览服务器文件系统，快速找到并读取 &#x2F; 下载 flag；也可直接执行系统命令（如 ls、whoami），实现服务器基础控制，无需手动反复输命令。其作用是将漏洞利用落地，让从 “找漏洞” 到 “拿权限” 更高效，是 CTF Web 题中获取服务器权限的常用工具。</p>
+<p><img src="/images/QZl0bEDO2o96Z6xV1kVcGuown76.png"></p>
+<h2 id="文件上传绪论"><a href="#文件上传绪论" class="headerlink" title="文件上传绪论"></a>文件上传绪论</h2><ol>
+<li><strong>漏洞到底是什么</strong></li>
+</ol>
+<p>网站里常见上传头像、附件这类功能，正常是传图片、文档这类无害文件的。但要是网站后台没做好文件检查，攻击者就能传恶意脚本文件（比如一句话木马），这就是文件上传漏洞。简单说，就是网站的 “文件安检” 出了问题，让危险文件混进了服务器。</p>
+<ol>
+<li><strong>漏洞能用来干嘛</strong></li>
+</ol>
+<p>攻击者传的恶意文件大多是叫 Webshell 的后门文件，传成功后就能控制服务器了。比如浏览服务器里的所有文件找 CTF 里的 flag，执行系统命令查看服务器信息，甚至篡改网站内容、偷取数据，危害特别大。</p>
+<ol>
+<li><strong>为啥会出现这漏洞</strong></li>
+</ol>
+<p>根源是网站的安全防护不到位。比如只在网页端用简单代码检查文件类型，很容易被绕过；或者只列了少数危险文件的黑名单，攻击者换个特殊后缀就蒙混过关了；还有的服务器没设置好权限，让上传目录里的文件能直接执行，这些都会催生漏洞。</p>
+<ol>
+<li><strong>CTF 里常见的利用小思路</strong></li>
+</ol>
+<p>新手在 CTF 题里常会遇到 “图片马” 这种利用方式。比如把正常图片和一句话木马文件拼在一起生成新图片，网站检查时只看到是图片就允许上传。之后再通过工具让服务器解析这个图片里的恶意代码，就能连接服务器找 flag 了。</p>
+<h2 id="文件上传的进行"><a href="#文件上传的进行" class="headerlink" title="文件上传的进行"></a>文件上传的进行</h2><h3 id="大致思路"><a href="#大致思路" class="headerlink" title="大致思路"></a>大致思路</h3><p>绕过文件上传验证的规则，或者伪造正确文件，达到上传脚本文件的目的。</p>
+<p>例如，我们可以尝试通过修改脚本文件后缀名（.php)为网站允许的正常文件类型（如.jpg），或者通过抓包修改 <a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=215690360&content_type=Article&match_order=1&q=MIME%E4%BF%A1%E6%81%AF&zd_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ6aGlkYV9zZXJ2ZXIiLCJleHAiOjE3NjUxNjM0NTgsInEiOiJNSU1F5L-h5oGvIiwiemhpZGFfc291cmNlIjoiZW50aXR5IiwiY29udGVudF9pZCI6MjE1NjkwMzYwLCJjb250ZW50X3R5cGUiOiJBcnRpY2xlIiwibWF0Y2hfb3JkZXIiOjEsInpkX3Rva2VuIjpudWxsfQ.LWsWzMzkcEiO03V1kNd-yMwWPyzKPppYk20T9kFxtvc&zhida_source=entity">MIME 信息</a></p>
+<p>达到绕过目的。</p>
+<h3 id="“恶意文件”-的含义与-“一句话木马”"><a href="#“恶意文件”-的含义与-“一句话木马”" class="headerlink" title="“恶意文件” 的含义与 “一句话木马”"></a>“恶意文件” 的含义与 “一句话木马”</h3><p>文章里反复提 “Webshell”恶意脚本”，对零基础来说不用记复杂的，先聚焦最常用的<strong>一句话木马</strong>（CTF 题里 90% 会遇到）：它是一行超短的代码，比如 PHP 语言的 <code>&lt;?php @eval($_POST[&#39;pass&#39;]);?&gt;</code>，作用是 “给服务器留个遥控器”—— 你把它藏在文件里传上服务器后，用蚁剑输入 “密码（pass）”，就能操控服务器。</p>
+<p><strong>为什么它危险？</strong></p>
+<p>就像你把家里的 “备用钥匙” 藏在门口地毯下（传木马文件），别人找到钥匙（用工具连接），就能随便进你家翻东西（读服务器文件、找 flag）、用你家设备（执行系统命令）。</p>
+<h3 id="文件上传常见验证"><a href="#文件上传常见验证" class="headerlink" title="文件上传常见验证"></a>文件上传常见验证</h3><ul>
+<li>后缀名，类型，文件头等</li>
+<li>后缀名黑名单或白名单</li>
+<li>文件类型：MIME 信息</li>
+<li>文件头：内容头信息</li>
+</ul>
+<h3 id="明确哪些参数能用抓包工具修改"><a href="#明确哪些参数能用抓包工具修改" class="headerlink" title="明确哪些参数能用抓包工具修改"></a><strong>明确哪些参数能用抓包工具修改</strong></h3><p><a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=215690360&content_type=Article&match_order=1&q=Content-Disposition&zd_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ6aGlkYV9zZXJ2ZXIiLCJleHAiOjE3NjUxNjM0NTgsInEiOiJDb250ZW50LURpc3Bvc2l0aW9uIiwiemhpZGFfc291cmNlIjoiZW50aXR5IiwiY29udGVudF9pZCI6MjE1NjkwMzYwLCJjb250ZW50X3R5cGUiOiJBcnRpY2xlIiwibWF0Y2hfb3JkZXIiOjEsInpkX3Rva2VuIjpudWxsfQ.phpKJ0FnFt2Q_Q9ICR2ow8NsC-8yJHTmv3pdVci6L4g&zhida_source=entity">Content-Disposition</a>：一般可更改</p>
+<p>name：表单参数值，不可更改</p>
+<p>filename：文件名，可以更改</p>
+<p><a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=215690360&content_type=Article&match_order=1&q=Content-Type&zd_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ6aGlkYV9zZXJ2ZXIiLCJleHAiOjE3NjUxNjM0NTgsInEiOiJDb250ZW50LVR5cGUiLCJ6aGlkYV9zb3VyY2UiOiJlbnRpdHkiLCJjb250ZW50X2lkIjoyMTU2OTAzNjAsImNvbnRlbnRfdHlwZSI6IkFydGljbGUiLCJtYXRjaF9vcmRlciI6MSwiemRfdG9rZW4iOm51bGx9.19_McGuUpn-sy8CydmG2ufSKPCHoE8Qvnx0R4RvVY9U&zhida_source=entity">Content-Type</a>：文件 MIME，视情况更改</p>
+<p><strong>下面我们用一个示例,来解释文件上传的全流程</strong></p>
+<p><del>管你听没听懂，看就完了</del></p>
+<h2 id="文件上传的举例-labs-1-流程"><a href="#文件上传的举例-labs-1-流程" class="headerlink" title="文件上传的举例(labs-1 流程)"></a>文件上传的举例(labs-1 流程)</h2><p><em>这个举例做了他妈一上午啊</em></p>
+<p>我们来到 upload-labs-1</p>
+<p><img src="/images/JjE0bectco81GLxAx4EcQLojnzc.png"></p>
+<p>要你上传一个图片,按理说我们只要不听他的话,上传一个你想执行 php 文件,然后再用文件包含的方式执行它就能得到 flag 了</p>
+<p>但是我们打开网页源代码,发现 php 文件根本不允许上传</p>
+<p><img src="/images/INrZbWzJhoxjhuxoSIvc2wWWnP4.png"></p>
+<p>于是我们就想到先写个 php,再试着传 jpg,在传的瞬间使用 Burp 拦截,改成 php 就能绕过了</p>
+<p>我们写个 flag.php,里面是我们想要执行的指令,这里加一个命令执行和 POST 变量 password,以便介绍蚁剑的使用</p>
+<p><img src="/images/TmWsb4dPdoXWRtxXpoEcdn7LnGe.png"></p>
+<p>把拓展名改成 jpg,用 Burp 内嵌浏览器在 Burp 拦截下上传</p>
+<p><img src="/images/R4IhbElMWosVF1xn6UacwQbWnhb.png"></p>
+<p><img src="/images/StCqbmznSopeaExsjagc9cxOnQf.png"></p>
+<p>选择文件,打开拦截</p>
+<p><img src="/images/SHZGbT2xAoPl5SxzlMVcyc5cnHg.png"></p>
+<p><img src="/images/Os58bi4llot6mGxWFaFcC3Ignaf.png"></p>
+<p>点击上传文件,上传被拦截,Burp 显示报告,我们将 flag.jpg 改成 flag.php,点击放行</p>
+<p><img src="/images/LcJFbafQtoQh45xeWSJcFrzSnuq.png"></p>
+<p>flag.php 就正常地被上传了,我们找到靶场的上传路径</p>
+<p><img src="/images/LM2qbCVPEoJhLAxZ4CgcJSmkneb.png"></p>
+<p>关闭拦截,输进 URL,指令被执行了</p>
+<p><img src="/images/Ikf8bbx5IoWRvRxK48scFylqnXf.png"></p>
+<h2 id="蚁剑获取网页文件"><a href="#蚁剑获取网页文件" class="headerlink" title="蚁剑获取网页文件"></a>蚁剑获取网页文件</h2><p>刚才我们用文件上传的方式执行了 lunix 命令,下面我们还可以使用蚁剑获取网页文件.</p>
+<p><img src="/images/XKAobPdHKoZxS3xm0JrcetLynZd.png"></p>
+<p>打开蚁剑添加数据,输入 flag.php 所在的地址以及刚刚的命令执行 post 变量,点测试连接报成功,直接点添加即可</p>
+<p><img src="/images/FqfpbbjncoH5Xgxj19lclgyWnBb.png"></p>
+<h1 id="Week6-2-实验-文件上传漏洞举例"><a href="#Week6-2-实验-文件上传漏洞举例" class="headerlink" title="[Week6.2]实验:文件上传漏洞举例"></a>[Week6.2]实验:文件上传漏洞举例</h1><p>文件上传的漏洞种类有很多,这里按理论 + 实验的方式逐个介绍</p>
+<p>(pass-1 属于前端效验，即浏览器自行效验，后面则全为后端效验)</p>
+<h2 id="后端-MIME-类型校验"><a href="#后端-MIME-类型校验" class="headerlink" title="后端 MIME 类型校验"></a><strong>后端 MIME 类型校验</strong></h2><ul>
+<li>什么是 MIME 类型？：文件的 “身份标识”，比如.jpg 的 MIME 是 <code>image/jpeg</code>，.php 的 MIME 是 <code>application/x-httpd-php</code></li>
+<li>题目漏洞：网站只看 MIME 类型是不是 “图片”，不看文件实际是啥。咱们用 Burp 把 <code>shell.php</code> 的 MIME 改成图片的，网站就会放行！</li>
+</ul>
+<h3 id="pass-02-实验举例"><a href="#pass-02-实验举例" class="headerlink" title="pass-02 实验举例"></a>pass-02 实验举例</h3><p>我们来到 pass-02,点显示源码,看到有对一些变量是否是”image&#x2F;jpeg”的判断,可知本题是绕过<strong>后端 MIME 类型校验题</strong></p>
+<p><img src="/images/RcQMbwvYooTBVGx7LNKcNEAXnae.png"></p>
+<p>我们用 Burp 直接传木马</p>
+<p><img src="/images/XRHWbXiguoWd6ExtYwjcfjqJnLb.png"></p>
+<p>开启拦截点击上传,找到本行代表 MIME 值,修改成我们需要的 image&#x2F;jpeg,点放行</p>
+<p><img src="/images/TNBvbX76MoEXQex83DDcx389n4g.png"></p>
+<p>运行通过</p>
+<p><img src="/images/GeksbaBcCortyKxNWWsc9eJqn7e.png"></p>
+<h2 id="后缀名黑名单校验"><a href="#后缀名黑名单校验" class="headerlink" title="后缀名黑名单校验"></a><strong>后缀名黑名单校验</strong></h2><p><strong>怎么判断是 “黑名单校验”？（还是用 2 次上传实验）</strong></p>
+<ul>
+<li>第一次：上传 <code>shell.php</code>（纯 PHP 后缀），页面提示 “不允许上传.php 类型文件”—— 明确告诉你 “禁止某个后缀”，不是 MIME 校验（MIME 会提示 “文件类型不正确”）；</li>
+<li>第二次：上传 <code>shell.jpg</code>（正常图片），能成功上传 —— 说明只拦 “黑名单里的后缀”，允许的后缀能直接过。</li>
+</ul>
+<p><strong>黑名单漏洞在哪？</strong></p>
+<p>PHP 除了 <code>.php</code> 后缀，还有很多 “能被服务器解析成 PHP 代码” 的变种后缀（比如 <code>.php5</code>、<code>.phtml</code>、<code>.php3</code> 等），Pass-3 的黑名单只禁了 <code>.php</code>，没禁这些变种，咱们用它们就能伪装！</p>
+<p>如果 <code>.php5</code> 不行（极少数情况服务器没配置解析），还能试这些 PHP 变种后缀（Pass-3 黑名单都没禁）：</p>
+<ul>
+<li><code>.phtml</code>、<code>.php3</code>、<code>.php4</code>、<code>.php7</code>、<code>.phps</code>（选一个改文件名即可，比如 <code>shell.phtml</code>）</li>
+</ul>
+<h3 id="pass-03-实验举例"><a href="#pass-03-实验举例" class="headerlink" title="pass-03 实验举例"></a>pass-03 实验举例</h3><p>我们打开源代码,发现本题过滤了 php 文件</p>
+<p><img src="/images/GmTrbvLsPoGOxyxvLtwcNOjjnDe.png"></p>
+<p>我们直接传一个 php5 文件</p>
+<p><img src="/images/NNJVbhbVSoFtEExnKA1cx1mbnkb.png"></p>
+<p>不用拦截,直接点击上传就成功了,但发现有的格式他不会解析,直接回显的是源代码,换其他的格式即可</p>
+<p>实际上,根据 pass-04 源代码,我们发现还有很多可行的绕过方式</p>
+<h3 id="更多可行的绕过方式"><a href="#更多可行的绕过方式" class="headerlink" title="更多可行的绕过方式"></a>更多可行的绕过方式</h3><p><img src="/images/PraebRmLxol0A1xEsD4cWAtdnLf.png"></p>
+<p>首尾加空格,用::$DATA 字符串,用大小写混合,在末尾加点等等,这些分别对应了 lab5-8 解题</p>
+<p>注意 windows 系统下这些拓展名可能起不出,可以用 Burp 修改</p>
+<p>::DATA 字符串我们不熟悉,可以看看</p>
+<p><img src="/images/OfwpbiiEkotguwxAtaDcyqT1nId.png"></p>
+<h2 id="非-php-解析方式-绕过-“超强后缀黑名单”（-htaccess-大法）"><a href="#非-php-解析方式-绕过-“超强后缀黑名单”（-htaccess-大法）" class="headerlink" title="[非 php 解析方式]绕过 “超强后缀黑名单”（.htaccess 大法）"></a>[非 php 解析方式]绕过 “超强后缀黑名单”（.htaccess 大法）</h2><p><strong>怎么判断是 “超强黑名单”？</strong></p>
+<ul>
+<li>试上传前 3 关能用的后缀：<code>shell.php</code>（提示禁止）、<code>shell.php5</code>（禁止）、<code>shell.phtml</code>（禁止）—— 几乎所有 PHP 相关后缀都被拦了；</li>
+<li>试上传正常图片 <code>test.jpg</code>（成功），改 MIME 上传 <code>shell.php</code>（还是禁止）—— 说明不校验 MIME，只严格拦后缀黑名单。</li>
+<li>直接看回显。</li>
+</ul>
+<p><strong>漏洞关键：.htaccess 文件（Apache 服务器专属 “配置文件”）</strong></p>
+<ul>
+<li><code>.htaccess</code> 是 Apache 服务器的 “目录级配置文件”，作用是：控制当前目录及子目录的文件解析规则；</li>
+<li>Pass-4 的黑名单没禁 <code>.htaccess</code>（这是核心漏洞），咱们上传一个自定义的 <code>.htaccess</code>，告诉服务器：“这个目录里所有文件，不管后缀是什么，都按 PHP 解析！”；</li>
+<li>后续再上传一个 “后缀合法但藏了木马” 的文件（比如 <code>shell.jpg</code>），服务器会因为 <code>.htaccess</code> 的配置，把它当成 PHP 代码执行！</li>
+</ul>
+<h3 id="pass-04-实验举例"><a href="#pass-04-实验举例" class="headerlink" title="pass-04 实验举例"></a>pass-04 实验举例</h3><p>查看源码,看到本题:</p>
+<p><img src="/images/GSAXbCx5AovpIBxqImKc2zOnnZg.png"></p>
+<p>我们新建一个 <code>.htaccess</code> 配置文件,告诉 Apache 服务器，所有 <code>.jpg</code> 后缀的文件，都按 PHP 代码解析.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AddType application/x-httpd-php .jpg</span><br></pre></td></tr></table></figure>
+
+<p>先上传 <code>.htaccess</code> 文件,再上传一个木马 jpg 文件,用蚁剑读后台发现都传上去了</p>
+<p><img src="/images/CXDGbhm67oV5BZx8AFVccVn4nbh.png"></p>
+<p>读 muma4.jpg,发现失败了,注意文件名需要只含有拓展名</p>
+<p><img src="/images/H5V4bbNUYoccFyxTG63c98gGn0b.png"></p>
+<p>再次读 muma4,运行通过</p>
+<p><img src="/images/JRg4bJakXoYJVmxIZ8kct6kQnhh.png"></p>
+<h2 id="黑名单-绕过-“联合过滤”"><a href="#黑名单-绕过-“联合过滤”" class="headerlink" title="[黑名单]绕过 “联合过滤”"></a>[黑名单]绕过 “联合过滤”</h2><p><strong>怎么判断是 “多重过滤”？</strong></p>
+<ul>
+<li>试 Pass-6 的 “末尾空格”（<code>shell.php </code>）→ 被拦（过滤空格）；</li>
+<li>试 Pass-7 的 “末尾点”（<code>shell.php.</code>）→ 被拦（过滤末尾点）；</li>
+<li>试 Pass-8 的 “<code>::$DATA</code>”（<code>shell.php::$DATA</code>）→ 被拦（过滤特殊标识）；</li>
+<li>试单一变种后缀（<code>.php5</code>）、大小写（<code>.PhP</code>）→ 被拦（黑名单 + 大小写过滤）；</li>
+<li>但试 “<code>shell.php. .</code>”（.php 后面加「点 + 空格 + 点」）→ 能放行！</li>
+</ul>
+<p><strong>漏洞关键：Windows 文件名 “多重过滤绕过”</strong></p>
+<p>Windows 处理文件名时，会按 “从后到前” 的顺序自动去除 <strong>末尾的点、空格</strong>，但不会一次性过滤 “点 + 空格 + 点” 的组合：</p>
+<ul>
+<li>你上传的文件名叫 <code>shell.php. .</code>（注意：<code>.php</code> 后面是「英文点 + 英文空格 + 英文点」）；</li>
+<li>服务器校验时，会把文件名当成 <code>shell.php. .</code>（后缀是 <code>.php. .</code>，不在黑名单里，直接放行）；</li>
+<li>保存时，Windows 会先去掉最后一个点 → 变成 <code>shell.php. </code>（带点 + 空格）；</li>
+<li>再自动去掉末尾的空格 → 变成 <code>shell.php.</code>（带点）；</li>
+<li>最后去掉末尾的点 → 最终还原成 <code>shell.php</code>（能正常解析 PHP）；</li>
+<li>相当于 “用组合符号骗过程序校验，再让系统自动还原成合法恶意文件名”。</li>
+</ul>
+<h3 id="pass-09-实验举例"><a href="#pass-09-实验举例" class="headerlink" title="pass-09 实验举例"></a>pass-09 实验举例</h3><p>我们打开源码，发现确实这些都给过滤了…所以我们需要构造一个文件名进行多重过滤绕过</p>
+<p><img src="/images/OxwwbvGgGokkhAxEAHTc5N9CnJe.png"></p>
+<p>我们构造一个末尾是.php.空格.,来读读代码</p>
+<p>这里先删除文件名末尾的点,只会删除空格之后,也就是末尾的一个点,接着首尾去空,把空格删去,最后检测文件名剩下.php.,它并不是被禁用的格式,因而上传成功</p>
+<p><img src="/images/WwKWbagktooGf6xwQNLcZOYjnig.png"></p>
+<p>这里我们可能不清楚上传的文件到底要怎么访问,因为删去的文件名有点乱,可以直接右键获取图片地址再访问即可</p>
+<p><img src="/images/UsiEbCzAQoMrYqxtybVcyM0Tn2l.png"></p>
+<h2 id="黑名单-双写后缀绕过（黑名单-单次字符过滤）"><a href="#黑名单-双写后缀绕过（黑名单-单次字符过滤）" class="headerlink" title="[黑名单]双写后缀绕过（黑名单 + 单次字符过滤）"></a>[黑名单]双写后缀绕过（黑名单 + 单次字符过滤）</h2><p><strong>判断校验规则（做 3 个小实验）</strong></p>
+<ul>
+<li>实验 1：上传 <code>shell.php</code> → 提示 “不允许上传该类型文件”（.php 在黑名单）；</li>
+<li>实验 2：上传 <code>shell.phphp</code> → 还是被拦（服务器把中间的 “php” 删掉，变成 <code>shell.php</code>，依然触发黑名单）；</li>
+<li>实验 3：上传 <code>shell.pphphp</code> → 放行！（服务器删掉中间的 “php”，变成 <code>shell.php</code>，但校验时识别的是 <code>pphphp</code> 后缀，不在黑名单）。</li>
+</ul>
+<p><strong>漏洞关键：服务器的 “单次替换” 逻辑</strong></p>
+<ul>
+<li>咱们构造 <code>pphphp</code> → 服务器单次替换 “php” 后，变成 <code>php</code>（刚好是能解析的后缀）；</li>
+<li>校验时，服务器看到的是 <code>pphphp</code>（不在黑名单），放行；保存后实际是 <code>shell.php</code>，能正常解析 PHP。</li>
+</ul>
+<h3 id="pass-10-实验举例"><a href="#pass-10-实验举例" class="headerlink" title="pass-10 实验举例"></a>pass-10 实验举例</h3><p>我们打开源代码，发现原本的文件名检测变成了把黑名单中的文件名直接替换成空，而且不构成循环，只替换一次</p>
+<p><img src="/images/PNY2bKYSCoQU2BxTQWVcL85mnie.png"></p>
+<p>读一读上一关的代码，是直接检测，检测到了就无法上传了</p>
+<p><img src="/images/RrTnbUcPvoZj7jx9mm9cm0UtnBb.png"></p>
+<p>那直接像 SQL 注入那样双写,点放行</p>
+<p><img src="/images/K5EgbkOreoPQD2xApMvc8WLmnSd.png"></p>
+<p>显示上传成功</p>
+<p><img src="/images/JZFUbybfwokcccxzwp9c03L0nWb.png"></p>
+<p>我们右键获取文件地址并访问,文件名自动变成.php 了,运行通过</p>
+<p><img src="/images/MxHybNc6goU5eGxhiX5ciaT3n4b.png"></p>
+<h2 id="白名单-GET-参数-00-空字符截断（白名单-只检测拓展名-拼接保存）"><a href="#白名单-GET-参数-00-空字符截断（白名单-只检测拓展名-拼接保存）" class="headerlink" title="[白名单]GET 参数 %00 空字符截断（白名单&#x2F;只检测拓展名 + 拼接保存）"></a>[白名单]GET 参数 %00 空字符截断（白名单&#x2F;只检测拓展名 + 拼接保存）</h2><p>Pass-11 是文件上传的重要转折点 —— 从「黑名单绕过」正式进入「白名单绕过」，核心考点是 <strong>%00</strong>** 空字符截断**（HTTP 协议特性），利用服务器 “路径拼接 + 空字符结束” 的逻辑，绕开白名单后缀校验！</p>
+<p><strong>判断校验规则（做 2 个实验）</strong></p>
+<ul>
+<li>实验 1：上传 <code>shell.php</code> → 提示 “不允许上传该类型文件”（.php 不在白名单）；</li>
+<li>实验 2：上传 <code>test.jpg</code> → 成功上传（.jpg 在白名单：.jpg&#x2F;.png&#x2F;.gif）；</li>
+<li>结论：服务器是「白名单校验」（只允许指定图片后缀），且校验的是 “文件名后缀”。</li>
+</ul>
+<p><strong>漏洞关键：%00 空字符的 “截断特性”</strong></p>
+<p>Pass-11 后端保存文件的核心逻辑（简化版）：</p>
+<p>php</p>
+<p>运行</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$save_path</span> = <span class="string">&quot;./uploads/&quot;</span> . <span class="variable">$_GET</span>[<span class="string">&#x27;filename&#x27;</span>]; <span class="comment">// 拼接“上传目录+GET参数传的文件名”</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">in_array</span>(获取文件后缀(<span class="variable">$save_path</span>), $白名单)) &#123; <span class="comment">// 检查后缀是否在白名单</span></span><br><span class="line"><span class="title function_ invoke__">move_uploaded_file</span>(..., <span class="variable">$save_path</span>); <span class="comment">// 保存文件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>%00</code> 是 HTTP 协议中的「空字符」，在 ASCII 表中编码是 0x00，代表 “字符串结束”；</p>
+</li>
+<li><p>当我们给 GET 参数传 <code>filename=shell.php%00.jpg</code> 时：</p>
+<ol>
+<li>校验阶段：服务器识别后缀是 <code>.jpg</code>（在白名单），放行；</li>
+<li>保存阶段：服务器遇到 <code>%00</code> 就停止解析，实际保存路径变成 <code>./uploads/shell.php</code>（后面的 <code>.jpg</code> 被截断）；</li>
+</ol>
+</li>
+<li><p>最终效果：用 <code>.jpg</code> 过白名单，实际保存的是 <code>.php</code> 木马文件！</p>
+</li>
+</ul>
+<h3 id="pass-11-实验举例-传路径"><a href="#pass-11-实验举例-传路径" class="headerlink" title="pass-11 实验举例(传路径)"></a>pass-11 实验举例(传路径)</h3><p>其实 %00 的可行是存在条件的,不然前面的题目都可以用 %00.我们读一下代码先</p>
+<p><img src="/images/Tl9Pb2NVGoe6uUxW6DFcpivBnff.png"></p>
+<p>发现这里是先把文件拓展名给拿出来,单独检查文件拓展名,再拼接保存</p>
+<p>这样我们只要保证拓展名在白名单中就可以了.</p>
+<p>但是第十关之前,是检查整个文件名,只要含 php 就会出问题.</p>
+<p>这里试了一下传木马的时候加个 %00.jpg,能成功上传,但读文件的时候失败了,蚁剑也提示上传的是 jpg</p>
+<p><img src="/images/GBhSbdyJBoZ8qLx04a6c1GlVn1c.png"></p>
+<p>所以我们尝试修改上传的路径,点放行</p>
+<p><img src="/images/SZdKb2MPio5Uvfxoz12ckU8Pnfg.png"></p>
+<p>放行成功,点获取地址后运行通过</p>
+<h2 id="白名单-POST-参数-0x00-十六进制截断（白名单进阶）"><a href="#白名单-POST-参数-0x00-十六进制截断（白名单进阶）" class="headerlink" title="[白名单]POST 参数 0x00 十六进制截断（白名单进阶）"></a>[白名单]POST 参数 0x00 十六进制截断（白名单进阶）</h2><p><strong>关键原理：</strong></p>
+<p>POST 请求的参数放在「请求体」中，而非 URL，服务器不会主动解码 <code>%00</code>—— 比如你直接写 <code>filename=shell.php%00.jpg</code>，服务器会当成 <code>shell.php%00.jpg</code> 处理（<code>%00</code> 是两个字符：<code>%</code> 和 <code>00</code>），无法截断；而十六进制 <code>00</code> 是「空字符的原始二进制编码」，服务器会直接识别为 “字符串结束”，从而触发截断。</p>
+<h3 id="pass-12-实验举例-post-传路径"><a href="#pass-12-实验举例-post-传路径" class="headerlink" title="pass-12 实验举例(post 传路径)"></a>pass-12 实验举例(post 传路径)</h3><p>我们打开 burp suite 进行抓包，上传脚本文件。修改 save_path 值，在“upload&#x2F;”后面加上“xxx.php a”，这里的“a”仅仅是为了显示空格。修改 filename 中的后缀名为合法后缀名。</p>
+<p><img src="/images/KxSWbgJ8ooEuSwxnz73cDnUanZf.png"></p>
+<p>然后进行关键一步，打开 Hex 选项修改十六进制码，找到“shell.php a”的位置，将空格对应的十六进制码“20”改成“00”。修改后发送数据包</p>
+<p><img src="/images/L80rbZOrOoN7N1xyQIAczalPnpd.png"></p>
+<p>接下来就是访问文件了，操作和上一关是一样的。</p>
+<h2 id="图片马-绕过-“文件幻术头校验”"><a href="#图片马-绕过-“文件幻术头校验”" class="headerlink" title="[图片马]绕过 “文件幻术头校验”"></a>[图片马]绕过 “文件<strong>幻术头</strong>校验”</h2><p><strong>关键原理：</strong></p>
+<p>jpg 文件有它特定的”文件幻术头”,长度为 2*3 个字符,当本关检测的是文件幻术头时,需要用一张真正的 jpg 图片(它带有幻术头),使用软件把恶意代码嵌入进去(这里需要使用工具 UltraEdit),再执行.</p>
+<p>注意:嵌入后的图片没办法用直接访问的方式执行,需要搭配文件包含,这是”文件马”类题的特点</p>
+<h3 id="pass-13-实验举例"><a href="#pass-13-实验举例" class="headerlink" title="pass-13 实验举例"></a>pass-13 实验举例</h3><p>读代码,发现是文件幻术头的检测,只有真正的 jpg 图片才有文件幻术头.</p>
+<p><img src="/images/L4Nkb9d9aoRpLWxbyeEcsvwbnob.png"></p>
+<p>我们用工具打开一张 jpg 图片,观察文本编辑,第一行前六个字符就是所谓”文件幻术头”</p>
+<p><img src="/images/JCmObDCTwoBfrHxvbIecDdS6n0g.png"></p>
+<p>我们直接编辑右边的非转码文字,将恶意代码嵌入,左边会自动转码.而后上传通过检测</p>
+<p><img src="/images/NJPObeHQSobtc7xrQpQcQrjSngd.png"></p>
+<p>上传发现并不报错,点击获取图片地址,用文件包含的形式打开(本关应当提供),代码就被执行了</p>
+<p><img src="/images/HayhbBY9SoB6wmxoyIHcb1mmn1e.png"></p>
+<h3 id="pass-14-15-实验说明"><a href="#pass-14-15-实验说明" class="headerlink" title="pass-14&#x2F;15 实验说明"></a>pass-14&#x2F;15 实验说明</h3><p>对比 13 关,检查字节</p>
+<p><img src="/images/WToObcioToj1QmxzUuvcFJYAnce.png"></p>
+<p><img src="/images/KGZPbgNRioTidexEGOwcIo0dnlg.png"></p>
+<p>14 关使用了 getimagesize()函数,但是和 pass13 拥有相同做法</p>
+<p><img src="/images/QxpZblUvlomU6Dxzl70cEFYNnqi.png"></p>
+<p>不过要注意的是 这些函数有的想 return true 有别的要求,所以有的时候 jpg 不行换 png,注意他会自动改文件名,要右击图片来获取地址</p>
+<p>15 关同理,用的是 <code>exif_imagetype()</code></p>
+<ul>
+<li><code>getimagesize()</code>（Pass-14）：检测文件头 + 基础图片结构并返回尺寸等信息，仅认真图片，忽略尾部内容；</li>
+<li><code>exif_imagetype()</code>（Pass-15）：严格校验图片文件头标识，仅返回图片类型，同样忽略尾部附加内容。</li>
+</ul>
+<p><img src="/images/L6TQb7pFJo3QKPxSUsrc2ck9nmc.png"></p>
+<h2 id="图片马-绕过-“图片二次处理-真图片校验”"><a href="#图片马-绕过-“图片二次处理-真图片校验”" class="headerlink" title="[图片马]绕过 “图片二次处理 + 真图片校验”"></a>[图片马]绕过 “图片二次处理 + 真图片校验”</h2><p>Pass-16 是进阶强化关 —— 后端不仅用 <code>exif_imagetype()</code> 做真图片校验，还会对上传图片做 <strong>二次处理</strong>（如压缩、裁剪、格式转换），直接在尾部嵌代码会被处理工具 “清空”，核心思路是 “用比较工具比较二次处理前后什么是不变的，把代码插入不变的区域”（二次处理不会清洗注释区内容）。</p>
+<h3 id="pass-16-实验举例"><a href="#pass-16-实验举例" class="headerlink" title="pass-16 实验举例"></a>pass-16 实验举例</h3><p>先把被渲染的图片下载下来，直接右键图片，点击“另存图像为”,再将两个图像使用 010 工具中的比较文件打开</p>
+<p><img src="/images/HPnrbVxMRoVPrBxEAs2crPzFn6e.png"></p>
+<p>将被渲染后的图片与原来的图片进行对比，利用工具可以明显的看到渲染前后图像文件的异同</p>
+<p><img src="/images/YcljbY7DZonGPixNxg7cbyvpnzd.png"></p>
+<p>写入一句话木马,保存再上传即可</p>
+<p><img src="/images/Ueg4btZPioAciYxN6a4clW6Un8d.png"></p>
+<h2 id="条件竞争漏洞"><a href="#条件竞争漏洞" class="headerlink" title="条件竞争漏洞"></a>条件竞争漏洞</h2><p>定义：条件竞争漏洞（Race condition）官方概念是——竞争条件发生在多个线程同时访问同一个共享代码、变量、文件等没有进行锁操作或者同步操作的场景中。这个漏洞存在于操作系统、数据库、web 等多个层面，像有名的脏牛（dirty cow）。</p>
+<p>条件竞争漏洞是一种服务器端的漏洞，由于服务器端在处理不同用户的请求时是并发进行的，因此，如果并发处理不当或相关操作逻辑顺序设计的不合理时，将会导致此类问题的发生。</p>
+<h3 id="pass-17-实验举例"><a href="#pass-17-实验举例" class="headerlink" title="pass-17 实验举例"></a>pass-17 实验举例</h3><p>读代码 发现源码存在临时文件,因而可能存在条件竞争漏洞</p>
+<p><img src="/images/P8afbTeV6oDkrOxRZErc1EhknZK.png"></p>
+<p>这里用 Burp 实验并没有做成功,用蚁剑查后台文件看到上传成功了,贴一个别人成功了的文章吧</p>
+<p><a target="_blank" rel="noopener" href="http://www.360doc.com/content/24/0910/17/83536423_1133653212.shtml">http://www.360doc.com/content/24/0910/17/83536423_1133653212.shtml</a></p>
+<p>注意 burp 设置,改线程等</p>
+<p><strong>另外 AI 说可以在上传的 php 中构造恶意文件，然后一直访问上传的文件，访问成功了也会生成永久文件，也是一个思路.</strong></p>
+<ol>
+<li>新建 <code>shell.php</code>，内容：<code>&lt;?php file_put_contents(&#39;shell2.php&#39;,&#39;&lt;?php @eval($_POST[&quot;mima&quot;]);?&gt;&#39;);?&gt;</code>（执行后生成新的持久恶意文件）；</li>
+<li>给文件加 JPG 文件头，改后缀为 <code>shell.jpg</code>（过白名单）：</li>
+<li>plaintext</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FF D8 FF</span><br><span class="line">&lt;?php file_put_contents(&#x27;shell2.php&#x27;,&#x27;&lt;?php @eval($_POST[&quot;mima&quot;]);?&gt;&#x27;);?&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="pass-18-实验说明"><a href="#pass-18-实验说明" class="headerlink" title="pass-18 实验说明"></a>pass-18 实验说明</h3><p>本关是图片马和条件竞争漏洞结合,会检测图片的幻术头,我们必须用图片爆破而非 php 脚本,同时读文件时要用文件包含</p>
+<h3 id="pass-19-实验说明"><a href="#pass-19-实验说明" class="headerlink" title="pass-19 实验说明"></a>pass-19 实验说明</h3><p><img src="/images/QzWGbTsyYoOQqpxD6G4cY7xJnng.png"></p>
+<p>对后缀名的检测,使用 pass-3 下方的任意一种绕过方式均可</p>
+<p><img src="/images/VSDcbz4RCobPxnx4R6Kc7DTjnig.png"></p>
+<p><img src="/images/UjiwbGQz9oC2G3xfNO8cf86rnRe.png"></p>
+<h2 id="数组绕过-pass-20-实验举例"><a href="#数组绕过-pass-20-实验举例" class="headerlink" title="数组绕过 |pass-20 实验举例"></a><strong>数组绕过 |pass-20 实验举例</strong></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">if(!empty($_FILES[&#x27;upload_file&#x27;]))&#123;</span><br><span class="line">    //检查MIME</span><br><span class="line">    $allow_type = array(&#x27;image/jpeg&#x27;,&#x27;image/png&#x27;,&#x27;image/gif&#x27;);</span><br><span class="line">    if(!in_array($_FILES[&#x27;upload_file&#x27;][&#x27;type&#x27;],$allow_type))&#123;</span><br><span class="line">        $msg = &quot;禁止上传该类型文件!&quot;;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        //检查文件名</span><br><span class="line">        $file = empty($_POST[&#x27;save_name&#x27;]) ? $_FILES[&#x27;upload_file&#x27;][&#x27;name&#x27;] : $_POST[&#x27;save_name&#x27;];</span><br><span class="line">        if (!is_array($file)) &#123;</span><br><span class="line">            $file = explode(&#x27;.&#x27;, strtolower($file));</span><br><span class="line">        &#125;</span><br><span class="line">​</span><br><span class="line">        $ext = end($file);</span><br><span class="line">        $allow_suffix = array(&#x27;jpg&#x27;,&#x27;png&#x27;,&#x27;gif&#x27;);</span><br><span class="line">        if (!in_array($ext, $allow_suffix)) &#123;</span><br><span class="line">            $msg = &quot;禁止上传该后缀文件!&quot;;</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            $file_name = reset($file) . &#x27;.&#x27; . $file[count($file) - 1];</span><br><span class="line">            $temp_file = $_FILES[&#x27;upload_file&#x27;][&#x27;tmp_name&#x27;];</span><br><span class="line">            $img_path = UPLOAD_PATH . &#x27;/&#x27; .$file_name;</span><br><span class="line">            if (move_uploaded_file($temp_file, $img_path)) &#123;</span><br><span class="line">                $msg = &quot;文件上传成功！&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>源码逻辑：</p>
+<ol>
+<li>检查 MIME （通过抓包改 Content-Type 绕过）</li>
+<li>判断 POST 参数 save_name 是否为空，</li>
+<li>判断 $file 是否为数组，不是数组以 <code>.</code> 分割化为数组</li>
+<li>取 $file 最后一个元素，作为文件后缀进行检查</li>
+<li>取 $file 第一位和第<code>$file[count($file) - 1]</code> 作为文件名和后缀名保存文件</li>
+</ol>
+<p>故：</p>
+<p>上传 <code>webshell.php</code>, 修改 <code>save_name</code> 为数组 绕过对$file 的切割，最后$file 最后一个元素是 <code>save_name[2] = jpg</code> 绕过后缀检测 ， 然后 <code>reset($file) = webshell.php</code></p>
+<p><code>$file[1]</code> 没有定义为空，<code>count($file)</code> 的值为 <code>$file[count($file) - 1]</code> &#x3D; <code>$file[1]</code></p>
+<p>所以最后上传的文件为 <code>webshell.php</code></p>
+<h2 id="文件上传总结"><a href="#文件上传总结" class="headerlink" title="文件上传总结"></a><strong>文件上传总结</strong></h2><p>允许用户上传文件是司空见惯的事，只要采取正确的预防措施，就不一定会有危险。一般来说，保护您自己的网站免受这些漏洞影响的最有效方法是实施以下所有做法：</p>
+<ul>
+<li>根据允许扩展名的白名单而不是禁止扩展名的黑名单检查文件扩展名</li>
+<li>确保文件名不包含任何可能被解释为目录或遍历序列 ( ..&#x2F;) 的子字符串。</li>
+<li>重命名上传的文件以避免可能导致现有文件被覆盖的冲突。</li>
+<li>在完全验证之前不要将文件上传到服务器的永久文件系统。</li>
+<li>尽可能使用已建立的框架来预处理文件上传，而不是尝试编写自己的验证机制。</li>
+</ul>
+<p>文件上传漏洞一般是一对一的,白名单有白名单的解法，黑名单&#x2F;图片马也有各自的解法，通过代码审计，可以实现解法漏洞一对一以完成解题</p>
+<h1 id="Week6-3-实验-文件上传漏洞实战"><a href="#Week6-3-实验-文件上传漏洞实战" class="headerlink" title="*[Week6.3]实验:文件上传漏洞实战"></a>*[Week6.3]实验:文件上传漏洞实战</h1><h2 id="文件上传靶场-1-20"><a href="#文件上传靶场-1-20" class="headerlink" title="文件上传靶场 1-20"></a>文件上传靶场 1-20</h2><p>见 6.2 节</p>
+<h2 id="ctf-Week2-Only-Picture-Up"><a href="#ctf-Week2-Only-Picture-Up" class="headerlink" title="?ctf [Week2] Only Picture Up"></a>?ctf [Week2] Only Picture Up</h2><p>来到题目,看提示是一个白名单漏洞,于是尝试 %00 空字符截断绕过白名单.</p>
+<p><img src="/images/QkQQbCB6Eo6tdgxXLFgcDTijnpf.png"></p>
+<p>编写一个连接密码为 mima 的命令执行函数,以便后续蚁剑连接.</p>
+<p><img src="/images/VO7ib0TBRoLSiFx0uB0cMpyGn4d.png"></p>
+<p>上传木马,发现没有途径可以改文件路径,我们选择直接改文件名</p>
+<p><img src="/images/W19hbEon9ovi7Vxta3AcBHROnBc.png"></p>
+<p>这里直接提示上传成功,点 direct link 它执行失败了,但 preview 可以正常运行代码</p>
+<p><img src="/images/Ln9cbZVYbozOJEx3vYecIKGTnuc.png"></p>
+<p><img src="/images/F3vDbCYAtoVOwExfFDNcJKcwnMb.png"></p>
+<p>提示本行自己敲的 flag,证明代码成功运行了,复制现在的网址,用蚁剑连接,输入连接密码,即变量名 mima</p>
+<p><img src="/images/RrodbwjZKoO45rxp5jNcJKMdngf.png"></p>
+<p>添加数据后点进去,打开网站的文档库,发现旗帜位于根目录下的一个文档中.</p>
+<p><img src="/images/SJtRb6L2ho8pTyxbqNDch0FFnjh.png"></p>
+<p><img src="/images/Wngdbs6HYo7hPpxwICDc9YxVn8g.png"></p>
+<h3 id="做题启示"><a href="#做题启示" class="headerlink" title="做题启示"></a>做题启示</h3><p>白名单的题你既可以改路径,又可以改文件名,只要是正确的 %00 截断,都可以运行通过</p>
+<h2 id="我只想要你的-PNG！-不会做"><a href="#我只想要你的-PNG！-不会做" class="headerlink" title="我只想要你的 PNG！(不会做)"></a>我只想要你的 PNG！(不会做)</h2><p>一进来就是开拓者啊，令人眼前一亮</p>
+<p>本题没给任何提示，令人眼前一黑！</p>
+<p><img src="/images/N7h6bxtHPo9j1pxS5Uics168nie.png"></p>
+<p>传了个 php,他说只有 png 才能用,猜测是白名单</p>
+<p><img src="/images/Ch0WbNaSyow7mJx1DrVcBBl1nMb.png"></p>
+<p>那还是试试 %00 截断吧</p>
+<p><img src="/images/X6GEbjJHloAslTxNIDmcYndPnxr.png"></p>
+<p>点放行,自己改名了</p>
+<p><img src="/images/TtjEbXdB4oU4ZMxBfCfczuZgnde.png"></p>
+<p>尝试访问,直接报错</p>
+<p><img src="/images/IyVqbltdZoCzmyxcUldcYhrfnvb.png"></p>
+<p>打开网页源代码,发现有个 check.php</p>
+<p><img src="/images/TD7BbfhACoMrA4xUL2YclxXdnpb.png"></p>
+<p>访问一下,执行的貌似是 ls，这些文件似乎都没有被改名</p>
+<p><img src="/images/SaNPbu1HPoJ6AzxjqJ2c9JOJnyb.png"></p>
+<p><img src="/images/OZIdbkYk5oEln6x9LJgc24FBnrf.png"></p>
+<p>又试了下十六进制截断,还是不行,没辙了啊.这咋整</p>
+<p>然后还试了试访问根目录下的文件,貌似这是个文件名拼接(?,但是访问也不成功，换了个环境让文件名不那么长，还是不成功，那不会了…下一题吧</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/01/21/%E7%AC%AC%E4%BA%94%E7%AB%A0-SSTI%E6%B3%A8%E5%85%A5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2398,510 +2781,6 @@ highlight_file(__FILE__);
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2025/10/29/%E7%AC%AC%E4%BA%8C%E7%AB%A0-RCE%E4%B8%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="legend1440">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拂云观 · legend1440">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/10/29/%E7%AC%AC%E4%BA%8C%E7%AB%A0-RCE%E4%B8%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="post-title-link" itemprop="url">第二章-RCE与正则表达式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-10-29 10:00:00" itemprop="dateCreated datePublished" datetime="2025-10-29T10:00:00+08:00">2025-10-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-21 01:40:16" itemprop="dateModified" datetime="2026-01-21T01:40:16+08:00">2026-01-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="PHP-命令执行-续上周的学习"><a href="#PHP-命令执行-续上周的学习" class="headerlink" title="PHP 命令执行(续上周的学习)"></a><strong>PHP 命令执行(续上周的学习)</strong></h1><p><em><em>个人的所有作业中,带</em>的小点为做题补充知识点</em></p>
-<p>飞书链接:<a target="_blank" rel="noopener" href="https://icnewi51k2yp.feishu.cn/wiki/ItxLw7DWRiswQwkzPH8cNV83nbe?from=from_copylink">https://icnewi51k2yp.feishu.cn/wiki/ItxLw7DWRiswQwkzPH8cNV83nbe?from=from_copylink</a></p>
-<h2 id="二-替换绕过函数过滤-即使用特定的函数或者不被过滤的函数执行命令"><a href="#二-替换绕过函数过滤-即使用特定的函数或者不被过滤的函数执行命令" class="headerlink" title="二 替换绕过函数过滤(即使用特定的函数或者不被过滤的函数执行命令)"></a>二 替换绕过函数过滤(即使用特定的函数或者不被过滤的函数执行命令)</h2><p><strong>1.记住常见的可执行函数</strong></p>
-<p><img src="/images/YTOjbBuyboX4EFxc64EcBL17n7c.png"></p>
-<p><strong>2.LD_PRELOAD(修改库文件)绕过(用于面对禁用函数者过多的情况)</strong></p>
-<p>它可以影响程序的运行时的链接,允许你定义在程序运行前优先加载的动态链接库。</p>
-<p>因而可以向库文件种中注入恶意程序</p>
-<p>putenv(“LD_PRELOAD&#x3D;文件路径”) 这个语句就代表加载动态链接库.</p>
-<p>我们需要的就是修改动态链接库中代表某个 php 函数的动作.</p>
-<p>再运行这个函数时 便可以运行恶意程序.</p>
-<p>下面以经典的修改库文件函数 mail 为例叙述具体流程:</p>
-<p>(1)在修改库文件时，先要找出 mail 函数调用了子进程的什么内容(子进程的运行则基于一些以 C 语言为基础的函数).</p>
-<p>我们在名为 demo.php 程序中写入 mail 函数并运行</p>
-<p>(2)再从 cmd 上输入 strace -o 1.txt -f php demo.php(修改的是 mail 函数普适执行的程序,因此在控制台下进行)</p>
-<p>把 demo.php 执行的动作，以文本方式放在 1.txt</p>
-<p>(3)再用#cat 1.txt | grep execve 获取 1.txt 的内容,用后面的参数独一地检查调用了哪些子进程</p>
-<p>发现在调用的”sendmail”子进程可能代表的是 mail 函数,并且看到了 sendmail 的路径</p>
-<p>(4)最后使用 readelf -Ws&#x2F;usr&#x2F;sbin&#x2F;sendmail</p>
-<p>查看 sendmail 调用了哪些函数</p>
-<p>找到一个明显可以修改定义的函数 getuid()</p>
-<p>(5)用#vim demo2.c 手写一个 getuid()的定义,再用#gcc -shared -fPIC demo2.c-O demo2.so</p>
-<p>将带有命令的 c 文件编译成为.so 文件，生成动态链接库文件并用上文所提的 putenv 手动添加库文件</p>
-<p>(注意:库文件一般以.so 为后缀,但内容为 C 代码)</p>
-<p>这样就改变了 mail 函数的进程.</p>
-<p>综上 就有一些绕过条件</p>
-<p>第一是能够上传自己的.so 文件；</p>
-<p>第二是能够控制环境变量的值（设置 LD_PRELOAD 变量），比如 putenv 函数并且未被禁止；</p>
-<p>(实际上 可使用蚁剑上的插件直接绕过函数过滤[disable_function]),让过滤的函数有用.上文是为了解释原理.)</p>
-<h2 id="三-操作系统连接符"><a href="#三-操作系统连接符" class="headerlink" title="三 操作系统连接符"></a>三 操作系统连接符</h2><p>在 php 命令执行函数中,字符串代表的命令是可用的,字符串中的链接符亦然有用.</p>
-<p>所以若出现 system(“ls”.$_GET(a))</p>
-<p>可以在 a 前加操作系统链接符以执行 ls 和 a 代表的命令.</p>
-<p>&amp;&amp;（逻辑与运算符）: 只有当第一个命令 cmd_1 执行成功（返回值为 0）时，才会执行第二个命令 cmd_2。例:  mkdir test &amp;&amp; cd test</p>
-<p>||（逻辑或运算符）: 只有当第一个命令 cmd_1 执行失败（返回值不为 0）时，才会执行第二个命令 cmd_2。例:  cd nonexistent_directory || echo “Directory not found”</p>
-<p>&amp;（后台运行符）: 将命令 cmd_1 放到后台执行，Shell 立即执行 cmd_2，两个命令并行执行。例:  sleep 10 &amp; echo “This will run immediately.”</p>
-<p>;（命令分隔符,推荐）: 无论前一个命令 cmd_1 是否成功，都会执行下一个命令 cmd_2。例:  echo “Hello” ; echo “World”</p>
-<h2 id="四-空格过滤绕过"><a href="#四-空格过滤绕过" class="headerlink" title="四 空格过滤绕过"></a>四 空格过滤绕过</h2><p><strong>1.preg_replace 函数</strong></p>
-<p>preg_replace(“M”,”N”,$a)</p>
-<p>将 $a 变量中##中间的 M 字符(串)或者字符串替换为 N 字符</p>
-<p>并且返回值为替换后的 $a.</p>
-<p>注意 如果要替换空格 M 要换成# #</p>
-<p><strong>2.用大括号的形式绕过空格</strong></p>
-<p>cmd&#x3D;{ls,-l},逗号代表空格,也可以正常执行 ls -l.</p>
-<p><strong>3.IFS(内部字段分隔符)代替空格；</strong></p>
-<p>$IFS ${IFS}(推荐) $IFS$9 都可以代替空格.</p>
-<p><strong>4.UR 编码 09%</strong></p>
-<p>09% 代表 tab 键表示的空格,可以绕过正常的空格</p>
-<h2 id="五-文件名过滤绕过"><a href="#五-文件名过滤绕过" class="headerlink" title="五 文件名过滤绕过"></a>五 文件名过滤绕过</h2><p><strong>0.如果是换命令 换成其他的能够执行命令的函数</strong></p>
-<p><strong>1.通配符?绕过</strong></p>
-<p>fl?g 代表?位置的字符不确定 可以绕过 flag 一整个字符串的过滤.</p>
-<p><strong>2.通配符*绕过</strong></p>
-<p>fl* *ag *可以代表任何字符串</p>
-<p>cat *可以查看全部的文件</p>
-<p><strong>3.在匹配字符串的时候添加””或者’’</strong></p>
-<p>fl’’ag 也可以绕过 flag 一整个字符串的过滤</p>
-<p>*<em>4.用转义字符*</em></p>
-<p>\在过滤字符的时候会被包含 但是执行指令的时候不会</p>
-<p>注意+字符可能会有其他含义 要规避</p>
-<p><strong>5.用 $+ 数字&#x2F;@&#x2F;</strong>*</p>
-<p>代表的为空 相当于单引号或双引号.</p>
-<p><strong>6.内联执行</strong></p>
-<p>自定义字符串，再拼接起来.</p>
-<p>a&#x3D;f;d&#x3D;ag;c&#x3D;l;cat $a$c$d.txt</p>
-<p><strong>7.在环境变量中提取字符</strong></p>
-<p>已知环境变量 PATH 为一个路径,且第五个字符为 l</p>
-<p>#echo f${PATH:5:1}</p>
-<p>可以使用环境变量 PATH 里的第五个字符，（从 0 开始计数，l 为第五个字符）</p>
-<p>来显示 1 个字符；</p>
-<p>fl</p>
-<h2 id="六-常见文件读取指令绕过-通常为过滤-cat"><a href="#六-常见文件读取指令绕过-通常为过滤-cat" class="headerlink" title="六 常见文件读取指令绕过(通常为过滤 cat)"></a>六 常见文件读取指令绕过(通常为过滤 cat)</h2><p>1.tac 反向显示 将倒数第一行显示为第一行 以此类推 但是同一行中的方向不变</p>
-<p>2.more 按页显示 敲空格往后翻页</p>
-<p>3.less 与 more 同理</p>
-<p>4.tail 查看末尾若干行</p>
-<p>5.nl 显示的时候顺便显示行号</p>
-<p>6.od&#x2F;xxd 以二进制形式读取</p>
-<p>7.sort 用于排序文件 效果与 cat 也相似.</p>
-<p>8.uniq:报告或删除文件中重复的行 与 cat 效果相似.</p>
-<p>9.执行错误的 php 文件(通常只有 flag 这一行的 php 文件是错误的.),并使用 file -f 报错出具体的内容.</p>
-<p>例如 passthru(“file -f flag.php”); flag.php 没有办法执行 因此会报错出这个程序的具体内容 其中可能包含 flag</p>
-<p>10.grep：在文本中查找指定的字符串所对应的行 并输出这一行</p>
-<p>例如 cmd&#x3D;passthru(“grep fla fla*”);</p>
-<p>从 fla*文本文件中搜索包含”fla”字符串的行.</p>
-<h2 id="七-编码绕过-对提交的命令进行编码"><a href="#七-编码绕过-对提交的命令进行编码" class="headerlink" title="七 编码绕过(对提交的命令进行编码)"></a>七 编码绕过(对提交的命令进行编码)</h2><p>(基础不足 暂时略过)</p>
-<h2 id="八-斜杠绕过"><a href="#八-斜杠绕过" class="headerlink" title="*八 斜杠绕过"></a>*八 斜杠绕过</h2><p>这种情况通常为文件路径无法输入 可以用 cd 更换工作目录</p>
-<p>再用 cat 直接加文件名进行文件输出</p>
-<h2 id="九-多个指令的执行"><a href="#九-多个指令的执行" class="headerlink" title="*九 多个指令的执行"></a>*九 多个指令的执行</h2><p>不仅可以用;还可以用 %0a(推荐,对应换行符) %0d(回车符) %0D%0A 作为多个指令的分隔同时执行多个指令.</p>
-<p>注意:回车符（%0d）本身不换行，仅光标回行首；换行符（%0a）仅光标下移一行。</p>
-<p>两者组合（%0d%0a，即 \r\n）才是「完整的换行逻辑」，也是最通用的跨场景换行格式.</p>
-<h1 id="PHP-函数安全"><a href="#PHP-函数安全" class="headerlink" title="PHP 函数安全"></a>PHP 函数安全</h1><p>在 PHP 中，除了上周学的⼏个命令执⾏函数，还有⼀些危险函数存在⼀些攻击点，也是 ctf ⽐较常⻅的出题点.</p>
-<h2 id="1-is-numeric-绕过"><a href="#1-is-numeric-绕过" class="headerlink" title="1.is_numeric 绕过"></a>1.is_numeric 绕过</h2><p>作用：检测变量是否是数字或数字字符串 返回值为 bool。</p>
-<p>e.g.</p>
-<p>$a &#x3D; $_GET[‘a’];</p>
-<p>if (is_numeric($a)) {</p>
-<pre><code>exit();
-</code></pre>
-<p>} elseif ($a &#x3D;&#x3D; 404) {</p>
-<pre><code>echo &quot;flag&quot;;
-</code></pre>
-<p>}</p>
-<p>我们要将$a用get方式更改为404 但该函数能够检测变量是数字</p>
-<p>通过在数字前面或者后面加上%0a %0b %0c %0d %09等文件名过滤绕过的方法绕过</p>
-<h2 id="2-PHP精度"><a href="#2-PHP精度" class="headerlink" title="2.PHP精度"></a>2.PHP精度</h2><p>可使用IEEE 754 标准在线转换网站：<a target="_blank" rel="noopener" href="https://tooltt.com/floatconverter/">https://tooltt.com/floatconverter/</a></p>
-<p>进行进制转换.</p>
-<p>(注:基本上所有语言双精度格式都采用 IEEE 754)</p>
-<p>用精度漏洞可用x.99999999999999999来绕过对x+1数字的限制.</p>
-<h2 id="3-比较和类型转换漏洞"><a href="#3-比较和类型转换漏洞" class="headerlink" title="3.比较和类型转换漏洞"></a>3.比较和类型转换漏洞</h2><p>PHP 包含 松散 和 严格 比较</p>
-<p>松散比较（&#x3D;&#x3D;）比较值，但不比较类型，严格比较（&#x3D;&#x3D;&#x3D;）即比较值也比较类型</p>
-<p>echo (123 &#x3D;&#x3D; “123”)?1:0;</p>
-<p>返回:1</p>
-<p>echo (123 &#x3D;&#x3D;&#x3D; “123”)?1:0;</p>
-<p>返回:0</p>
-<p>注： 字符串转成数字后会是 0,而不是对应的ASCII码值.</p>
-<p>var_dump(0 &#x3D;&#x3D; “a”);</p>
-<p>返回： 1（0 &amp; 0 自然为1）</p>
-<p>$id &#x3D; intval(“12312a”);</p>
-<p>var_dump($id);</p>
-<p>输出：12312</p>
-<p>在 PHP 中类型转换有一定的缺陷，如果一个 字符串 要转成数值类型，首先对字符串进行一个判断，</p>
-<p>如果字符串包含 e 、. 、E 则会作为 float 来取值，否则则为 int ，上述例子由于 a 没有包含任何东西，</p>
-<p>所以被当作 int 来处理了，</p>
-<p>这里要说明的是，如果字符串起始部分为 数值 ，则采用 起始的数值 ，否则一律为 0</p>
-<p>需要注意的是科学计数法和十六进制也会被识别出来</p>
-<p>var_dump(100 &#x3D;&#x3D; “1e2”); #采用科学计数法</p>
-<p>返回：true</p>
-<p>var_dump(23333 &#x3D;&#x3D; “0x5b25”); #采用十六进制</p>
-<p>返回：true</p>
-<p>在 PHP8.0.0 之前（最新版本已修复），如果 字符串 与 数字 或者 数字字符串 进行比较，</p>
-<p>则会先进行 类型转换 再进行比较。</p>
-<p>最新版本直接识别为string string&#x3D;&#x3D;0会返回false了.</p>
-<h2 id="4-PHP-弱类型比较"><a href="#4-PHP-弱类型比较" class="headerlink" title="4.PHP 弱类型比较"></a>4.PHP 弱类型比较</h2><p>判断原始变量类型的函数(注意 PHP的变量不存在先声明后定义 一定要定义)</p>
-<h4 id="1-gettype-var-返回变量的「原始类型字符串」"><a href="#1-gettype-var-返回变量的「原始类型字符串」" class="headerlink" title="(1)gettype($var)返回变量的「原始类型字符串」"></a><strong>(1)gettype($var)返回变量的「原始类型字符串」</strong></h4><p>直接告诉你变量是什么类型（如 int、string、null 等）。</p>
-<p>(必须传已定义的变量)</p>
-<h4 id="2-empty-var-——-“空值检测器”"><a href="#2-empty-var-——-“空值检测器”" class="headerlink" title="(2)empty($var) —— “空值检测器”"></a><strong>(2)empty($var) —— “空值检测器”</strong></h4><p>判断变量是否为「空值」（宽松判断，不区分类型，只要是 “无意义” 的值都算空）。</p>
-<p>以下值会被判定为「空」，返回 true，其余返回 false：</p>
-<p>未定义的变量（$var 没声明）；</p>
-<p>null（显式赋值为 null）；</p>
-<p>布尔值 false；</p>
-<p>数值 0、0.0（整数 0、浮点数 0）；</p>
-<p>空字符串 “”、字符串 “0”（注意：仅 “0” 算空， “00”、”false” 不算）；</p>
-<p>空数组 []（count($var) &#x3D;&#x3D; 0）；</p>
-<p>(可以传未定义的变量)</p>
-<h4 id="3-is-null-var-——-“严格-null-判断器”"><a href="#3-is-null-var-——-“严格-null-判断器”" class="headerlink" title="(3)is_null($var) —— “严格 null 判断器”"></a><strong>(3)is_null($var) —— “严格 null 判断器”</strong></h4><p>核心作用：仅判断变量是否为「严格的 null」（比 empty 严格 10 倍，只认 null）。</p>
-<p>(必须传已定义的变量)</p>
-<h4 id="4-isset-var-——-“变量存在检测器”"><a href="#4-isset-var-——-“变量存在检测器”" class="headerlink" title="(4)isset($var) —— “变量存在检测器”"></a><strong>(4)isset($var) —— “变量存在检测器”</strong></h4><p>判断变量「是否已定义」且「值不为 null」（重点：检测 “存在性”，而非 “空值”）。</p>
-<p>已定义但值为 null → 返回 false；</p>
-<p>已定义且值不为 null → 返回 true（即使值是 0、””、[] 等空值也返回 true）；</p>
-<p>支持多变量判断：isset($a, $b, $c) → 所有变量都存在且非 null 才返回 true。</p>
-<p>(可以传未定义的变量,返回 false（不报错）；)</p>
-<h4 id="5-if-x-——-布尔值隐式转换（“真值检测器”）"><a href="#5-if-x-——-布尔值隐式转换（“真值检测器”）" class="headerlink" title="(5)if($x) —— 布尔值隐式转换（“真值检测器”）"></a><strong>(5)if($x) —— 布尔值隐式转换（“真值检测器”）</strong></h4><p>将变量 $x 隐式转换为布尔值 true&#x2F;false，判断变量是否为「真值」</p>
-<p>（逻辑和 empty() 几乎相反，但有细微差异）。</p>
-<p>以下值会被转为 false（和 empty() 判定为 “空” 的规则一致）：</p>
-<p>null、false、0、0.0、””、”0”、[]；</p>
-<p>其余值（如 “ “、1、”abc”、[“a”] 等）都会转为 true。</p>
-<p>(必须传已定义的变量)</p>
-<h4 id="6-弱类型比较表格"><a href="#6-弱类型比较表格" class="headerlink" title="(6)弱类型比较表格"></a><strong>(6)弱类型比较表格</strong></h4><p><a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/types.comparisons.php#types.comparisions-loose">https://www.php.net/manual/zh/types.comparisons.php#types.comparisions-loose</a></p>
-<p>(最重要的:0&#x3D;&#x3D;Null true)</p>
-<h4 id="7-strcmp函数"><a href="#7-strcmp函数" class="headerlink" title="(7)strcmp函数"></a><strong>(7)strcmp函数</strong></h4><p>描述：strcmp(str1, str2)</p>
-<p>如果 str1 小于 str2 返回 &lt; 0； 如果 str1 大于 str2 返回 &gt; 0；如果两者相等，返回 0。</p>
-<p>(注： 在 php5.0 以前，strcmp 返回的是 str2 第一位字母转成 ascii 后减去 str1 第一位字母。)</p>
-<p>当 strcmp 比较出错后，会返回 null，null 则为 0，举个例子</p>
-<p>$flag &#x3D; ‘flag{123}’;</p>
-<p>if (strcmp($flag, $_GET[‘str’]) &#x3D;&#x3D; 0) {</p>
-<pre><code>echo $flag;
-</code></pre>
-<p>}else{</p>
-<pre><code>echo &quot;Out!&quot;;
-</code></pre>
-<p>}</p>
-<p>为了使 strcmp 比较出错，可以传入一个数组</p>
-<p>非空数组和变量无法正常比较.</p>
-<h4 id="8-is-numeric函数"><a href="#8-is-numeric函数" class="headerlink" title="(8)is_numeric函数"></a><strong>(8)is_numeric函数</strong></h4><p>is_numeric() 用于检测数值是否为数值，如果遇到这个函数，可以用上述转换类型的特性</p>
-<p>（版本小于 8.0.0），如果传入的是字符串，会先将字符串转换成数值:</p>
-<p>(在 PHP8.0.0 之前（最新版本已修复），如果 字符串 与 数字 或者 数字字符串 进行比较，</p>
-<p>则会先进行 类型转换 再进行比较。</p>
-<p>最新版本直接识别为string string&#x3D;&#x3D;0会返回false了.)</p>
-<p>$flag &#x3D; ‘flag{111}’;</p>
-<p>$id &#x3D; $_GET[‘id’];</p>
-<p>if(is_numeric($id) &gt; 0){</p>
-<pre><code>echo &#39;Out!&#39;;
-</code></pre>
-<p>}else{</p>
-<pre><code>if ($id &gt; 233) {
-    echo $flag;
-
-}
-</code></pre>
-<p>}</p>
-<p>Payload: ?id&#x3D;2333,</p>
-<p>Payload: ?id&#x3D;2333%00</p>
-<p>Payload: ?id&#x3D;2333A</p>
-<h4 id="9-is-switch函数"><a href="#9-is-switch函数" class="headerlink" title="(9)is_switch函数"></a><strong>(9)is_switch函数</strong></h4><p>is_switch()¶</p>
-<p>这个方法和类型转换一样大同小异，case 会自动将字符转换成数值。这里来个例子就知道了</p>
-<p>$a &#x3D; “233a”; # 注意这里</p>
-<p>$flag &#x3D; “flag{Give you FLAG}”;</p>
-<p>switch ($a) {<br>    case 1:<br>        echo “No Flag”;<br>        break;<br>    case 2:<br>        echo “No Flag”;<br>        break;<br>    case 233:<br>        echo $flag;</p>
-<pre><code>    break;
-
-default:
-
-    $a = 233;
-
-    echo &quot;Haha...&quot;;
-</code></pre>
-<p>}</p>
-<p>输出：flag{Give you FLAG}</p>
-<h4 id="10-sha1-函数"><a href="#10-sha1-函数" class="headerlink" title="(10)sha1()函数"></a><strong>(10)sha1()函数</strong></h4><p>sha1() 是 PHP 中用于计算字符串 SHA-1 哈希值 的内置函数，属于哈希算法的一种，</p>
-<p>核心用途是将任意长度的字符串转换为固定长度（40 个字符）的 16 进制字符串</p>
-<p>sha1 的参数不能为数组，传入数组会返回 NULL，所以先传一个数组使得 sha1 函数报错，</p>
-<p>接着再左右两边传入不一样的内容，两边条件自然 &#x3D;1，相等即可绕过.</p>
-<p>$flag &#x3D; “flag{Chain!}”;</p>
-<p>$get &#x3D; $_GET[‘get’];</p>
-<p>$teg &#x3D; $_GET[‘teg’];</p>
-<p>if ($get !&#x3D; $teg &amp;&amp; sha1($get) &#x3D;&#x3D;&#x3D; sha1($teg)) {</p>
-<p>#if ($get !&#x3D; $teg &amp;&amp; sha1($get) &#x3D;&#x3D; sha1($teg)) {</p>
-<pre><code>echo $flag;
-</code></pre>
-<p>}else{</p>
-<pre><code>echo &#39;Out!&#39;;
-</code></pre>
-<p>}</p>
-<p>Payload: ?get[]&#x3D;&amp;teg[]&#x3D;1</p>
-<h3 id="5-md5哈希值问题"><a href="#5-md5哈希值问题" class="headerlink" title="5.md5哈希值问题"></a><strong>5.md5哈希值问题</strong></h3><p>描述：md5(字符串,字符串,var2)</p>
-<p>计算 字符串 的 MD5 散列值，如果 var2 为真将返回 16 字符长度的原始二进制格式</p>
-<p>md5 在处理哈希字符串的时候，如果 md5 编码后的哈希值时 0e （科学计数法）开头的，都一律解释为 0，</p>
-<p>所以当两个不同的值经过哈希编码后他们的值都是以 0e 开头的，则每个值都是 0</p>
-<p>(他们用松散等于是相等的 但严格等于未必!)</p>
-<p>var_dump(0e912 &#x3D;&#x3D; 0e112?1:0);</p>
-<p>输出：1</p>
-<p>常见 md5 以 0e 开头的值</p>
-<p>数值型</p>
-<p>240610708 0e462097431906509019562988736854 返回：0</p>
-<p>314282422 0e990995504821699494520356953734 返回：0</p>
-<p>571579406 0e972379832854295224118025748221 返回：0</p>
-<p>903251147 0e174510503823932942361353209384 返回：0</p>
-<p>字母型</p>
-<p>QLTHNDT 0e405967825401955372549139051580 返回：0</p>
-<p>QNKCDZO 0e830400451993494058024219903391 返回：0</p>
-<p>EEIZDOI 0e782601363539291779881938479162 返回：0</p>
-<p>TUFEPMC 0e839407194569345277863905212547 返回：0</p>
-<h4 id="弱类型比较的处理方法"><a href="#弱类型比较的处理方法" class="headerlink" title="&#x3D;&#x3D;弱类型比较的处理方法"></a><strong>&#x3D;&#x3D;弱类型比较的处理方法</strong></h4><p>$flag &#x3D; “flag{THIS_IS_REAL_FLAG}”;</p>
-<p>$v1 &#x3D; $_GET[‘gat’];</p>
-<p>$v2 &#x3D; $_GET[‘tag’];</p>
-<p>if ($v1 !&#x3D; $v2 &amp;&amp; md5($v1) &#x3D;&#x3D; md5($v2)) {</p>
-<pre><code>echo $flag;
-</code></pre>
-<p>}else{</p>
-<pre><code>echo &quot;Out!&quot;;
-</code></pre>
-<p>}</p>
-<p>v1 和 v2 是两个参数变量，首先 v1 不等于 v2，意思就是两个值必须不相同，</p>
-<p>其次 md5 后的 v1 和 md5 后的 v2 必须相同，这时候就可以使用上述 0e 方法构造 Payload，</p>
-<p>只需找出哪个值经过 md5 编码后以 0e 开头即可</p>
-<p>Payload: ?gat&#x3D;240610708&amp;tag&#x3D;314282422</p>
-<h4 id="数组比较法绕过-强比较"><a href="#数组比较法绕过-强比较" class="headerlink" title="数组比较法绕过&#x3D;&#x3D;&#x3D;强比较"></a><strong>数组比较法绕过&#x3D;&#x3D;&#x3D;强比较</strong></h4><p>如果遇到下列程序</p>
-<p>$flag &#x3D; “flag{THIS_IS_REAL_FLAG}”;</p>
-<p>$str1 &#x3D; $_GET[‘gat’];</p>
-<p>$str2 &#x3D; $_GET[‘tag’];</p>
-<p>if (md5($str1) &#x3D;&#x3D;&#x3D; md5($str2)) {</p>
-<pre><code>echo $flag;
-</code></pre>
-<p>}</p>
-<p>用上述 0e 方法自然是不可行的（注意：&#x3D;&#x3D;&#x3D;），这时候就得使用数组来绕过了</p>
-<p>如果传入一个数组的值，会报出错误（md5 只能使用字符串），报错后就相当于绕过&#x3D;&#x3D;&#x3D;这个条件了</p>
-<p>(注： 在 PHP 8.0.0 时，该方法行不通了)</p>
-<h4 id="md5-碰撞问题"><a href="#md5-碰撞问题" class="headerlink" title="md5 碰撞问题"></a><strong>md5 碰撞问题</strong></h4><p><strong>(即md5相同而内容完全不一样的字符串)</strong></p>
-<p>如果遇到不能传入数组，只能传入字符串的时候，如下例</p>
-<p>$flag &#x3D; “flag{THIS_IS_REAL_FLAG}”;</p>
-<p>$str1 &#x3D; $_GET[“gat”];</p>
-<p>$str2 &#x3D; $_GET[“tag”];</p>
-<p>if((string)$str1 !&#x3D;&#x3D; (string)$str2 &amp;&amp; md5($str1)&#x3D;&#x3D;&#x3D;md5($str2)){</p>
-<pre><code>echo &quot;flag{THIS_IS_REAL_FLAG}&quot;;
-</code></pre>
-<p>}else{</p>
-<pre><code>echo &quot;Out!&quot;;
-</code></pre>
-<p>}</p>
-<p>这时候就得需要 md5 碰撞((string)转化让第二个条件&#x3D;&#x3D;&#x3D;无法返回null,不然也可以用第二点的数组绕过)，</p>
-<p>上面判断条件的意思是，str1 和 str2 内容必须不同，但是 md5 必须相同。</p>
-<p>这里可以使用工具构造</p>
-<p>240610708</p>
-<p>314282422</p>
-<p>存在MD5碰撞漏洞</p>
-<h3 id="6-变量覆盖漏洞"><a href="#6-变量覆盖漏洞" class="headerlink" title="6.变量覆盖漏洞"></a><strong>6.变量覆盖漏洞</strong></h3><p>变量如果未被初始化，且能够被用户所控制，那么很可能会导致安全问题，前提是环境开启了</p>
-<p>register_globals&#x3D;ON</p>
-<p>如果传入一个参数 ?id&#x3D;1，并且这个参数把原有的变量值给覆盖掉了则叫做 变量覆盖漏洞</p>
-<p>例如</p>
-<p>$flag &#x3D; “flag{Chain!}”;</p>
-<p>$a &#x3D; “A”;</p>
-<p>$b &#x3D; “B”;</p>
-<p>echo “$a” . “\n”;</p>
-<p>echo “$b” . “\n”;</p>
-<p>$a &#x3D; $_GET[‘get’];  # $a 变量被我们传入的get给覆盖掉了</p>
-<p>echo $a . “\n”;</p>
-<p>echo $b . “\n”;</p>
-<p>传入参数：?get&#x3D;Genshin，返回</p>
-<p>a:A</p>
-<p>b:B</p>
-<p>a:Genshin</p>
-<p>b:B</p>
-<p>漏洞产生原因大致有:</p>
-<p>register_globals（全局变量）为 On</p>
-<p>$$ 使用不恰当<br>extract() 函数使用不当<br>parse_str() 使用不当<br>import_request_variables() 使用不当</p>
-<p>(12.1)$$</p>
-<p>在 PHP 中，$$ 是可变变量（Variable Variables） 的语法，核心作用是：用一个变量的值作为另一个变量的名称。</p>
-<p>简单说：如果有一个变量 $a &#x3D; “name”，那么 $$a 就等价于 $name（把 $a 的值 “name” 当作了新变量的名称）。</p>
-<h4 id="extract-函数"><a href="#extract-函数" class="headerlink" title="extract()函数"></a><strong>extract()函数</strong></h4><p>描述：extract(array,flags,prefix)</p>
-<p>array：数组</p>
-<p>flags(相当于模式的选择)：</p>
-<pre><code>EXTR_OVERWRITE - 如果有冲突，覆盖已有的变量。（默认）
-
-EXTR_SKIP - 如果有冲突，不覆盖已有的变量。
-
-EXTR_PREFIX_SAME - 如果有冲突，在变量名前加上前缀 prefix。（需要第 prefix 参数）
-
-…
-</code></pre>
-<p>prefix：该参数规定了前缀。前缀和数组键名之间会自动加上一个下划线。</p>
-<p>即若数组中有”a”&#x3D;&gt;”STR”</p>
-<p>变量又存在”a”&#x3D;”STR2”</p>
-<p>则EXTR_PREFIX_SAME模式下不会把STR赋给a,而会创建一个&lt;前缀&gt;_a的变量并把值赋给他    </p>
-<p>extract 用来将变量从数组中导入到当前的符号表中，并返回成功导入到符号表中的变量数目</p>
-<p>例</p>
-<p>$a &#x3D; “Source”;</p>
-<p>$array &#x3D; array(</p>
-<pre><code>&quot;a&quot;=&gt;&quot;JP&quot;,
-
-&quot;b&quot;=&gt;&quot;RU&quot;,
-
-&quot;c&quot;=&gt;&quot;US&quot;,
-</code></pre>
-<p>);</p>
-<p>extract($array);</p>
-<p>echo “$a &#x3D; “ . $a . “<br>“; # 注意这里，a原本是有内容的</p>
-<p>echo “$b &#x3D; “ . $b . “<br>“;</p>
-<p>echo “$c &#x3D; “ . $c . “<br>“;</p>
-<p>返回</p>
-<p>$a &#x3D; JP</p>
-<p>$b &#x3D; RU</p>
-<p>$c &#x3D; US</p>
-<p>(注意:extract($_POST); 的核心意思是：将前端通过 POST 请求提交的所有数据（存储在 $_POST 关联数组中）</p>
-<p>批量转为当前作用域的 PHP 变量—— 数组的「键名」会变成变量名，数组的「键值」会变成变量值。)</p>
-<p>(假设前端通过表单 &#x2F; POST 请求发送了 3 个变量：username&#x3D;张三、age&#x3D;25、email&#x3D;<a href="mailto:&#122;&#104;&#97;&#110;&#x67;&#115;&#97;&#110;&#x40;&#101;&#120;&#x61;&#x6d;&#x70;&#x6c;&#101;&#46;&#99;&#x6f;&#109;">zhangsan@example.com</a>，那么 PHP 接收后：</p>
-<p>$_POST 数组的结构是：[“username” &#x3D;&gt; “张三”, “age” &#x3D;&gt; 25, “email” &#x3D;&gt; “<a href="mailto:&#x7a;&#x68;&#97;&#110;&#103;&#x73;&#97;&#110;&#64;&#x65;&#x78;&#x61;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#99;&#111;&#x6d;">zhangsan@example.com</a>“]</p>
-<p>执行 extract($_POST); 后，会自动创建 3 个变量：</p>
-<p>$username &#x3D; “张三”（键名 username → 变量名 $username，键值为值）</p>
-<p>$age &#x3D; 25（键名 age → 变量名 $age）</p>
-<p>$email &#x3D; “<a href="mailto:&#x7a;&#104;&#x61;&#x6e;&#103;&#x73;&#97;&#x6e;&#x40;&#x65;&#x78;&#x61;&#109;&#x70;&#108;&#x65;&#x2e;&#99;&#x6f;&#x6d;">zhangsan@example.com</a>“（键名 email → 变量名 $email）</p>
-<p>之后你可以直接用 $username、$age 访问数据，无需再写 $_POST[‘username’]。)</p>
-<h4 id="parse-str-str-函数"><a href="#parse-str-str-函数" class="headerlink" title="parse_str(str)函数"></a><strong>parse_str(str)函数</strong></h4><p>描述：parse_str(str) 用于将字符串解析成多个变量(也可以为单个变量)，没有返回值\</p>
-<p>parse_str(“username&#x3D;A&amp;password&#x3D;123456”);</p>
-<p>echo “Username: “ . $username . “<br>“;</p>
-<p>echo “Password: “ . $password;</p>
-<p>输出</p>
-<p>Username: A</p>
-<p>Password: 123456</p>
-<p>原本这个函数有 array 参数的，但在 7.2 后废除了，array 变量会以数组元素的形式存入到这个数组，作为替代</p>
-<p>来到例题</p>
-<p>$UIUCTF &#x3D; “UIUCTF Hacker.”;</p>
-<p>$id &#x3D; $_GET[‘id’];</p>
-<p>@parse_str($id);</p>
-<p>if ($a[0] !&#x3D; ‘QNKCDZO’ &amp;&amp; md5($a[0]) &#x3D;&#x3D; md5(‘QNKCDZO’)) {</p>
-<pre><code>echo $flag;
-</code></pre>
-<p>}else{</p>
-<pre><code>echo &quot;Out!&quot;;
-</code></pre>
-<p>}</p>
-<p>#QNKCDZO &#x3D; 0e830400451993494058024219903391</p>
-<p>注意第四行，和前面的 md5 比较有关系，但不同的是这里加入了 parse_str 这个函数，这段代码大致意思就和上面 md5 绕过的意思一样，如果 md5 编码后的哈希值时 0e （科学计数法）开头的，都一律解释为 0，所以当两个不同的值经过哈希编码后他们的值都是以 0e 开头的，则每个值都是 0，与众不同的是我们要覆盖掉 a[0] 这个变量</p>
-<p>Payload: ?id&#x3D;a[0]&#x3D;240610708</p>
-<h4 id="register-globals环境变量问题"><a href="#register-globals环境变量问题" class="headerlink" title="register_globals环境变量问题"></a><strong>register_globals环境变量问题</strong></h4><p>register_globals 设置为 on 的时候，传递的参数会 自动注册 为全局变量。</p>
-<p>ini_set(“register_globals”, “On”);</p>
-<p>echo $a;</p>
-<h3 id="略-伪协议问题"><a href="#略-伪协议问题" class="headerlink" title="(略)伪协议问题"></a><strong>(略)伪协议问题</strong></h3><p>(基础不足，暂时略过)</p>
-<h1 id="正则表达式基本语法"><a href="#正则表达式基本语法" class="headerlink" title="正则表达式基本语法"></a>正则表达式基本语法</h1><p>正则表达式是⼀种⽤于匹配和操作⽂本的强⼤⼯具，它是由⼀系列字符和特殊字符组成的模式，⽤于 </p>
-<p>描述要匹配的⽂本模式。 </p>
-<p>正则表达式可以在⽂本中查找、替换、提取和验证特定的模式。 </p>
-<p>例如： </p>
-<p>• runoo+b，可以匹配 runoob、runooob、runoooooob 等，+ 号代表前⾯的字符必须⾄少出现⼀ </p>
-<p>次（</p>
-<p>1次或多次） </p>
-<p>• runoo<em>b，可以匹配 runob、runoob、runoooooob 等，</em> 号代表前⾯的字符可以不出现，也可 </p>
-<p>以出现⼀次或者多次（</p>
-<p>0次、或1次、或多次） </p>
-<p>• colou?r 可以匹配 color 或者 colour，? 问号代表前⾯的字符最多只可以出现⼀次（</p>
-<p>0次或1次） </p>
-<p>正则分隔符:（</p>
-<p>PHP 正则需⽤ &#x2F; 或 # 等包裹）例如&#x2F;runoo*b&#x2F; </p>
-<p>⼦表达式:不加括号的时候是前⼀个字符,加括号时是前⼀个括号内的字符 </p>
-<p>例如colo(ur)?可以匹配colo. </p>
-<h2 id="正则表达式的基本语法与应用"><a href="#正则表达式的基本语法与应用" class="headerlink" title="正则表达式的基本语法与应用"></a><strong>正则表达式的基本语法与应用</strong></h2><p>**(1)指定⼦表达式的出现次数 **</p>
-<p>除了上⾯举例中的?,*和+外,还有⼀些⽅式可以指定⼦表达式的出现次数. </p>
-<p>ab{2}c 表⽰指定ac之中出现b的次数为2次 </p>
-<p>ab{2,6}c 表⽰指定ac之中出现b的次数为2-6次 </p>
-<p>ac{2,}c 即为表⽰指定ac之中出现b的次数⼤于等于2次 </p>
-<p>**(2)正则表达式的逻辑运算符 **</p>
-<p>|表⽰或 配合()⼀起使⽤ 例如a(b|c),匹配ab或ac </p>
-<p>**(3)字符类运算符 **</p>
-<p>[]+ ⽅括号的内容表⽰匹配的字符只能取⾃他们,注意是每⼀个字符,不是字符串 </p>
-<p>_(这⾥可以思考⼀下preg_match函数中()和[]的区别,|⽤在哪个地⽅会使()和[]等价) _</p>
-<p>不同字符中间也不需要分隔 </p>
-<p>[abc]+ 能匹配到abc aabbcc等 </p>
-<p>[a-z]+ 能匹配到所有带有⼩写字⺟的字符串 </p>
-<p>[a-zA-z0-9]+ 能匹配到所有带有⼩写字⺟,⼤写字⺟或数字的字符串 </p>
-<p>如果在⽅括号最开始加^,即代表否定,[^abc],则代表匹配⽆三个字⺟abc的字符串注:带⽅括号的整体为⼀整个⼦表达式 </p>
-<p>如可按照\a[abc]{1}\匹配到aa ab ac. </p>
-<p>可按照\1[0-4][0-9]\匹配到⼩于15 </p>
-<p>0的数字 </p>
-<p>**(4)元字符 **</p>
-<p>正则表达式的⼤部分元字符都以\开头 </p>
-<p>\d数字字符 相当于[0-9] </p>
-<p>\w单词字符 代表所有的字⺟ 数字 下划线 相当于[a-zA-z0-9] </p>
-<p>\s空⽩符 代表tab和空⽩符 </p>
-<p>\D ⾮数字字符 </p>
-<p>\W ⾮单词字符 </p>
-<p>\S ⾮空⽩字符 </p>
-<p>. 代表除换⾏符以外的任意字符(如果要匹配.这个符号,可以⽤.) </p>
-<p>^(⼦表达式) 只匹配字符⾸ ^a只匹配⾏头的a </p>
-<p>$(⼦表达式) 只匹配字符尾 $a只匹配⾏尾的a </p>
-<p>这⾥要和[^abc]区分,那个只是字符类运算符! </p>
-<p>**(5)正则表达式中的其他概念 **</p>
-<p>贪婪与懒惰匹配 </p>
-<p>*,+和{},会默认匹配尽可能多的字符,称贪婪匹配 </p>
-<p>在其后加? 则切换为懒惰匹配 </p>
-<p>例如&lt;.+&gt; +能够匹配⼦表达式.,即任意的⾮换⾏字符,因⽽整个正则表达式可以匹配除了换⾏符以外的整 </p>
-<p>个⽂本 </p>
-<p>&lt;.+?&gt; +还是能够匹配⼦表达式.但是由于?的存在,+只会选择.代表的⽂本中第⼀个字符匹配</p>
-<p>例如⽂本为 abc def efg agh</p>
-<p>&lt;.+&gt; 能匹配整个⽂本</p>
-<p>&lt;.+?&gt; 只能以懒惰匹配识别包含于.的 a,匹配带有 a 的字符串.</p>
-<p>参考视频</p>
-<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1da4y1p7iZ/">https://www.bilibili.com/video/BV1da4y1p7iZ/</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2971,7 +2850,7 @@ EXTR_PREFIX_SAME - 如果有冲突，在变量名前加上前缀 prefix。（需
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

