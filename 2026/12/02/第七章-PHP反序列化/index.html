@@ -23,7 +23,7 @@
   <meta name="description" content="飞书链接:https:&#x2F;&#x2F;icnewi51k2yp.feishu.cn&#x2F;wiki&#x2F;Tcjmwc5RAigdUUk2ZmSc8rfan1c?from&#x3D;from_copylink [Week7.1]php 反序列化绪论在 Web 安全与 CTF 竞赛中，PHP 反序列化漏洞始终是高频且核心的考点—— 它不像文件上传漏洞那样 “直观可见”，却常隐藏在代码逻辑深处，成为突破服务器权限的关键入口。本章我们将">
 <meta property="og:type" content="article">
 <meta property="og:title" content="第七章-PHP反序列化">
-<meta property="og:url" content="http://hnu-legend1440.com/2026/01/21/%E7%AC%AC%E4%B8%83%E7%AB%A0-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/index.html">
+<meta property="og:url" content="http://hnu-legend1440.com/2026/12/02/%E7%AC%AC%E4%B8%83%E7%AB%A0-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/index.html">
 <meta property="og:site_name" content="拂云观 · legend1440">
 <meta property="og:description" content="飞书链接:https:&#x2F;&#x2F;icnewi51k2yp.feishu.cn&#x2F;wiki&#x2F;Tcjmwc5RAigdUUk2ZmSc8rfan1c?from&#x3D;from_copylink [Week7.1]php 反序列化绪论在 Web 安全与 CTF 竞赛中，PHP 反序列化漏洞始终是高频且核心的考点—— 它不像文件上传漏洞那样 “直观可见”，却常隐藏在代码逻辑深处，成为突破服务器权限的关键入口。本章我们将">
 <meta property="og:locale" content="zh_CN">
@@ -130,13 +130,13 @@
 <meta property="og:image" content="http://hnu-legend1440.com/images/LDoybzVHXobPTXxsfTDcIbSMnAf.png">
 <meta property="og:image" content="http://hnu-legend1440.com/images/F6Ccb6aeGoQLdHxRbcFcjkTunDb.png">
 <meta property="og:image" content="http://hnu-legend1440.com/images/SR6LbHXkVo5MQMxOZMhcvN4Xndc.png">
-<meta property="article:published_time" content="2026-01-20T17:49:30.000Z">
-<meta property="article:modified_time" content="2026-01-20T17:51:19.179Z">
+<meta property="article:published_time" content="2026-12-02T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-20T17:53:17.614Z">
 <meta property="article:author" content="legend1440">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://hnu-legend1440.com/images/Q9DWbXJRdoVEDOxXxG0cNB6unVd.png">
 
-<link rel="canonical" href="http://hnu-legend1440.com/2026/01/21/%E7%AC%AC%E4%B8%83%E7%AB%A0-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+<link rel="canonical" href="http://hnu-legend1440.com/2026/12/02/%E7%AC%AC%E4%B8%83%E7%AB%A0-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
 
 
 <script id="page-configurations">
@@ -274,7 +274,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/01/21/%E7%AC%AC%E4%B8%83%E7%AB%A0-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/12/02/%E7%AC%AC%E4%B8%83%E7%AB%A0-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -296,10 +296,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2026-01-21 01:49:30 / 修改时间：01:51:19" itemprop="dateCreated datePublished" datetime="2026-01-21T01:49:30+08:00">2026-01-21</time>
+              <time title="创建时间：2026-12-02 12:00:00" itemprop="dateCreated datePublished" datetime="2026-12-02T12:00:00+08:00">2026-12-02</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-01-21 01:53:17" itemprop="dateModified" datetime="2026-01-21T01:53:17+08:00">2026-01-21</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -980,7 +986,10 @@
     <a href="/2026/01/18/hello-world/" rel="prev" title="欢迎大家前来阅读文章">
       <i class="fa fa-chevron-left"></i> 欢迎大家前来阅读文章
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2026/12/09/%E7%AC%AC%E5%85%AB%E7%AB%A0-SSRF%E6%BC%8F%E6%B4%9E/" rel="next" title="第八章-SSRF漏洞">
+      第八章-SSRF漏洞 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -1053,7 +1062,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
