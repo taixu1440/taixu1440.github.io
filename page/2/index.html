@@ -165,6 +165,270 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2025/12/09/%E7%AC%AC%E5%85%AB%E7%AB%A0-SSRF%E6%BC%8F%E6%B4%9E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="legend1440">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拂云观 · legend1440">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/12/09/%E7%AC%AC%E5%85%AB%E7%AB%A0-SSRF%E6%BC%8F%E6%B4%9E/" class="post-title-link" itemprop="url">第八章-SSRF漏洞</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-12-09 12:00:00" itemprop="dateCreated datePublished" datetime="2025-12-09T12:00:00+08:00">2025-12-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-01-21 01:56:18" itemprop="dateModified" datetime="2026-01-21T01:56:18+08:00">2026-01-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>飞书链接:<a target="_blank" rel="noopener" href="https://icnewi51k2yp.feishu.cn/wiki/KTLBwFFFkigQbpkPUZTc5egEnCc?from=from_copylink">https://icnewi51k2yp.feishu.cn/wiki/KTLBwFFFkigQbpkPUZTc5egEnCc?from=from_copylink</a></p>
+<h1 id="Week9-1-SSRF-漏洞绪论"><a href="#Week9-1-SSRF-漏洞绪论" class="headerlink" title="[Week9.1]SSRF 漏洞绪论"></a>[Week9.1]SSRF 漏洞绪论</h1><h3 id="SSRF-漏洞简介"><a href="#SSRF-漏洞简介" class="headerlink" title="SSRF 漏洞简介"></a>SSRF 漏洞简介</h3><h4 id="核心定义"><a href="#核心定义" class="headerlink" title="核心定义"></a>核心定义</h4><p>SSRF &#x3D; 服务器端请求伪造 → <strong>你让服务器替你发请求</strong>，服务器能访问的资源（本地文件、内网服务），你自己访问不了，但通过 SSRF 就能 “借服务器的手” 拿到。</p>
+<h4 id="类比示例"><a href="#类比示例" class="headerlink" title="类比示例"></a><strong>类比示例</strong></h4><p>你想去邻居家（服务器内网）偷东西，但你进不去（你直接访问不了内网）；你骗物业（服务器）：“帮我去邻居家拿个快递”（构造 SSRF 请求）；物业有钥匙（服务器能访问内网），真的去邻居家帮你拿了（服务器执行请求，返回结果给你）；→ 你没进门，却拿到了邻居家的东西 &#x3D; SSRF 攻击成功。</p>
+<h4 id="技术层面示例"><a href="#技术层面示例" class="headerlink" title="技术层面示例"></a>技术层面示例</h4><p>靶机有个文件读取接口：<code>http://靶机/fetch.php?url=xxx</code>，功能是 “服务器根据你传的 url，去获取内容并返回给你”。</p>
+<ul>
+<li>正常用法：你传 <code>url=``https://www.baidu.com</code> → 服务器帮你爬百度页面，返回给你；</li>
+<li>SSRF 攻击：你传 <code>url=file:///var/www/html/flag.php</code> → 服务器帮你读它本地的 flag.php，把内容返回给你（你自己直接访问不到这个文件）；</li>
+<li>关键：服务器的权限远大于你，它能访问自己的本地文件、内网机器，你通过 SSRF 就能 “蹭” 它的权限。</li>
+</ul>
+<p><img src="/images/P5eCbhdtso6d5xxakydcZrmRnJh.png"></p>
+<h3 id="SSRF-核心应用场景"><a href="#SSRF-核心应用场景" class="headerlink" title="SSRF 核心应用场景"></a>SSRF 核心应用场景</h3><p><img src="/images/UGo8bjjdAogbpCx6Ocxcer2BnWa.png"></p>
+<h4 id="场景-1：读取服务器本地文件"><a href="#场景-1：读取服务器本地文件" class="headerlink" title="场景 1：读取服务器本地文件"></a>场景 1：读取服务器本地文件</h4><p>用 <code>file://</code> 协议，让服务器读它自己的文件：</p>
+<ul>
+<li>测试 Payload：<code>http://靶机/fetch.php?url=file:///etc/passwd</code>（&#x2F;etc&#x2F;passwd 是 Linux 系统必有的文件，能读到说明 SSRF 存在）；</li>
+<li>拿 flagPayload：<code>http://靶机/fetch.php?url=file:///var/www/html/flag.php</code>（根据题目提示的 flag 路径调整）；</li>
+</ul>
+<h4 id="场景-2：探测内网服务"><a href="#场景-2：探测内网服务" class="headerlink" title="场景 2：探测内网服务"></a>场景 2：探测内网服务</h4><p>服务器内网可能有隐藏的服务（比如数据库、后台管理页），你直接访问不了，但服务器能访问：</p>
+<ul>
+<li>测试内网 IP：<code>http://靶机/fetch.php?url=``http://192.168.1.101:80</code>（看是否能访问内网 101 机器的 80 端口）；</li>
+<li>测试本地端口：<code>http://靶机/fetch.php?url=``http://127.0.0.1:3306</code>（看本地是否开了 MySQL 服务）；</li>
+</ul>
+<h4 id="场景-3：攻击内网服务（了解即可）"><a href="#场景-3：攻击内网服务（了解即可）" class="headerlink" title="场景 3：攻击内网服务（了解即可）"></a>场景 3：攻击内网服务（了解即可）</h4><p>如果内网服务有漏洞（比如 Redis 未授权访问），通过 SSRF 让服务器去攻击内网服务：</p>
+<ul>
+<li>例子：<code>http://靶机/fetch.php?url=gopher://127.0.0.1:6379/_CONFIG SET dir /var/www/html</code>（让服务器给内网 Redis 发命令，写后门文件）；</li>
+</ul>
+<h3 id="前置知识-NAT"><a href="#前置知识-NAT" class="headerlink" title="前置知识 NAT"></a>前置知识 NAT</h3><p>NAT(Network Address Translation)</p>
+<p>网络地址转换</p>
+<p>通过将一个外部 IP 地址和端口映射到</p>
+<p>更大的内部 IP 地址集来转换 IP 地址。</p>
+<p><img src="/images/Ltp9bUkt8ovsZzxzMDOcb6g8n4b.png"></p>
+<h3 id="漏洞举例"><a href="#漏洞举例" class="headerlink" title="漏洞举例"></a>漏洞举例</h3><p>我们正常访问 127.0.0.1&#x2F;flag.php 是没办法访问的，但题目中有特定程序处理 URL 参数，并以服务器的高权限身份访问到了这一(可能是内网)的内容</p>
+<p><img src="/images/U373bvAkZoA5mFxUm7lclniDnJl.png"></p>
+<h1 id="Week9-2-SSRF-漏洞利用"><a href="#Week9-2-SSRF-漏洞利用" class="headerlink" title="[Week9.2]SSRF 漏洞利用"></a>[Week9.2]SSRF 漏洞利用</h1><p><em>注:SSRF 靶场在本节作为例题出现过的，本章实验就不会再出现了</em></p>
+<h2 id="认识-127-0-0-1"><a href="#认识-127-0-0-1" class="headerlink" title="认识 127.0.0.1"></a>认识 127.0.0.1</h2><p><code>127.0.0.1</code> 是服务器的<strong>本地回环地址，是只在服务器本机生效的 IP</strong>，数据不会走外网，只有服务器自己能访问这个地址对应的资源，你如果不用服务器的程序代码，而是直接用浏览器 URL 访问 <code>127.0.0.1</code>，访问的是你自己的电脑，不是靶机服务器的</p>
+<p><img src="/images/KfjGbVjbMoEGasxunnscEiDTnee.png"></p>
+<h2 id="SSRF-重要函数"><a href="#SSRF-重要函数" class="headerlink" title="SSRF 重要函数"></a>SSRF 重要函数</h2><h3 id="file-get-contents-与-readfile"><a href="#file-get-contents-与-readfile" class="headerlink" title="file_get_contents() 与 readfile()"></a>file_get_contents() 与 readfile()</h3><p><code>file_get_contents</code> 这一函数是把 <strong>传入的参数(变量)</strong> 写入字符串，当把 <strong>传参</strong> 是内网文件的时候，会先去把这个文件的内容读出来再写入，导致了任意文件读取，也就是信息泄露的一种。一般这种攻击也与目录遍历相结合。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ssrf.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$url</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>];;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/Rj2SbZEY4oPtEpx8bf9cZ0Fqnjg.png"></p>
+<h3 id="fsockopen"><a href="#fsockopen" class="headerlink" title="fsockopen()"></a>fsockopen()</h3><p><code>fsockopen($hostname,$port,$errno,$errstr,$timeout)</code>  用于打开一个网络连接或者一个 Unix 套接字连接，初始化一个套接字连接到指定主机（hostname），实现对用户指定 url  数据的获取。该函数会使用 socket 跟服务器建立 tcp 连接，进行传输原始数据。 fsockopen()  将返回一个文件句柄，之后可以被其他文件类函数调用 <code>（例如：fgets()，fgetss()，fwrite()，fclose()还有feof()）</code> 如果调用失败，将返回 false。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ssrf.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$host</span>=<span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="variable">$fp</span> = <span class="title function_ invoke__">fsockopen</span>(<span class="variable">$host</span>, <span class="number">80</span>, <span class="variable">$errno</span>, <span class="variable">$errstr</span>, <span class="number">30</span>);</span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$fp</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;<span class="subst">$errstr</span> (<span class="subst">$errno</span>)&lt;br /&gt;\n&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="variable">$out</span> = <span class="string">&quot;GET / HTTP/1.1\r\n&quot;</span>;</span><br><span class="line">    <span class="variable">$out</span> .= <span class="string">&quot;Host: <span class="subst">$host</span>\r\n&quot;</span>;</span><br><span class="line">    <span class="variable">$out</span> .= <span class="string">&quot;Connection: Close\r\n\r\n&quot;</span>;</span><br><span class="line">    <span class="title function_ invoke__">fwrite</span>(<span class="variable">$fp</span>, <span class="variable">$out</span>);</span><br><span class="line">    <span class="keyword">while</span> (!<span class="title function_ invoke__">feof</span>(<span class="variable">$fp</span>)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">fgets</span>(<span class="variable">$fp</span>, <span class="number">128</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_ invoke__">fclose</span>(<span class="variable">$fp</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="curl-exec"><a href="#curl-exec" class="headerlink" title="curl_exec()"></a>curl_exec()</h3><p>curl_init(url) 函数初始化一个新的会话，返回一个 cURL 句柄，供 <code>curl_setopt()，curl_exec()和curl_close()</code> 函数使用。</p>
+<p><em>注:</em><strong>cURL 句柄就是你给 cURL 工具 “开的一个专属操作窗口”</strong>_ —— 你要让 cURL 帮你发 HTTP&#x2F;HTTPS&#x2F;FTP 等请求，得先 “开一个窗口（创建句柄）”，在这个窗口里设置请求的 URL、请求方法、头信息等参数，让 cURL 按你的要求干活，干完活再 “关掉这个窗口（关闭句柄）”。_</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="comment">// 1. 检测URL中是否传入了名为url的GET参数（核心触发条件）</span></span><br><span class="line"><span class="comment">// 比如访问 http://localhost/ssrf.php?url=http://127.0.0.1/flag.php 时，该条件成立</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>]))&#123;</span><br><span class="line">    <span class="comment">// 2. 将GET参数url的值赋值给变量$link，后续作为cURL请求的目标地址</span></span><br><span class="line">    <span class="comment">// $link就是攻击者可控的核心参数，也是SSRF漏洞的入口</span></span><br><span class="line">        <span class="variable">$link</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 3. 初始化cURL会话，返回一个cURL句柄（资源类型）</span></span><br><span class="line">        <span class="comment">// 句柄是后续配置cURL请求、执行请求的唯一标识，所有操作都基于这个句柄</span></span><br><span class="line">        <span class="variable">$curlobj</span> = <span class="title function_ invoke__">curl_init</span>(); </span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 4. 设置cURL参数：强制使用GET请求（禁用POST）</span></span><br><span class="line">        <span class="comment">// CURLOPT_POST=0 表示请求方法为GET；若设为1则为POST请求</span></span><br><span class="line">        <span class="comment">// 该配置限制了请求方法，但不影响SSRF的核心利用（GET已足够访问文件/内网）</span></span><br><span class="line">        <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curlobj</span>, CURLOPT_POST, <span class="number">0</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 5. 设置cURL的核心参数：指定要请求的目标URL</span></span><br><span class="line">        <span class="comment">// 将攻击者可控的$link作为请求地址，这是SSRF的关键——服务器会按这个地址发送请求</span></span><br><span class="line">        <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curlobj</span>,CURLOPT_URL,<span class="variable">$link</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 6. 设置cURL参数：将请求结果以字符串返回，而非直接输出到浏览器</span></span><br><span class="line">        <span class="comment">// 若不设该参数，curl_exec()会直接把结果打印到页面，设为1则可将结果存入变量$result</span></span><br><span class="line">        <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curlobj</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>); </span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 7. 执行cURL会话：根据上述配置发送请求，并获取响应结果</span></span><br><span class="line">        <span class="comment">// 服务器会代替攻击者访问$link指定的地址（本地文件/内网服务/外网），并把响应内容赋值给$result</span></span><br><span class="line">        <span class="comment">// 这一步是SSRF漏洞的核心执行过程：服务器主动发起请求，获取目标资源</span></span><br><span class="line">        <span class="variable">$result</span>=<span class="title function_ invoke__">curl_exec</span>(<span class="variable">$curlobj</span>); </span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 8. 关闭cURL句柄，释放系统资源（避免内存泄漏）</span></span><br><span class="line">        <span class="comment">// 执行完请求后必须关闭句柄，是cURL使用的规范操作</span></span><br><span class="line">        <span class="title function_ invoke__">curl_close</span>(<span class="variable">$curlobj</span>); </span><br><span class="line"> </span><br><span class="line">        <span class="comment">// 以下两行是被注释的代码，原本功能是将请求结果写入本地文件（可忽略）</span></span><br><span class="line">        <span class="comment">// $filename = &#x27;./curled/&#x27;.rand().&#x27;.txt&#x27;; // 生成随机文件名，避免重复</span></span><br><span class="line">        <span class="comment">// file_put_contents($filename, $result); // 将$result写入本地文件</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 9. 输出cURL请求的结果到浏览器</span></span><br><span class="line">        <span class="comment">// 攻击者可通过这一步获取服务器请求$link后的响应内容（比如本地flag文件、内网服务信息）</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$result</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以通过 <code>file、dict、gopher</code> 这三个协议来进行渗透，提高 <code>curl_exec()</code> 这里的攻击危害。</p>
+<p>下见危险协议</p>
+<h2 id="SSRF-信息收集伪协议"><a href="#SSRF-信息收集伪协议" class="headerlink" title="SSRF 信息收集伪协议"></a>SSRF 信息收集伪协议</h2><h3 id="File-伪协议"><a href="#File-伪协议" class="headerlink" title="File 伪协议"></a>File 伪协议</h3><p>file:&#x2F;&#x2F;从文件系统中获取文件内容，格式为 file:&#x2F;&#x2F;[文件路径]</p>
+<p>这些是常使用的文件名读取</p>
+<p><img src="/images/MRNtbeQq0oqgBOxP8Exc5T9Entd.png"></p>
+<p>file 伪协议的用途一般是查找内网存活主机，这里涉及到对 arp 和 burp 爆破的应用，这里暂不叙述，CTF 解题时若遇到再进行举例</p>
+<p>大致就是，先用 burp 爆破所有想查询的范围</p>
+<p><img src="/images/QZesbMZCjoTTMpxkwizcfoMwnsh.png"></p>
+<p>然后如下访问 arp 缓存表</p>
+<p><img src="/images/ANJYb93uDoL9nSxtDtNcZReqnJb.png"></p>
+<p>扫到一个这样的表，观察圈起来的这一列与众不同的就是打开的主机了</p>
+<p><img src="/images/XTjwbvuYVof40mxk1hRcgyDrnze.png"></p>
+<h4 id="实验举例-hello-ssrf-Level1"><a href="#实验举例-hello-ssrf-Level1" class="headerlink" title="[实验举例]hello-ssrf-Level1"></a>[实验举例]hello-ssrf-Level1</h4><p>使用服务器提供的请求来读取根目录下 flag 文件</p>
+<p><img src="/images/KdNgbWgWxoNo6Wx50A4cZIRbnjw.png"></p>
+<h3 id="Dict-伪协议-端口扫描"><a href="#Dict-伪协议-端口扫描" class="headerlink" title="Dict 伪协议(端口扫描)"></a>Dict 伪协议(端口扫描)</h3><p>利用 <code>dict</code> 协议，<code>dict://&lt;ip&gt;/info</code> 可获取本地 <code>redis</code> 服务配置信息。</p>
+<p>对后续漏洞(查找内网主机开放端口等)有所帮助</p>
+<h4 id="实验举例-hello-ssrf-Level2"><a href="#实验举例-hello-ssrf-Level2" class="headerlink" title="[实验举例]hello-ssrf-Level2"></a>[实验举例]hello-ssrf-Level2</h4><p>SSRF 中的端口探测，我们常用 <code>dict</code> 协议进行端口扫描.</p>
+<p><img src="/images/GZDfb2I02o010cxnWKmcAfFon2f.png"></p>
+<p>我们可以先输一输 80 端口，看下请求有结果不</p>
+<p><img src="/images/OFDMbkGTror3XfxUVMPcnBIKnSc.png"></p>
+<p>会显示结果，再输一次 80 端口，打开 burp 拦截</p>
+<p><img src="/images/ZyGvbM5rDoJy0yxgXn9czSAMnlh.png"></p>
+<p>右键，发送到 intruder 进行爆破</p>
+<p>选择单个 payload 狙击手 框选 80 点击添加 payload 位置</p>
+<p><img src="/images/Da3Ybpc7MoMmIrxtHG7c7Qsanke.png"></p>
+<p>payload 界面:</p>
+<p>payload 类型选择数值，范围按照题目给的 1 到 1 万</p>
+<p><img src="/images/BmwlbVnNNoOy5zxbJpwcFMh2ngc.png"></p>
+<p>按照题目所说:dict:&#x2F;&#x2F;ip:prot”当遇到开放端口时，响应速度会明显变慢</p>
+<p>观察一下爆破结果，哪些端口响应速度比较慢</p>
+<p>点击列，手动添加这两列</p>
+<p><img src="/images/WJewbuOuyo9fI7xs8zZcVlRGnpg.png"></p>
+<p>爆破完毕后应该有一万条结果，看看哪些时间比较长，比如图中的 9001 端口</p>
+<p>我们再手动把端口输进去，查询结果发现是旗帜的一部分</p>
+<p><img src="/images/OSbrbUGNooXbtExiGRjcM9uXnmc.png"></p>
+<p>把五个端口全部找到，便可以获得完整的旗帜了</p>
+<p><img src="/images/OGeYbi4mRoozPQx29f0cra2Dnrc.png"></p>
+<p>flag{222279809ec64168a5790fd9a6088e1f}</p>
+<h3 id="Http-协议"><a href="#Http-协议" class="headerlink" title="Http 协议"></a><strong>Http 协议</strong></h3><p>作用：常规 URL 形式，允许通过 HTTP1.0 的 GET 方法，以只读访问文件或资源，<strong>即进行目录扫描</strong>。</p>
+<p>此外你要进行 post 提交和 get 提交你必须用 http 协议</p>
+<p>CTF 中通常用于远程包含。</p>
+<p><img src="/images/M3J1bvxXmoyghXxVCVXcN6O6nPc.png"></p>
+<p>使用 Burp 爆破 +http 伪协议读特定的(未知名称的)php 文件</p>
+<p><img src="/images/ITCqb3dpjoXhvoxoqWqc56POnLb.png"></p>
+<h3 id="gopher-协议-POST-提交数据"><a href="#gopher-协议-POST-提交数据" class="headerlink" title="gopher 协议(POST 提交数据)"></a>gopher 协议(POST 提交数据)</h3><p>假如我们想要用 SSRF 访问无权限访问的 php 文件，还想 post 或 get 提交数据，对于 get，可以直接用 http 协议解决，</p>
+<p>对于 post，则需要用 gopher 协议</p>
+<p><img src="/images/V2iBbUYQ5oLH26xKG5UcEcpznVb.png"></p>
+<p><strong>用 gopher 协议进行 get 提交</strong></p>
+<p>头部信息可以使用 Burp 抓包获得</p>
+<p><img src="/images/DL7MblqJsoo606xYpwecq4SdnOb.png"></p>
+<p><img src="/images/KDmVbM6Rbo3rjRx4RsIctu8mnzc.png"></p>
+<p>注意最后需要增加一个换行符</p>
+<p><strong>用 gopher 协议进行 post 提交</strong></p>
+<p>POST 则需要保留更多的头部信息，并且图中缺了必要的路径和目标 ip 地址，我们应该像 get 一样加上</p>
+<p><img src="/images/AGNvbQiqyoL9wuxHAHXc60JNnQb.png"></p>
+<p>其中后面两点和你 post 提交的内容相关联</p>
+<p>字符转换前在 post 前另起两行</p>
+<p><img src="/images/H6SkbufXToPXMPx2wENcIv2Fnrd.png"></p>
+<h2 id="SSRF-绕过过滤"><a href="#SSRF-绕过过滤" class="headerlink" title="SSRF 绕过过滤"></a>SSRF 绕过过滤</h2><p>第二第三个过滤都不太容易实操，先了解一下吧</p>
+<h3 id="127-0-0-1-过滤绕过-环回地址绕过"><a href="#127-0-0-1-过滤绕过-环回地址绕过" class="headerlink" title="127.0.0.1 过滤绕过(环回地址绕过)"></a>127.0.0.1 过滤绕过(环回地址绕过)</h3><p><img src="/images/P0wrbmABKoMPxhxhnf3cYB4In9f.png"></p>
+<p>有的题目会限制 127.0.0.1 的访问，可以更换别的表达方式</p>
+<p><img src="/images/AN24baomRoyEiAxPnEzcM5ckn7g.png"></p>
+<p><img src="/images/JOKsbnblHojLlOxW7KxcyxIznsg.png"></p>
+<p>还有一些其他的方法，这里暂不赘述(进制是最好用的)</p>
+<p><a target="_blank" rel="noopener" href="https://drun1baby.top/2022/05/16/%E4%BB%8E0%E5%88%B01%E5%AE%8C%E5%85%A8%E6%8E%8C%E6%8F%A1SSRF">https://drun1baby.top/2022/05/16/%E4%BB%8E0%E5%88%B01%E5%AE%8C%E5%85%A8%E6%8E%8C%E6%8F%A1SSRF</a></p>
+<p>经过做题，发现 127.0.0.2 和单独的一个 0 也适用，后面这些也有可能奏效</p>
+<p><img src="/images/AaQCbyVEEoBOZmxAydAcFTu5n2c.png"></p>
+<p>还有 ipv6– ::1 等价于 127.0.0.1</p>
+<h3 id="302-重定向绕过"><a href="#302-重定向绕过" class="headerlink" title="302 重定向绕过"></a>302 重定向绕过</h3><p>SSRF 的 302 重定向绕过，就是出题人给 SSRF 加了 “黑名单过滤”（比如禁止访问 127.0.0.1、file:&#x2F;&#x2F; 协议），你直接传 <code>127.0.0.1/flag</code> 会被拦，但你可以先搭一个 “中转服务器”，让目标服务器访问你的中转服务器时触发 302 重定向，偷偷跳转到被禁止的地址（比如 127.0.0.1&#x2F;flag），绕开黑名单检测</p>
+<p><img src="/images/IAobb8V7yo8QwOxa8Vjc71hEnPg.png"></p>
+<h4 id="步骤-1：搭你的-302-重定向中转服务器（用-PHP-Python-都可以）"><a href="#步骤-1：搭你的-302-重定向中转服务器（用-PHP-Python-都可以）" class="headerlink" title="步骤 1：搭你的 302 重定向中转服务器（用 PHP&#x2F;Python 都可以）"></a>步骤 1：搭你的 302 重定向中转服务器（用 PHP&#x2F;Python 都可以）</h4><p>这里用最简单的 PHP 写 <code>redirect.php</code>（放到你的公网服务器 &#x2F; 本地穿透地址）：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// 核心：返回302状态码，并重定向到被禁止的地址（比如127.0.0.1/flag）</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: http://127.0.0.1/flag&quot;</span>); <span class="comment">// 要跳转的目标地址（题目里被禁的）</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;HTTP/1.1 302 Moved Temporarily&quot;</span>); <span class="comment">// 发送302重定向响应</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><em>(解释：谁访问这个__redirect.php</em><em>，谁就会被 302 重定向到__127.0.0.1&#x2F;flag</em><em>。)</em></p>
+<h4 id="步骤-2：构造-SSRF-Payload（传给靶机）"><a href="#步骤-2：构造-SSRF-Payload（传给靶机）" class="headerlink" title="步骤 2：构造 SSRF Payload（传给靶机）"></a>步骤 2：构造 SSRF Payload（传给靶机）</h4><p>靶机的 SSRF 接口是 <code>ssrf.php?url=</code>，你传：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://靶机IP/ssrf.php?url=http://你的服务器IP/redirect.php</span><br></pre></td></tr></table></figure>
+
+<h4 id="步骤-3：靶机的执行过程"><a href="#步骤-3：靶机的执行过程" class="headerlink" title="步骤 3：靶机的执行过程"></a>步骤 3：靶机的执行过程</h4><ol>
+<li>靶机检测你传的 URL：<code>http://你的服务器IP/redirect.php</code> → 不含 127.0.0.1，通过黑名单；</li>
+<li>靶机用 cURL 访问你的 <code>redirect.php</code> → 你的服务器返回 302，告诉靶机 “去访问 127.0.0.1&#x2F;flag”；</li>
+<li>靶机的 cURL 默认会跟随 302 跳转（因为代码里通常有 <code>CURLOPT_FOLLOWLOCATION=true</code>），直接访问 <code>127.0.0.1/flag</code>；</li>
+<li>靶机读取 flag 内容，返回给你 → 绕过成功！</li>
+</ol>
+<h3 id="DNS-重绑定绕过"><a href="#DNS-重绑定绕过" class="headerlink" title="DNS 重绑定绕过"></a>DNS 重绑定绕过</h3><p>不太容易实操，放一张图吧</p>
+<p><img src="/images/VwISbh10JoS0LZxtHaLcLMISnVV.png"></p>
+<p>使用第三方工具利用解析间隙重改 ip</p>
+<p><a target="_blank" rel="noopener" href="https://lock.cmpxchg8b.com/rebinder.html">https://lock.cmpxchg8b.com/rebinder.html</a></p>
+<p>A,B 分别输合法 ip，不合法 ip，访问新生成的网址即可</p>
+<p><em>效果类比：你访问 <strong>wwfcww.xyz</strong> 这个域名，第一次解析的 IP 是 192.168.0.1；而第二次解析的 IP 是 127.0.0.1，如此一来即可进行 SSRF 攻击。</em></p>
+<p>第三节第二个实验已经有举例了，复习的时候可以看看</p>
+<p><a target="_blank" rel="noopener" href="https://hnusec-star.feishu.cn/wiki/QmDhwYaO1iCfZwkQqHycUtNzngP#share-OOjgd2U0bokiGhxMHXFcFQ4knPe">[Week9.3]实验:SSRF 漏洞实践</a></p>
+<h1 id="Week9-3-实验-SSRF-漏洞实践"><a href="#Week9-3-实验-SSRF-漏洞实践" class="headerlink" title="[Week9.3]实验:SSRF 漏洞实践"></a>[Week9.3]实验:SSRF 漏洞实践</h1><h2 id="newstarctf2025-MyGO"><a href="#newstarctf2025-MyGO" class="headerlink" title="newstarctf2025 MyGO!!!"></a>newstarctf2025 MyGO!!!</h2><p>拿到题目发现没什么回显，右击查看源码</p>
+<p><img src="/images/SmDFbSX7Wo3NVYxfK9ic3BXinGf.png"></p>
+<p>应该每个按钮相当于给 url 赋了值，红框框的地方也很可疑，照这样 payload 看看先</p>
+<p><img src="/images/VUFYbzz0co5COTxK7SDcZUjYnpb.png"></p>
+<p>回显 提示错误 URL</p>
+<p><img src="/images/RSt9b7q6SoYBVFxDG38ctTB1n2b.png"></p>
+<p>源码中 flag 的 URL 是 <a target="_blank" rel="noopener" href="http://localhost/">http://localhost/</a>??? 先试试 flag.php</p>
+<p>回显了一道新题</p>
+<p><img src="/images/QKgkb7qYmoL1plxhczycejqunbg.png"></p>
+<p>利用服务器读 url，传 file 伪协议即可.</p>
+<p><img src="/images/W6blbF5fqo8FGoxBo0NcsHb0nOc.png"></p>
+<h2 id="NSSRound-28-Team-ez-ssrf"><a href="#NSSRound-28-Team-ez-ssrf" class="headerlink" title="[NSSRound#28 Team]ez_ssrf"></a>[NSSRound#28 Team]ez_ssrf</h2><p>看题，题目中还提示了”flag 在&#x2F;flag 路由中 “</p>
+<p><img src="/images/EL8fb8YFCoQQvixR4uocST6nnNb.png"></p>
+<p>读了读代码，发现它绕过了 127.0.0.1 和 ipv6 形式::1，试了试各种进制绕过，发现并不好使</p>
+<p><img src="/images/Q9kNbOczPov19NxtkfIcYDm6nhf.png"></p>
+<p>302 重定向绕过需要搭 VPS，暂时还不打算搞，于是尝试了一下 DNS 重绑定绕过，运行是通过的:</p>
+<h3 id="法一-DNS-重绑定绕过"><a href="#法一-DNS-重绑定绕过" class="headerlink" title="法一 DNS 重绑定绕过"></a>法一 DNS 重绑定绕过</h3><p>先复习一下 DNS 重绑定的原理:利用两次解析的短暂间隙</p>
+<p><img src="/images/Ws27bMGXAodFyIxkTulcPtv4nTe.png"></p>
+<p>工具如下:</p>
+<p><a target="_blank" rel="noopener" href="https://lock.cmpxchg8b.com/rebinder.html">https://lock.cmpxchg8b.com/rebinder.html</a></p>
+<p>我们输入可以正常访问的 192.168.1.1 和需要解析的 127.0.0.1，生成了一个新网址</p>
+<p><img src="/images/DjJob49yrokblGxJDfzcltj7nJe.png"></p>
+<p>复制这个网址尝试 payload:?url&#x3D;<a target="_blank" rel="noopener" href="http://7f000001.c0a80001.rbndr.us/flag">http://7f000001.c0a80001.rbndr.us/flag</a></p>
+<p><img src="/images/FYf6bIOGFoTc7oxtUYqcGS74nZd.png"></p>
+<p>上图可知第一次并没有成功，多刷新几次，运行通过!</p>
+<p><img src="/images/AQSubUzfEoIHLGxvxoZcgRDYn6b.png"></p>
+<h3 id="法二-回环地址的不唯一性"><a href="#法二-回环地址的不唯一性" class="headerlink" title="法二 回环地址的不唯一性"></a>法二 回环地址的不唯一性</h3><p>问了下学过计网的研究生学长（没接触 CTF），他说回环地址不唯一，ip 直接输 0 或者 127.x.y.z，xyz 为合理的任意值都属于回环地址</p>
+<p><img src="/images/JNGjbZhg5oleQLxh9eicItvKnYb.png"></p>
+<p>于是就有了新解</p>
+<p><img src="/images/FBuDbZ9KCobxKUxDwFwcsFeDnwh.png"></p>
+<p><img src="/images/RsT5bSm1uopOeExfoS6c4K0ynmg.png"></p>
+<h2 id="DNS-想要玩"><a href="#DNS-想要玩" class="headerlink" title="DNS 想要玩"></a>DNS 想要玩</h2><p>读题，代码都没换行，咱们先给他换个行</p>
+<p><img src="/images/SrgSbdhCzoi5GexiHSDcPljRned.png"></p>
+<p>换行以后:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask import Flask, request</span><br><span class="line"><span class="keyword">from</span> urllib.parse import urlparse</span><br><span class="line">import socket</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">app = <span class="title function_ invoke__">Flask</span>(__name__)</span><br><span class="line"></span><br><span class="line">BlackList=[</span><br><span class="line">    <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;@&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;172&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;gopher&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;file&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;dict&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;tcp&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;0.0.0.0&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;114.5.1.4&#x27;</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">def <span class="title function_ invoke__">check</span>(url):</span><br><span class="line">    url = <span class="title function_ invoke__">urlparse</span>(url)</span><br><span class="line">    host = url.hostname</span><br><span class="line">    host_acscii = host.<span class="title function_ invoke__">encode</span>(<span class="string">&#x27;idna&#x27;</span>).<span class="title function_ invoke__">decode</span>(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> socket.<span class="title function_ invoke__">gethostbyname</span>(host_acscii) == <span class="string">&#x27;114.5.1.4&#x27;</span></span><br><span class="line"></span><br><span class="line">@app.<span class="title function_ invoke__">route</span>(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">def <span class="title function_ invoke__">index</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">open</span>(__file__).<span class="title function_ invoke__">read</span>()</span><br><span class="line"></span><br><span class="line">@app.<span class="title function_ invoke__">route</span>(<span class="string">&#x27;/ssrf&#x27;</span>)</span><br><span class="line">def <span class="title function_ invoke__">ssrf</span>():</span><br><span class="line">    raw_url = request.args.<span class="title function_ invoke__">get</span>(<span class="string">&#x27;url&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> not raw_url:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;URL Needed&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> u in BlackList:</span><br><span class="line">        <span class="keyword">if</span> u in raw_url:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;Invaild URL&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="title function_ invoke__">check</span>(raw_url):</span><br><span class="line">        <span class="keyword">return</span> os.<span class="title function_ invoke__">popen</span>(request.args.<span class="title function_ invoke__">get</span>(<span class="string">&#x27;cmd&#x27;</span>)).<span class="title function_ invoke__">read</span>()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;NONONO&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.<span class="title function_ invoke__">run</span>(host=<span class="string">&#x27;0.0.0.0&#x27;</span>,port=<span class="number">8000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这里面有几个 @app.route 意思是访问这个目录就会执行这个函数，如果黑名单查询通过了，就会执行 get 形式提交的 cmd 命令，还用到了 os 模块</p>
+<p>那访问下&#x2F;ssrf 呗?</p>
+<p><img src="/images/MrJUb4N0uo0FTyxb4yWcLdOgn5f.png"></p>
+<p>他说需要一个 url,我们给 127.0.0.1,提示内部错误</p>
+<p><img src="/images/CJjrbPM4logaqzxYNZMcTJOKnzh.png"></p>
+<p>我又读了一下代码，发现 check 这段根本不是在做黑名单检测，而是可能在前端进行重定向(?)，通过黑名单检测后，自动转成 114.5.1.4</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request</span><br><span class="line"><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> urlparse</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line">BlackList=[</span><br><span class="line">    <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;@&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;172&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;gopher&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;file&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;dict&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;tcp&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;0.0.0.0&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;114.5.1.4&#x27;</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check</span>(<span class="params">url</span>):</span><br><span class="line">    url = urlparse(url)</span><br><span class="line">    host = url.hostname</span><br><span class="line">    host_acscii = host.encode(<span class="string">&#x27;idna&#x27;</span>).decode(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> socket.gethostbyname(host_acscii) == <span class="string">&#x27;114.5.1.4&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">open</span>(__file__).read()</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/ssrf&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ssrf</span>():</span><br><span class="line">    raw_url = request.args.get(<span class="string">&#x27;url&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> raw_url:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;URL Needed&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> u <span class="keyword">in</span> BlackList:</span><br><span class="line">        <span class="keyword">if</span> u <span class="keyword">in</span> raw_url:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;Invaild URL&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> check(raw_url):</span><br><span class="line">        <span class="keyword">return</span> os.popen(request.args.get(<span class="string">&#x27;cmd&#x27;</span>)).read()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;NONONO&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.run(host=<span class="string">&#x27;0.0.0.0&#x27;</span>,port=<span class="number">8000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>打开 DNS 工具，试一下利用重绑定绕过</p>
+<p><img src="/images/Y34FbwkePoYn3zxIMVwcBzLLnsf.png"></p>
+<p>?url&#x3D;<a target="_blank" rel="noopener" href="http://72050104.7f000001.rbndr.us&cmd=cat/">http://72050104.7f000001.rbndr.us&amp;cmd=cat</a> &#x2F;flag 刷新几次运行通过</p>
+<p><img src="/images/AscobXuzeoEN5yxIcknc5vZxnB0.png"></p>
+<h3 id="做题启示"><a href="#做题启示" class="headerlink" title="做题启示"></a>做题启示</h3><p>我一直疑惑这题 url 为啥要用 http 请求，一开始不用死活做不出，投给了 AI 他这么回答:</p>
+<p><img src="/images/AqIKbWUTKoj2EJxQ1wZckPhOnwg.png"></p>
+<p>后面的题目我也不懂什么函数要标准 URL，什么函数不要，那遇到这种情况普遍加个 http 试错吧.</p>
+<h2 id="hello-ssrf-Level1-2"><a href="#hello-ssrf-Level1-2" class="headerlink" title="hello-ssrf-Level1-2"></a>hello-ssrf-Level1-2</h2><p>9.2 节<a target="_blank" rel="noopener" href="https://hnusec-star.feishu.cn/wiki/WkNcw9YZUip39xkY5ufcBrGan2v#share-FhDGd0ZkxodbaOxnDFPcD9sKnlh">[Week9.2]SSRF 漏洞利用</a></p>
+<h2 id="hello-ssrf-Level3"><a href="#hello-ssrf-Level3" class="headerlink" title="hello-ssrf-Level3"></a>hello-ssrf-Level3</h2><p>按要求复制粘贴发 gopher 协议就行了，注意第一个字符不读取，这里就不重新打一遍了</p>
+<h2 id="hello-ssrf-Level4"><a href="#hello-ssrf-Level4" class="headerlink" title="hello-ssrf-Level4"></a>hello-ssrf-Level4</h2><p>靶机似乎有问题，打开和 3 一样</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2025/12/02/%E7%AC%AC%E4%B8%83%E7%AB%A0-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3095,12 +3359,12 @@ EXTR_PREFIX_SAME - 如果有冲突，在变量名前加上前缀 prefix。（需
 <p>$c &#x3D; US</p>
 <p>(注意:extract($_POST); 的核心意思是：将前端通过 POST 请求提交的所有数据（存储在 $_POST 关联数组中）</p>
 <p>批量转为当前作用域的 PHP 变量—— 数组的「键名」会变成变量名，数组的「键值」会变成变量值。)</p>
-<p>(假设前端通过表单 &#x2F; POST 请求发送了 3 个变量：username&#x3D;张三、age&#x3D;25、email&#x3D;<a href="mailto:&#122;&#104;&#97;&#x6e;&#103;&#x73;&#97;&#x6e;&#x40;&#x65;&#x78;&#x61;&#109;&#x70;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;">zhangsan@example.com</a>，那么 PHP 接收后：</p>
-<p>$_POST 数组的结构是：[“username” &#x3D;&gt; “张三”, “age” &#x3D;&gt; 25, “email” &#x3D;&gt; “<a href="mailto:&#x7a;&#x68;&#97;&#x6e;&#x67;&#x73;&#97;&#110;&#x40;&#x65;&#x78;&#97;&#x6d;&#x70;&#x6c;&#x65;&#x2e;&#x63;&#x6f;&#109;">zhangsan@example.com</a>“]</p>
+<p>(假设前端通过表单 &#x2F; POST 请求发送了 3 个变量：username&#x3D;张三、age&#x3D;25、email&#x3D;<a href="mailto:&#122;&#104;&#x61;&#x6e;&#103;&#x73;&#97;&#x6e;&#x40;&#x65;&#x78;&#97;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#99;&#x6f;&#109;">zhangsan@example.com</a>，那么 PHP 接收后：</p>
+<p>$_POST 数组的结构是：[“username” &#x3D;&gt; “张三”, “age” &#x3D;&gt; 25, “email” &#x3D;&gt; “<a href="mailto:&#x7a;&#x68;&#x61;&#110;&#103;&#x73;&#x61;&#x6e;&#x40;&#x65;&#120;&#97;&#109;&#x70;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#109;">zhangsan@example.com</a>“]</p>
 <p>执行 extract($_POST); 后，会自动创建 3 个变量：</p>
 <p>$username &#x3D; “张三”（键名 username → 变量名 $username，键值为值）</p>
 <p>$age &#x3D; 25（键名 age → 变量名 $age）</p>
-<p>$email &#x3D; “<a href="mailto:&#x7a;&#104;&#x61;&#110;&#103;&#115;&#97;&#110;&#64;&#101;&#x78;&#97;&#109;&#112;&#108;&#x65;&#46;&#x63;&#x6f;&#x6d;">zhangsan@example.com</a>“（键名 email → 变量名 $email）</p>
+<p>$email &#x3D; “<a href="mailto:&#x7a;&#x68;&#97;&#110;&#103;&#x73;&#97;&#x6e;&#x40;&#x65;&#x78;&#x61;&#109;&#112;&#108;&#101;&#46;&#99;&#x6f;&#109;">zhangsan@example.com</a>“（键名 email → 变量名 $email）</p>
 <p>之后你可以直接用 $username、$age 访问数据，无需再写 $_POST[‘username’]。)</p>
 <h4 id="parse-str-str-函数"><a href="#parse-str-str-函数" class="headerlink" title="parse_str(str)函数"></a><strong>parse_str(str)函数</strong></h4><p>描述：parse_str(str) 用于将字符串解析成多个变量(也可以为单个变量)，没有返回值\</p>
 <p>parse_str(“username&#x3D;A&amp;password&#x3D;123456”);</p>
@@ -3517,12 +3781,12 @@ cat 路径 阅读文件
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span>
       </div>
   </nav>
