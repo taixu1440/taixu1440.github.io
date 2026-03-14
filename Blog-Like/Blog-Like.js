@@ -2,7 +2,7 @@
   var BLOG_LIKE_CONFIG = {
   "enable": true,
   "Backend": "Cloudflare",
-  "CloudflareBackend": "https://你的workers域名",
+  "CloudflareBackend": "/api/like",
   "PHPBackend": "",
   "AppID": "",
   "AppKEY": "",
