@@ -1,486 +1,163 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 8.1.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/sign.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/small.ico">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
-
-<link rel="stylesheet" href="/css/main.css">
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hnu-legend1440.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
-  </script>
-
-  <meta name="description" content="这一章因为格式问题实在是转化不了md去飞书看吧https:&#x2F;&#x2F;icnewi51k2yp.feishu.cn&#x2F;wiki&#x2F;VGvfwHIDkipsS7krwejcntfRnmf?from&#x3D;from_copylink">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>第五章-SSTI注入 | 拂云观 · legend1440</title><meta name="author" content="legend1440"><meta name="copyright" content="legend1440"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="这一章因为格式问题实在是转化不了md去飞书看吧https:&#x2F;&#x2F;icnewi51k2yp.feishu.cn&#x2F;wiki&#x2F;VGvfwHIDkipsS7krwejcntfRnmf?from&#x3D;from_copylink">
 <meta property="og:type" content="article">
 <meta property="og:title" content="第五章-SSTI注入">
 <meta property="og:url" content="http://hnu-legend1440.com/2025/11/18/%E7%AC%AC%E4%BA%94%E7%AB%A0-SSTI%E6%B3%A8%E5%85%A5/index.html">
 <meta property="og:site_name" content="拂云观 · legend1440">
 <meta property="og:description" content="这一章因为格式问题实在是转化不了md去飞书看吧https:&#x2F;&#x2F;icnewi51k2yp.feishu.cn&#x2F;wiki&#x2F;VGvfwHIDkipsS7krwejcntfRnmf?from&#x3D;from_copylink">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://hnu-legend1440.com/img/butterfly-icon.png">
 <meta property="article:published_time" content="2025-11-18T04:00:00.000Z">
 <meta property="article:modified_time" content="2026-01-20T17:48:15.986Z">
 <meta property="article:author" content="legend1440">
 <meta name="twitter:card" content="summary">
-
-<link rel="canonical" href="http://hnu-legend1440.com/2025/11/18/%E7%AC%AC%E4%BA%94%E7%AB%A0-SSTI%E6%B3%A8%E5%85%A5/">
-
-
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh-CN'
-  };
-</script>
-
-  <title>第五章-SSTI注入 | 拂云观 · legend1440</title>
-  
-
-
-
-
-
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-<!-- hexo injector head_end start --><link rel="stylesheet" href="/Blog-Like/style.css">
-<script src="/Blog-Like/Blog-Like.js"></script><!-- hexo injector head_end end --></head>
-
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
-
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">拂云观 · legend1440</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
-    </div>
-  </div>
-</div>
-
-
-
-
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-schedule">
-
-    <a href="/categories/schedule/" rel="section"><i class="fa fa-skating fa-fw"></i>期末突击</a>
-
-  </li>
-        <li class="menu-item menu-item-training">
-
-    <a href="/categories/training/" rel="section"><i class="fa fa-yin-yang fa-fw"></i>集训修行</a>
-
-  </li>
-        <li class="menu-item menu-item-wp">
-
-    <a href="/categories/WP/" rel="section"><i class="fa fa-feather fa-fw"></i>全面战场</a>
-
-  </li>
-        <li class="menu-item menu-item-puzzles">
-
-    <a href="/categories/puzzles/" rel="section"><i class="fa fa-spa fa-fw"></i>练习札记</a>
-
-  </li>
-        <li class="menu-item menu-item-server">
-
-    <a href="/categories/server/" rel="section"><i class="fa fa-star fa-fw"></i>服务器风采</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
-        </a>
-      </li>
-  </ul>
-</nav>
-
-
-
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
-           placeholder="搜索..." spellcheck="false"
-           type="search" class="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
-  </div>
-</div>
-
-    </div>
-  </div>
-
-</div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
-
-    
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hnu-legend1440.com/2025/11/18/%E7%AC%AC%E4%BA%94%E7%AB%A0-SSTI%E6%B3%A8%E5%85%A5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="legend1440">
-      <meta itemprop="description" content="前进中的CTF-web现役队员">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拂云观 · legend1440">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          第五章-SSTI注入
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-11-18 12:00:00" itemprop="dateCreated datePublished" datetime="2025-11-18T12:00:00+08:00">2025-11-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-21 01:48:15" itemprop="dateModified" datetime="2026-01-21T01:48:15+08:00">2026-01-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/training/" itemprop="url" rel="index"><span itemprop="name">-training</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-        <p>这一章因为格式问题实在是转化不了md<br>去飞书看吧<br><a target="_blank" rel="noopener" href="https://icnewi51k2yp.feishu.cn/wiki/VGvfwHIDkipsS7krwejcntfRnmf?from=from_copylink">https://icnewi51k2yp.feishu.cn/wiki/VGvfwHIDkipsS7krwejcntfRnmf?from=from_copylink</a></p>
-
-    </div>
-
-    
-    
-    
-
-      <footer class="post-footer">
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2025/11/11/%E7%AC%AC%E5%9B%9B%E7%AB%A0-SQL%E6%B3%A8%E5%85%A5/" rel="prev" title="第四章-SQL注入">
-      <i class="fa fa-chevron-left"></i> 第四章-SQL注入
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2025/11/25/%E7%AC%AC%E5%85%AD%E7%AB%A0-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" rel="next" title="第六章-文件上传">
-      第六章-文件上传 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
+<meta name="twitter:image" content="http://hnu-legend1440.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "第五章-SSTI注入",
+  "url": "http://hnu-legend1440.com/2025/11/18/%E7%AC%AC%E4%BA%94%E7%AB%A0-SSTI%E6%B3%A8%E5%85%A5/",
+  "image": "http://hnu-legend1440.com/img/butterfly-icon.png",
+  "datePublished": "2025-11-18T04:00:00.000Z",
+  "dateModified": "2026-01-20T17:48:15.986Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "legend1440",
+      "url": "http://hnu-legend1440.com"
     }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://hnu-legend1440.com/2025/11/18/%E7%AC%AC%E4%BA%94%E7%AB%A0-SSTI%E6%B3%A8%E5%85%A5/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
       }
     }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
 
-        </div>
-          
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
   
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
 
-  <aside class="sidebar">
-    <div class="sidebar-inner">
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
 
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">legend1440</p>
-  <div class="site-description" itemprop="description">前进中的CTF-web现役队员</div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives">
-          <span class="site-state-item-count">25</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">5</span>
-        <span class="site-state-item-name">分类</span>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="http://hnu-legend1440.com/" title="1535548287 → http:&#x2F;&#x2F;hnu-legend1440.com"><i class="fab fa-qq fa-fw"></i>1535548287</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://www.hnusec.com/" title="HnuSec → https:&#x2F;&#x2F;www.hnusec.com&#x2F;" rel="noopener" target="_blank"><i class="far fa-shield-alt fa-fw"></i>HnuSec</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://qm.qq.com/q/15T8HZQOFK" title="杨桃监狱服务器 → https:&#x2F;&#x2F;qm.qq.com&#x2F;q&#x2F;15T8HZQOFK" rel="noopener" target="_blank"><i class="far fa-star fa-fw"></i>杨桃监狱服务器</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://space.bilibili.com/652601966?spm_id_from=333.788.0.0" title="BiliBili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;652601966?spm_id_from&#x3D;333.788.0.0" rel="noopener" target="_blank"><i class="fa fa-play fa-fw"></i>BiliBili</a>
-      </span>
-  </div>
-
-
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
         
-
-        
-
-<div class="copyright">
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
   
-  &copy; Sun Jan 18 2026 08:00:00 GMT+0800 (GMT+08:00) – 
-  <span itemprop="copyrightYear">2026</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">legend1440</span>
-</div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
-  </div>
-
-        
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="总访客量">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="总访问量">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
-
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
-
-  
-
-
-
-
-  
-<script src="/js/local-search.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-</body>
-</html>
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '第五章-SSTI注入',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start --><link rel="stylesheet" href="/Blog-Like/style.css">
+<script src="/Blog-Like/Blog-Like.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.1"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">拂云观 · legend1440</span></a><a class="nav-page-title" href="/"><span class="site-name">第五章-SSTI注入</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">第五章-SSTI注入</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-18T04:00:00.000Z" title="发表于 2025-11-18 12:00:00">2025-11-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-20T17:48:15.986Z" title="更新于 2026-01-21 01:48:15">2026-01-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/training/">-training</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>这一章因为格式问题实在是转化不了md<br>去飞书看吧<br><a target="_blank" rel="noopener" href="https://icnewi51k2yp.feishu.cn/wiki/VGvfwHIDkipsS7krwejcntfRnmf?from=from_copylink">https://icnewi51k2yp.feishu.cn/wiki/VGvfwHIDkipsS7krwejcntfRnmf?from=from_copylink</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://hnu-legend1440.com">legend1440</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://hnu-legend1440.com/2025/11/18/%E7%AC%AC%E4%BA%94%E7%AB%A0-SSTI%E6%B3%A8%E5%85%A5/">http://hnu-legend1440.com/2025/11/18/%E7%AC%AC%E4%BA%94%E7%AB%A0-SSTI%E6%B3%A8%E5%85%A5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://hnu-legend1440.com" target="_blank">拂云观 · legend1440</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/11/25/%E7%AC%AC%E5%85%AD%E7%AB%A0-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="第六章-文件上传"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">第六章-文件上传</div></div><div class="info-2"><div class="info-item-1">飞书链接:https://icnewi51k2yp.feishu.cn/wiki/EIIywCXJOif6XmksNIfcbsq4nbf?from=from_copylink [Week6.1]蚁剑安装和文件上传绪论蚁剑安装对 CTF Web 学习者，蚁剑是上传后门文件后的核心管理工具。它能帮你可视化浏览服务器文件系统，快速找到并读取 &#x2F; 下载 flag；也可直接执行系统命令（如 ls、whoami），实现服务器基础控制，无需手动反复输命令。其作用是将漏洞利用落地，让从 “找漏洞” 到 “拿权限” 更高效，是 CTF Web 题中获取服务器权限的常用工具。  文件上传绪论 漏洞到底是什么  网站里常见上传头像、附件这类功能，正常是传图片、文档这类无害文件的。但要是网站后台没做好文件检查，攻击者就能传恶意脚本文件（比如一句话木马），这就是文件上传漏洞。简单说，就是网站的 “文件安检” 出了问题，让危险文件混进了服务器。  漏洞能用来干嘛  攻击者传的恶意文件大多是叫 Webshell 的后门文件，传成功后就能控制服务器了。比如浏览服务器里的所有文件找 CTF 里的 fla...</div></div></div></a><a class="pagination-related" href="/2025/11/11/%E7%AC%AC%E5%9B%9B%E7%AB%A0-SQL%E6%B3%A8%E5%85%A5/" title="第四章-SQL注入"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">第四章-SQL注入</div></div><div class="info-2"><div class="info-item-1">飞书链接:https://icnewi51k2yp.feishu.cn/wiki/K0giwmjwUiZksMkV7YbcD7qbnFb?from=from_copylink [Week4.1]数据库基础与 SQL 基本语法数据库基础参考文章 https://blog.csdn.net/senxu_&#x2F;article&#x2F;details&#x2F;126877128 数据库管理系统(Database Management System)是一种操纵和管理数据库的大型软件，用于建立、使用和维护数据库，简称 DBMS。 它对数据库进行统一的管理和控制，以保证数据库的安全性和完整性。用户通过 DBMS 访问数据库中的数据，数据库管理员也通过 DBMS 进行数据库的维护工作。 它可以支持多个应用程序和用户用不同的方法在同时或不同时刻去建立，修改和询问数据库。大部分 DBMS 提供数据定义语言 DDL 和数据操作语言 DML，供用户定义数据库的模式结构与权限约束，实现对数据的追加、删除等操作。 其又是由许多程序所组成的一个大型软件系统，每个程序都有自己的功能，共同完成 DBMS...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">legend1440</div><div class="author-info-description">前进中的CTF-web现役队员</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/15/%E6%9D%A8%E6%A1%83%E7%9B%91%E7%8B%B1%C2%B7%E7%9F%BF%E5%8C%BA%E8%AE%BE%E8%AE%A1%E6%B4%BB%E5%8A%A8/" title="杨桃监狱·矿区设计活动">杨桃监狱·矿区设计活动</a><time datetime="2026-03-15T07:34:29.000Z" title="发表于 2026-03-15 15:34:29">2026-03-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/15/%E6%9D%A8%E6%A1%83%E7%9B%91%E7%8B%B1%C2%B7%E8%BF%9B%E6%9C%8D%E6%B5%81%E7%A8%8B%E6%8C%87%E5%BC%95/" title="杨桃监狱·进服流程指引">杨桃监狱·进服流程指引</a><time datetime="2026-03-15T06:00:00.000Z" title="发表于 2026-03-15 14:00:00">2026-03-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/15/hello-world/" title="欢迎大家前来阅读文章">欢迎大家前来阅读文章</a><time datetime="2026-03-15T04:59:08.328Z" title="发表于 2026-03-15 12:59:08">2026-03-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/08/%E5%AE%9E%E6%88%98%E8%AE%B0%E5%BD%95-2026%E5%AF%92%E5%81%87HNUCTF%C2%B7%E8%B5%9B%E9%A2%98WP/" title="[实战记录]2026寒假HnuCTF·赛题WP">[实战记录]2026寒假HnuCTF·赛题WP</a><time datetime="2026-02-08T07:00:00.000Z" title="发表于 2026-02-08 15:00:00">2026-02-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/04/%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-%E6%80%BB%E5%A4%8D%E4%B9%A0/" title="第十一章-总复习">第十一章-总复习</a><time datetime="2026-02-04T08:00:00.000Z" title="发表于 2026-02-04 16:00:00">2026-02-04</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By legend1440</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
