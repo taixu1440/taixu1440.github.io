@@ -308,6 +308,13 @@
   </url>
   
   <url>
+    <loc>http://hnu-legend1440.com/categories/training/</loc>
+    <lastmod>2026-03-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>http://hnu-legend1440.com/categories/schedule/</loc>
     <lastmod>2026-03-19</lastmod>
     <changefreq>weekly</changefreq>
@@ -316,13 +323,6 @@
   
   <url>
     <loc>http://hnu-legend1440.com/categories/server/</loc>
-    <lastmod>2026-03-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://hnu-legend1440.com/categories/training/</loc>
     <lastmod>2026-03-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
