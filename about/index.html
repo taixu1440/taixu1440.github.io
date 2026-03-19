@@ -1,0 +1,611 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>拂云观 · legend1440 | 拂云观 · legend1440</title><meta name="author" content="legend1440"><meta name="copyright" content="legend1440"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="写作 | Hexo                                   &lt;link rel&#x3D;&quot;alternate&quot; hreflang&#x3D;&quot;en&quot; href&#x3D;&quot;https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;writing&quot;&gt;            &lt;link rel&#x3D;&quot;alternate">
+<meta property="og:type" content="website">
+<meta property="og:title" content="拂云观 · legend1440">
+<meta property="og:url" content="http://hnu-legend1440.com/about/index.html">
+<meta property="og:site_name" content="拂云观 · legend1440">
+<meta property="og:description" content="写作 | Hexo                                   &lt;link rel&#x3D;&quot;alternate&quot; hreflang&#x3D;&quot;en&quot; href&#x3D;&quot;https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;writing&quot;&gt;            &lt;link rel&#x3D;&quot;alternate">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q.qlogo.cn/headimg_dl?dst_uin=1535548287&spec=640&img_type=jpg">
+<meta property="article:published_time" content="2026-03-15T07:29:18.300Z">
+<meta property="article:modified_time" content="2026-03-14T16:19:04.383Z">
+<meta property="article:author" content="legend1440">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q.qlogo.cn/headimg_dl?dst_uin=1535548287&spec=640&img_type=jpg"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/sign.ico"><link rel="canonical" href="http://hnu-legend1440.com/about/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: false,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '拂云观 · legend1440',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><!-- hexo injector head_end start --><link rel="stylesheet" href="/Blog-Like/style.css">
+<script src="/Blog-Like/Blog-Like.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.1"></head><body><div class="page" id="body-wrap"><header class="not-home-page" id="page-header" style="background-image: url(/img/background.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">拂云观 · legend1440</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div></div></nav><div id="page-site-info"><h1 id="site-title"></h1></div></header><main class="layout" id="content-inner"><div id="page"><div class="container" id="article-container"><!DOCTYPE html>
+<html lang="zh-cn">
+<head prefix="og: http://ogp.me/ns#">
+  <meta charset="utf-8">
+  <title>写作 | Hexo</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://hexo.io/zh-cn/docs/writing">
+  <!-- Alternate links -->
+  
+    
+      
+<pre><code>    &lt;link rel=&quot;alternate&quot; hreflang=&quot;en&quot; href=&quot;https://hexo.io/docs/writing&quot;&gt;
+  
+
+  
+    &lt;link rel=&quot;alternate&quot; hreflang=&quot;zh-tw&quot; href=&quot;https://hexo.io/zh-tw/docs/writing&quot;&gt;
+  
+
+  
+
+  
+    &lt;link rel=&quot;alternate&quot; hreflang=&quot;ru&quot; href=&quot;https://hexo.io/ru/docs/writing&quot;&gt;
+  
+
+  
+    &lt;link rel=&quot;alternate&quot; hreflang=&quot;ko&quot; href=&quot;https://hexo.io/ko/docs/writing&quot;&gt;
+  
+
+  
+    &lt;link rel=&quot;alternate&quot; hreflang=&quot;pt-br&quot; href=&quot;https://hexo.io/pt-br/docs/writing&quot;&gt;
+  
+
+  
+    &lt;link rel=&quot;alternate&quot; hreflang=&quot;th&quot; href=&quot;https://hexo.io/th/docs/writing&quot;&gt;
+  
+
+  
+    &lt;link rel=&quot;alternate&quot; hreflang=&quot;ja&quot; href=&quot;https://hexo.io/ja/docs/writing&quot;&gt;
+  
+
+  
+    &lt;link rel=&quot;alternate&quot; hreflang=&quot;es&quot; href=&quot;https://hexo.io/es/docs/writing&quot;&gt;
+  
+
+&lt;link rel=&quot;alternate&quot; hreflang=&quot;x-default&quot; href=&quot;https://hexo.io/docs/writing&quot; /&gt;
+</code></pre>
+  <!-- Icon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/icon/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/icon/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/icon/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/icon/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icon/apple-touch-icon-152x152.png">
+  <link rel="icon" type="image/png" href="/icon/favicon-196x196.png" sizes="196x196">
+  <link rel="icon" type="image/png" href="/icon/favicon-160x160.png" sizes="160x160">
+  <link rel="icon" type="image/png" href="/icon/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/icon/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/icon/favicon-32x32.png" sizes="32x32">
+  <meta name="msapplication-TileColor" content="#2f83cd">
+  <meta name="msapplication-TileImage" content="/icon/mstile-144x144.png">
+  <!-- CSS -->
+  <!-- build:css build/css/navy.css -->
+  
+<link rel="stylesheet" href="/css/navy.css">
+
+  <!-- endbuild -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-lato@0.0.75/index.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css">
+  <!-- RSS -->
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <!-- Open Graph -->
+  <meta name="description" content="你可以执行下列命令来创建一篇新文章或者新的页面。 $ hexo new [layout] &lt;title&gt;  post是默认的布局，但你也可以提供自己的布局。 您可以通过编辑 _config.yml 中的 default_layout 设置来更改默认布局。 布局（Layout）Hexo 有三种默认布局：post、page 和 draft。 每个布局创建的文件会被保存到不同的路径。 新">
+<meta property="og:type" content="website">
+<meta property="og:title" content="写作">
+<meta property="og:url" content="https://hexo.io/zh-cn/docs/writing">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="你可以执行下列命令来创建一篇新文章或者新的页面。 $ hexo new [layout] &lt;title&gt;  post是默认的布局，但你也可以提供自己的布局。 您可以通过编辑 _config.yml 中的 default_layout 设置来更改默认布局。 布局（Layout）Hexo 有三种默认布局：post、page 和 draft。 每个布局创建的文件会被保存到不同的路径。 新">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hexo.io/icon/og-image-wide.png">
+<meta property="article:published_time" content="2026-03-12T00:23:04.419Z">
+<meta property="article:modified_time" content="2026-03-12T00:23:04.419Z">
+<meta property="article:author" content="Hexo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hexo.io/icon/twitter-summary.png">
+<meta name="twitter:site" content="hexojs">
+<meta property="fb:admins" content="100000247608790">
+  <!-- Google Analytics -->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-48498357-3', 'auto');
+  ga('send', 'pageview');
+</script>
+
+  <!-- Algolia -->
+  <link rel="preconnect" href="https://7HZ261W96L-dsn.algolia.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <header id="header" class="wrapper">
+  <div id="header-inner" class="inner">
+    <h1 id="logo-wrap">
+      <a href="/zh-cn/" id="logo">Hexo</a>
+    </h1>
+    <nav id="main-nav">
+      <a href="/zh-cn/docs/" class="main-nav-link">文档</a><a href="/zh-cn/api/" class="main-nav-link">API</a><a href="/news/" class="main-nav-link">新闻</a><a href="/plugins/" class="main-nav-link">插件</a><a href="/themes/" class="main-nav-link">主题</a><a href="/about/" class="main-nav-link">关于</a>
+      <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/hexojs/hexo" class="main-nav-link"><i class="fab fa-github-alt"></i></a>
+      <div id="docsearch"></div>
+    </nav>
+    <div id="lang-select-wrap">
+      <label id="lang-select-label"><i class="fa fa-globe"></i><span>简体中文</span></label>
+      <select id="lang-select" data-canonical="docs/writing.html">
+        
+<pre><code>      &lt;option value=&quot;en&quot;&gt;English&lt;/option&gt;
+    
+      &lt;option value=&quot;zh-tw&quot;&gt;正體中文&lt;/option&gt;
+    
+      &lt;option value=&quot;zh-cn&quot; selected&gt;简体中文&lt;/option&gt;
+    
+      &lt;option value=&quot;ru&quot;&gt;Русский&lt;/option&gt;
+    
+      &lt;option value=&quot;ko&quot;&gt;한국어&lt;/option&gt;
+    
+      &lt;option value=&quot;pt-br&quot;&gt;Português (Brasil)&lt;/option&gt;
+    
+      &lt;option value=&quot;th&quot;&gt;ภาษาไทย&lt;/option&gt;
+    
+      &lt;option value=&quot;ja&quot;&gt;日本語&lt;/option&gt;
+    
+      &lt;option value=&quot;es&quot;&gt;Español&lt;/option&gt;
+    
+  &lt;/select&gt;
+&lt;/div&gt;
+&lt;a id=&quot;mobile-nav-toggle&quot;&gt;
+  &lt;span class=&quot;mobile-nav-toggle-bar&quot;&gt;&lt;/span&gt;
+  &lt;span class=&quot;mobile-nav-toggle-bar&quot;&gt;&lt;/span&gt;
+  &lt;span class=&quot;mobile-nav-toggle-bar&quot;&gt;&lt;/span&gt;
+&lt;/a&gt;
+</code></pre>
+  </div>
+</header>
+
+<pre><code>&lt;div id=&quot;content-wrap&quot;&gt;
+</code></pre>
+  <div id="content" class="wrapper">
+    <div id="content-inner">
+      <article class="article-container" itemscope itemtype="http://schema.org/Article">
+        <div class="article-inner">
+          <div class="article">
+            <div class="inner">
+              <header class="article-header">
+                <h1 class="article-title" itemprop="name">写作</h1>
+                <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/hexojs/site/edit/master/source/zh-cn/docs/writing.md" class="article-edit-link" title="改进本文"><i class="fa fa-pencil"></i></a>
+              </header>
+              <div class="article-content" itemprop="articleBody">
+                <html><head></head><body><div class="video-container"><iframe src="https://www.youtube.com/embed/HLJ9jJy7CMg" frameborder="0" loading="lazy" allowfullscreen=""></iframe></div>
+
+<p>你可以执行下列命令来创建一篇新文章或者新的页面。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">$ hexo new [layout] &lt;title&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>post</code>是默认的<code>布局</code>，但你也可以提供自己的布局。 您可以通过编辑 <code>_config.yml</code> 中的 <code>default_layout</code> 设置来更改默认布局。</p>
+<h2 id="布局（Layout）" class="article-heading"><a href="#布局（Layout）" class="headerlink" title="布局（Layout）"></a>布局（Layout）<a class="article-anchor" href="#布局（Layout）" aria-hidden="true"></a></h2><p>Hexo 有三种默认布局：<code>post</code>、<code>page</code> 和 <code>draft</code>。 每个布局创建的文件会被保存到不同的路径。 新创建的帖子被保存到 <code>source/_post</code> 文件夹。</p>
+<table>
+<thead>
+<tr>
+<th>布局</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>post</code></td>
+<td><code>source/_posts</code></td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td><code>source</code></td>
+</tr>
+<tr>
+<td><code>draft</code></td>
+<td><code>source/_drafts</code></td>
+</tr>
+</tbody></table>
+<blockquote class="note tip"><strong class="note-title">禁用布局</strong><p>如果你不希望一篇文章（post/page）使用主题处理，请在它的 front-matter 中设置 <code>layout: false</code>。 详情请参考<a href="/zh-cn/docs/front-matter#%E5%B8%83%E5%B1%80">本节</a>。</p>
+</blockquote>
+
+<h2 id="文件名称" class="article-heading"><a href="#文件名称" class="headerlink" title="文件名称"></a>文件名称<a class="article-anchor" href="#文件名称" aria-hidden="true"></a></h2><p>默认情况下，Hexo 使用帖子标题作为其文件名。 您可以编辑 <code>_config.yml</code> 中的 <code>new_post_name</code> 设置去更改默认文件名。 例如， <code>:year-:month-:day-:title.md</code> 将在文件名前加上创建日期。 你可以使用以下占位符：</p>
+<table>
+<thead>
+<tr>
+<th>占位符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>:title</code></td>
+<td>标题（小写，空格将会被替换为短杠）</td>
+</tr>
+<tr>
+<td><code>:year</code></td>
+<td>建立的年份，比如， <code>2015</code></td>
+</tr>
+<tr>
+<td><code>:month</code></td>
+<td>建立的月份（有前导零），比如， <code>04</code></td>
+</tr>
+<tr>
+<td><code>:i_month</code></td>
+<td>建立的月份（无前导零），比如， <code>4</code></td>
+</tr>
+<tr>
+<td><code>:day</code></td>
+<td>建立的日期（有前导零），比如， <code>07</code></td>
+</tr>
+<tr>
+<td><code>:i_day</code></td>
+<td>建立的日期（无前导零），比如， <code>7</code></td>
+</tr>
+</tbody></table>
+<h2 id="草稿" class="article-heading"><a href="#草稿" class="headerlink" title="草稿"></a>草稿<a class="article-anchor" href="#草稿" aria-hidden="true"></a></h2><p>之前，我们在提到了 Hexo 中的一个特殊的布局：<code>draft</code>。 使用此布局初始化的帖子将被保存到 <code>source/_drafts</code> 文件夹中。 您可以使用 <code>发布</code> 命令将草稿移动到 <code>source/_posts</code> 文件夹。 <code>publish</code> 工作方式类似于 <code>new</code> 命令。</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">$ hexo publish [layout] &lt;title&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>默认情况下不显示草稿 您可以在运行 Hexo 时添加 <code>--draft</code> 选项或在 <code>_config.yml</code> 启用 <code>render_draft</code> 设置来渲染草稿。</p>
+<h2 id="脚手架" class="article-heading"><a href="#脚手架" class="headerlink" title="脚手架"></a>脚手架<a class="article-anchor" href="#脚手架" aria-hidden="true"></a></h2><p>在新建文章时，Hexo 会根据 <code>scaffolds</code> 文件夹内相对应的文件来建立文件。 例如：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">$ hexo new photo <span class="string">"My Gallery"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>在执行这行指令时，Hexo 会尝试在 <code>scaffolds</code> 文件夹中寻找 <code>photo.md</code>，并根据其内容建立文章。 以下是您可以在模版中使用的变量：</p>
+<table>
+<thead>
+<tr>
+<th>占位符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>layout</code></td>
+<td>布局</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>标题</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>文件建立日期</td>
+</tr>
+</tbody></table>
+<h2 id="支持的格式" class="article-heading"><a href="#支持的格式" class="headerlink" title="支持的格式"></a>支持的格式<a class="article-anchor" href="#支持的格式" aria-hidden="true"></a></h2><p>Hexo 支持以任何格式书写文章，只要安装了相应的渲染插件。</p>
+<p>例如，Hexo 默认安装了 <code>hexo-renderer-marked</code> 和 <code>hexo-renderer-ejs</code>，因此你不仅可以用 Markdown 写作，你还可以用 EJS 写作。 如果你安装了 <code>hexo-renderer-pug</code>，你甚至可以用 Pug 模板语言书写文章。</p>
+<p>只需要将文章的扩展名从 <code>md</code> 改成 <code>ejs</code>，Hexo 就会使用 <code>hexo-renderer-ejs</code> 渲染这个文件，其他格式同理。</p>
+</body></html>
+              </div>
+              <footer class="article-footer">
+                <time class="article-footer-updated" datetime="2026-03-12T00:23:04.419Z" itemprop="dateModified">上次更新：2026-03-12</time>
+                <a class='article-footer-prev' href='/zh-cn/docs/migration' title='迁移'><i class="fa fa-chevron-left"></i><span>上一页</span></a><a class='article-footer-next' href='/zh-cn/docs/front-matter' title='Front-matter'><span>下一页</span><i class="fa fa-chevron-right"></i></a>
+              </footer>
+              
+<section id="comments">
+  <div id="disqus_thread"></div>
+</section>
+<script>
+  var disqus_shortname = 'hexojs';
+  var disqus_url = 'https://hexo.io/zh-cn/docs/writing.html';
+  var disqus_title = "写作";
+  var disqus_config = function(){
+    this.language = 'zh';
+  };
+  (function(){
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'https://go.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+<pre><code>        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;aside id=&quot;article-toc&quot; role=&quot;navigation&quot;&gt;
+        &lt;div id=&quot;article-toc-inner&quot;&gt;
+          &lt;strong class=&quot;sidebar-title&quot;&gt;目录&lt;/strong&gt;
+          &lt;ol class=&quot;toc&quot;&gt;&lt;li class=&quot;toc-item toc-level-2&quot;&gt;&lt;a class=&quot;toc-link&quot; href=&quot;#%E5%B8%83%E5%B1%80%EF%BC%88Layout%EF%BC%89&quot;&gt;&lt;span class=&quot;toc-text&quot;&gt;布局（Layout）&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;li class=&quot;toc-item toc-level-2&quot;&gt;&lt;a class=&quot;toc-link&quot; href=&quot;#%E6%96%87%E4%BB%B6%E5%90%8D%E7%A7%B0&quot;&gt;&lt;span class=&quot;toc-text&quot;&gt;文件名称&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;li class=&quot;toc-item toc-level-2&quot;&gt;&lt;a class=&quot;toc-link&quot; href=&quot;#%E8%8D%89%E7%A8%BF&quot;&gt;&lt;span class=&quot;toc-text&quot;&gt;草稿&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;li class=&quot;toc-item toc-level-2&quot;&gt;&lt;a class=&quot;toc-link&quot; href=&quot;#%E8%84%9A%E6%89%8B%E6%9E%B6&quot;&gt;&lt;span class=&quot;toc-text&quot;&gt;脚手架&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;li class=&quot;toc-item toc-level-2&quot;&gt;&lt;a class=&quot;toc-link&quot; href=&quot;#%E6%94%AF%E6%8C%81%E7%9A%84%E6%A0%BC%E5%BC%8F&quot;&gt;&lt;span class=&quot;toc-text&quot;&gt;支持的格式&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;
+          &lt;a href=&quot;#&quot; id=&quot;article-toc-top&quot;&gt;回到顶部&lt;/a&gt;
+        &lt;/div&gt;
+      &lt;/aside&gt;
+    &lt;/div&gt;
+  &lt;/article&gt;
+  &lt;aside id=&quot;sidebar&quot; role=&quot;navigation&quot;&gt;
+</code></pre>
+  <div class="inner">
+    <strong class="sidebar-title">开始使用</strong><a class='sidebar-link' href='/zh-cn/docs/'>概述</a><a class='sidebar-link' href='/zh-cn/docs/setup'>建站</a><a class='sidebar-link' href='/zh-cn/docs/configuration'>配置</a><a class='sidebar-link' href='/zh-cn/docs/commands'>命令</a><a class='sidebar-link' href='/zh-cn/docs/migration'>迁移</a><strong class="sidebar-title">基本操作</strong><a class='sidebar-link current' href='/zh-cn/docs/writing'>写作</a><a class='sidebar-link' href='/zh-cn/docs/front-matter'>Front-matter</a><a class='sidebar-link' href='/zh-cn/docs/tag-plugins'>标签插件</a><a class='sidebar-link' href='/zh-cn/docs/asset-folders'>资源文件夹</a><a class='sidebar-link' href='/zh-cn/docs/data-files'>数据文件夹</a><a class='sidebar-link' href='/zh-cn/docs/server'>服务器</a><a class='sidebar-link' href='/zh-cn/docs/generating'>生成器</a><strong class="sidebar-title">部署</strong><a class='sidebar-link' href='/zh-cn/docs/github-pages'>GitHub Pages</a><a class='sidebar-link' href='/zh-cn/docs/gitlab-pages'>GitLab Pages</a><a class='sidebar-link' href='/zh-cn/docs/one-command-deployment'>一键部署</a><strong class="sidebar-title">自定义</strong><a class='sidebar-link' href='/zh-cn/docs/permalinks'>永久链接</a><a class='sidebar-link' href='/zh-cn/docs/themes'>主题</a><a class='sidebar-link' href='/zh-cn/docs/templates'>模版</a><a class='sidebar-link' href='/zh-cn/docs/variables'>变量</a><a class='sidebar-link' href='/zh-cn/docs/helpers'>辅助函数</a><a class='sidebar-link' href='/zh-cn/docs/internationalization'>国际化 (i18n)</a><a class='sidebar-link' href='/zh-cn/docs/syntax-highlight'>代码高亮</a><a class='sidebar-link' href='/zh-cn/docs/plugins'>插件</a><strong class="sidebar-title">其他</strong><a class='sidebar-link' href='/zh-cn/docs/troubleshooting'>问题解答</a><a class='sidebar-link' href='/zh-cn/docs/contributing'>贡献</a>
+  </div>
+</aside>
+    </div>
+  </div>
+</div>
+
+<pre><code>&lt;footer id=&quot;footer&quot; class=&quot;wrapper&quot;&gt;
+</code></pre>
+  <div class="inner">
+    <div id="footer-copyright">
+      &copy; 2026 <a href="https://github.com/hexojs/hexo/graphs/contributors" rel="external nofollow noreferrer" target="_blank">Hexo</a><br>
+      Documentation licensed under <a href="http://creativecommons.org/licenses/by/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>.
+    </div>
+    <div id="footer-links">
+      <a href="https://www.netlify.com/" rel="external nofollow noreferrer" class="footer-link" target="_blank"><img src="https://www.netlify.com/img/global/badges/netlify-dark.svg" style="margin-bottom:-14px"/></a>
+      <a href="https://twitter.com/hexojs" rel="external nofollow noreferrer" class="footer-link" target="_blank"><i class="fab fa-x-twitter"></i></a>
+      <a href="https://github.com/hexojs/hexo" rel="external nofollow noreferrer" class="footer-link" target="_blank"><i class="fab fa-github-alt"></i></a>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  <div id="mobile-nav-dimmer"></div>
+  <nav id="mobile-nav">
+  <div id="mobile-nav-inner">
+    <ul id="mobile-nav-list">
+      <a href="/zh-cn/docs/" class="mobile-nav-link">文档</a><a href="/zh-cn/api/" class="mobile-nav-link">API</a><a href="/news/" class="mobile-nav-link">新闻</a><a href="/plugins/" class="mobile-nav-link">插件</a><a href="/themes/" class="mobile-nav-link">主题</a><a href="/about/" class="mobile-nav-link">关于</a>
+      <li class="mobile-nav-item">
+        <a href="https://github.com/hexojs/hexo" class="mobile-nav-link" rel="external" target="_blank">GitHub</a>
+      </li>
+    </ul>
+    
+<pre><code>  &lt;strong class=&quot;mobile-nav-title&quot;&gt;开始使用&lt;/strong&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/&#39;&gt;概述&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/setup&#39;&gt;建站&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/configuration&#39;&gt;配置&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/commands&#39;&gt;命令&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/migration&#39;&gt;迁移&lt;/a&gt;&lt;strong class=&quot;mobile-nav-title&quot;&gt;基本操作&lt;/strong&gt;&lt;a class=&#39;mobile-nav-link current&#39; href=&#39;/zh-cn/docs/writing&#39;&gt;写作&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/front-matter&#39;&gt;Front-matter&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/tag-plugins&#39;&gt;标签插件&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/asset-folders&#39;&gt;资源文件夹&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/data-files&#39;&gt;数据文件夹&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/server&#39;&gt;服务器&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/generating&#39;&gt;生成器&lt;/a&gt;&lt;strong class=&quot;mobile-nav-title&quot;&gt;部署&lt;/strong&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/github-pages&#39;&gt;GitHub Pages&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/gitlab-pages&#39;&gt;GitLab Pages&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/one-command-deployment&#39;&gt;一键部署&lt;/a&gt;&lt;strong class=&quot;mobile-nav-title&quot;&gt;自定义&lt;/strong&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/permalinks&#39;&gt;永久链接&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/themes&#39;&gt;主题&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/templates&#39;&gt;模版&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/variables&#39;&gt;变量&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/helpers&#39;&gt;辅助函数&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/internationalization&#39;&gt;国际化 (i18n)&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/syntax-highlight&#39;&gt;代码高亮&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/plugins&#39;&gt;插件&lt;/a&gt;&lt;strong class=&quot;mobile-nav-title&quot;&gt;其他&lt;/strong&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/troubleshooting&#39;&gt;问题解答&lt;/a&gt;&lt;a class=&#39;mobile-nav-link&#39; href=&#39;/zh-cn/docs/contributing&#39;&gt;贡献&lt;/a&gt;
+</code></pre>
+  </div>
+  <div id="mobile-lang-select-wrap">
+    <span id="mobile-lang-select-label"><i class="fa fa-globe"></i><span>简体中文</span></span>
+    <select id="mobile-lang-select" data-canonical="docs/writing.html">
+      
+<pre><code>    &lt;option value=&quot;en&quot;&gt;English&lt;/option&gt;
+  
+    &lt;option value=&quot;zh-tw&quot;&gt;正體中文&lt;/option&gt;
+  
+    &lt;option value=&quot;zh-cn&quot; selected&gt;简体中文&lt;/option&gt;
+  
+    &lt;option value=&quot;ru&quot;&gt;Русский&lt;/option&gt;
+  
+    &lt;option value=&quot;ko&quot;&gt;한국어&lt;/option&gt;
+  
+    &lt;option value=&quot;pt-br&quot;&gt;Português (Brasil)&lt;/option&gt;
+  
+    &lt;option value=&quot;th&quot;&gt;ภาษาไทย&lt;/option&gt;
+  
+    &lt;option value=&quot;ja&quot;&gt;日本語&lt;/option&gt;
+  
+    &lt;option value=&quot;es&quot;&gt;Español&lt;/option&gt;
+  
+&lt;/select&gt;
+</code></pre>
+  </div>
+</nav>
+  <!-- Scripts -->
+<!-- Cookie -->
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<!-- build:js build/js/main.js -->
+
+<script src="/js/lang_select.js"></script>
+
+
+<script src="/js/mobile_nav.js"></script>
+
+
+<script src="/js/colorScheme.js"></script>
+
+<!-- endbuild -->
+
+<!-- Algolia -->
+<script src="https://cdn.jsdelivr.net/npm/@docsearch/js@3"></script>
+<script type="text/javascript">
+docsearch({
+  appId: '7HZ261W96L',
+  apiKey: 'cb702f6ec26558e81b1f650f2e793b28',
+  indexName: 'hexo',
+  insights: true,
+  container: '#docsearch',
+  debug: false,
+  searchParameters: {
+    facetFilters: ['lang:zh-cn']
+  }
+});
+</script>
+
+</body>
+</html>
+</div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://q.qlogo.cn/headimg_dl?dst_uin=1535548287&amp;spec=640&amp;img_type=jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">legend1440</div><div class="author-info-description">前进中的CTF-web现役队员</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" href="http://hnu-legend1440.com/2026/03/15/%E6%9D%A8%E6%A1%83%E7%9B%91%E7%8B%B1%C2%B7%E8%BF%9B%E6%9C%8D%E6%B5%81%E7%A8%8B%E6%8C%87%E5%BC%95/"><i class="fab fa-star"></i><span>杨桃监狱Minecraft服务器</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">平芜尽处是春山</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/15/%E6%9D%A8%E6%A1%83%E7%9B%91%E7%8B%B1%C2%B7%E7%9F%BF%E5%8C%BA%E8%AE%BE%E8%AE%A1%E6%B4%BB%E5%8A%A8/" title="杨桃监狱·矿区设计活动">杨桃监狱·矿区设计活动</a><time datetime="2026-03-15T07:34:29.000Z" title="发表于 2026-03-15 15:34:29">2026-03-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/15/%E6%9D%A8%E6%A1%83%E7%9B%91%E7%8B%B1%C2%B7%E8%BF%9B%E6%9C%8D%E6%B5%81%E7%A8%8B%E6%8C%87%E5%BC%95/" title="杨桃监狱·进服流程指引">杨桃监狱·进服流程指引</a><time datetime="2026-03-15T06:00:00.000Z" title="发表于 2026-03-15 14:00:00">2026-03-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/15/hello-world/" title="千年之羽渡红尘，太虚之握掌乾坤。">千年之羽渡红尘，太虚之握掌乾坤。</a><time datetime="2026-03-15T04:59:08.328Z" title="发表于 2026-03-15 12:59:08">2026-03-15</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/WP/"><span class="card-category-list-name">-WP</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/puzzles/"><span class="card-category-list-name">-puzzles</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/schedule/"><span class="card-category-list-name">-schedule</span><span class="card-category-list-count">5</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/server/"><span class="card-category-list-name">-server</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/training/"><span class="card-category-list-name">-training</span><span class="card-category-list-count">12</span></a></li>
+          </ul></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/03/">
+            <span class="card-archive-list-date">
+              三月 2026
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/02/">
+            <span class="card-archive-list-date">
+              二月 2026
+            </span>
+            <span class="card-archive-list-count">4</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/01/">
+            <span class="card-archive-list-date">
+              一月 2026
+            </span>
+            <span class="card-archive-list-count">9</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/12/">
+            <span class="card-archive-list-date">
+              十二月 2025
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/11/">
+            <span class="card-archive-list-date">
+              十一月 2025
+            </span>
+            <span class="card-archive-list-count">4</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/10/">
+            <span class="card-archive-list-date">
+              十月 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">25</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-03-19T14:50:50.335Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By legend1440</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
