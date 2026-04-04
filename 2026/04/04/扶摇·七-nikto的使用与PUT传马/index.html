@@ -1,0 +1,196 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>扶摇·七--nikto的使用与PUT传马 | 拂云观 · legend1440</title><meta name="author" content="legend1440"><meta name="copyright" content="legend1440"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="在题目中，我们会遇到网页开放 PUT 方法，这可能允许 PUT 上传木马，从而用这种方式 getshell 那么我们如何判断该方法是否可行，实战中又如何操作呢？本章将围绕这一话题叙述。 nikto 工具简介Nikto2 是一款开源的、功能强大的 Web 服务器扫描器。简单来说，它的核心作用就是自动、快速地对网站进行全面的安全检查，帮助发现潜在的安全隐患。 Nikto 的检查范围非常广泛，主要包括四">
+<meta property="og:type" content="article">
+<meta property="og:title" content="扶摇·七--nikto的使用与PUT传马">
+<meta property="og:url" content="http://hnu-legend1440.com/2026/04/04/%E6%89%B6%E6%91%87%C2%B7%E4%B8%83-nikto%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8EPUT%E4%BC%A0%E9%A9%AC/index.html">
+<meta property="og:site_name" content="拂云观 · legend1440">
+<meta property="og:description" content="在题目中，我们会遇到网页开放 PUT 方法，这可能允许 PUT 上传木马，从而用这种方式 getshell 那么我们如何判断该方法是否可行，实战中又如何操作呢？本章将围绕这一话题叙述。 nikto 工具简介Nikto2 是一款开源的、功能强大的 Web 服务器扫描器。简单来说，它的核心作用就是自动、快速地对网站进行全面的安全检查，帮助发现潜在的安全隐患。 Nikto 的检查范围非常广泛，主要包括四">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q.qlogo.cn/headimg_dl?dst_uin=1535548287&spec=640&img_type=jpg">
+<meta property="article:published_time" content="2026-04-04T11:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-04T11:58:18.487Z">
+<meta property="article:author" content="legend1440">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q.qlogo.cn/headimg_dl?dst_uin=1535548287&spec=640&img_type=jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "扶摇·七--nikto的使用与PUT传马",
+  "url": "http://hnu-legend1440.com/2026/04/04/%E6%89%B6%E6%91%87%C2%B7%E4%B8%83-nikto%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8EPUT%E4%BC%A0%E9%A9%AC/",
+  "image": "https://q.qlogo.cn/headimg_dl?dst_uin=1535548287&spec=640&img_type=jpg",
+  "datePublished": "2026-04-04T11:00:00.000Z",
+  "dateModified": "2026-04-04T11:58:18.487Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "legend1440",
+      "url": "http://hnu-legend1440.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/sign.ico"><link rel="canonical" href="http://hnu-legend1440.com/2026/04/04/%E6%89%B6%E6%91%87%C2%B7%E4%B8%83-nikto%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8EPUT%E4%BC%A0%E9%A9%AC/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: false,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '扶摇·七--nikto的使用与PUT传马',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start --><link rel="stylesheet" href="/Blog-Like/style.css">
+<script src="/Blog-Like/Blog-Like.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://q.qlogo.cn/headimg_dl?dst_uin=1535548287&amp;spec=640&amp;img_type=jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">32</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/schedule/"><i class="fa-fw fa fa-skating"></i><span> 期末突击</span></a></div><div class="menus_item"><a class="site-page" href="/categories/training/"><i class="fa-fw fa fa-yin-yang"></i><span> 集训修行</span></a></div><div class="menus_item"><a class="site-page" href="/categories/WP/"><i class="fa-fw fa fa-feather"></i><span> 全面战场</span></a></div><div class="menus_item"><a class="site-page" href="/categories/puzzles/"><i class="fa-fw fa fa-spa"></i><span> 练习札记</span></a></div><div class="menus_item"><a class="site-page" href="/categories/server/"><i class="fa-fw fa fa-star"></i><span> 服务器风采</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/png040402);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">拂云观 · legend1440</span></a><a class="nav-page-title" href="/"><span class="site-name">扶摇·七--nikto的使用与PUT传马</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/schedule/"><i class="fa-fw fa fa-skating"></i><span> 期末突击</span></a></div><div class="menus_item"><a class="site-page" href="/categories/training/"><i class="fa-fw fa fa-yin-yang"></i><span> 集训修行</span></a></div><div class="menus_item"><a class="site-page" href="/categories/WP/"><i class="fa-fw fa fa-feather"></i><span> 全面战场</span></a></div><div class="menus_item"><a class="site-page" href="/categories/puzzles/"><i class="fa-fw fa fa-spa"></i><span> 练习札记</span></a></div><div class="menus_item"><a class="site-page" href="/categories/server/"><i class="fa-fw fa fa-star"></i><span> 服务器风采</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">扶摇·七--nikto的使用与PUT传马</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-04T11:00:00.000Z" title="发表于 2026-04-04 19:00:00">2026-04-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-04T11:58:18.487Z" title="更新于 2026-04-04 19:58:18">2026-04-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/training/">-training</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>在题目中，我们会遇到网页开放 PUT 方法，这可能允许 PUT 上传木马，从而用这种方式 getshell</p>
+<p>那么我们如何判断该方法是否可行，实战中又如何操作呢？本章将围绕这一话题叙述。</p>
+<h1 id="nikto-工具简介"><a href="#nikto-工具简介" class="headerlink" title="nikto 工具简介"></a>nikto 工具简介</h1><p>Nikto2 是一款开源的、功能强大的 Web 服务器扫描器。简单来说，它的核心作用就是自动、快速地对网站进行全面的安全检查，帮助发现潜在的安全隐患。</p>
+<p>Nikto 的检查范围非常广泛，主要包括四大类问题：</p>
+<ol>
+<li>危险文件与程序：扫描服务器上是否存在超过 7000 个已知的、可能被攻击者利用的危险文件或 CGI 程序（如测试脚本、后台管理页面等）。</li>
+<li>服务器版本过时：检查超过 1250 种 Web 服务器的版本是否为过时版本，这些旧版本可能包含已知但未修复的安全漏洞。</li>
+<li>特定版本漏洞：针对 270 多种服务器软件，查找其特定版本中存在的问题。</li>
+<li>配置错误：检测服务器配置不当的地方，例如是否存在多个索引文件、是否开放了不安全的 HTTP 方法（如 PUT）、是否泄露了服务器信息等。</li>
+</ol>
+<h1 id="nikto-的使用"><a href="#nikto-的使用" class="headerlink" title="nikto 的使用"></a>nikto 的使用</h1><p>这东西，它得在 linux 系统上才能正常运行，核心指令大概这么多，注意不要加 http</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ==================== Nikto 使用示例 ====================</span></span><br><span class="line"><span class="comment"># 注意：所有扫描必须获得目标授权，仅在合法测试或CTF环境中使用</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 基础扫描（HTTP默认80端口，HTTPS默认443端口）</span></span><br><span class="line">nikto -h example.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 指定端口扫描（-p 参数）</span></span><br><span class="line">nikto -h node4.anna.nssctf.cn -p 20997</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 扫描多个端口（用逗号分隔）</span></span><br><span class="line">nikto -h example.com -p 80,443,8080</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 强制SSL模式（-ssl 参数，用于HTTPS站点）</span></span><br><span class="line">nikto -h https://example.com -ssl</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 保存扫描报告（-o 指定文件名，格式由扩展名决定）</span></span><br><span class="line">nikto -h example.com -o scan_result.html    <span class="comment"># 保存为HTML格式</span></span><br><span class="line">nikto -h example.com -o scan_result.csv     <span class="comment"># 保存为CSV格式</span></span><br><span class="line">nikto -h example.com -o scan_result.xml     <span class="comment"># 保存为XML格式</span></span><br><span class="line">nikto -h example.com -o scan_result.txt     <span class="comment"># 保存为纯文本格式</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 6. 指定输出格式（-Format 参数，与 -o 配合使用）</span></span><br><span class="line">nikto -h example.com -o result -Format htm   <span class="comment"># 强制输出HTML</span></span><br><span class="line">nikto -h example.com -o result -Format csv   <span class="comment"># 强制输出CSV</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 7. 自定义扫描类型（-Tuning 参数，最核心的筛选功能）</span></span><br><span class="line"><span class="comment"># 数字组合含义：</span></span><br><span class="line"><span class="comment">#   0 - 文件上传</span></span><br><span class="line"><span class="comment">#   1 - 日志文件</span></span><br><span class="line"><span class="comment">#   2 - 默认配置文件</span></span><br><span class="line"><span class="comment">#   3 - 信息泄露</span></span><br><span class="line"><span class="comment">#   4 - 注入（XSS/SQL/命令注入）</span></span><br><span class="line"><span class="comment">#   5 - 远程文件包含（RFI）</span></span><br><span class="line"><span class="comment">#   6 - 本地文件包含（LFI）</span></span><br><span class="line"><span class="comment">#   7 - 拒绝服务</span></span><br><span class="line"><span class="comment">#   8 - 命令执行</span></span><br><span class="line"><span class="comment">#   9 - SQL注入</span></span><br><span class="line"><span class="comment">#   a - 认证绕过</span></span><br><span class="line"><span class="comment">#   b - 软件识别</span></span><br><span class="line"><span class="comment">#   c - 远程访问</span></span><br><span class="line"><span class="comment">#   d - 服务端请求伪造（SSRF）</span></span><br><span class="line"><span class="comment">#   e - 目录遍历</span></span><br><span class="line">nikto -h example.com -Tuning 1234            <span class="comment"># 只执行类型1,2,3,4的测试</span></span><br><span class="line">nikto -h example.com -Tuning 4               <span class="comment"># 只测试注入漏洞</span></span><br><span class="line">nikto -h example.com -Tuning 9               <span class="comment"># 只测试SQL注入</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 8. 排除特定测试类型（使用负数）</span></span><br><span class="line">nikto -h example.com -Tuning x1234           <span class="comment"># 排除类型1,2,3,4的测试</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 9. 更新Nikto数据库和插件（首次使用建议执行）</span></span><br><span class="line">nikto -update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 10. 查看详细帮助（了解所有参数）</span></span><br><span class="line">nikto -Help</span><br><span class="line"></span><br><span class="line"><span class="comment"># 11. 查看Nikto版本</span></span><br><span class="line">nikto -Version</span><br><span class="line"></span><br><span class="line"><span class="comment"># ==================== 交互控制 ====================</span></span><br><span class="line"><span class="comment"># 扫描过程中：</span></span><br><span class="line"><span class="comment">#   空格键 - 查看当前进度</span></span><br><span class="line"><span class="comment">#   q键   - 安全退出扫描</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ==================== 针对你的目标 ====================</span></span><br><span class="line"><span class="comment"># 综合扫描命令（推荐）</span></span><br><span class="line">nikto -h node4.anna.nssctf.cn -p 20997 -o nss_scan.html</span><br></pre></td></tr></table></figure>
+
+<p>就比如我们用最基本的指定端口扫描，就返回来大概这么几个信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nikto -h node4.anna.nssctf.cn -p 20997</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">- Nikto v2.1.5</span></span><br><span class="line"><span class="section">---------------------------------------------------------------------------</span></span><br><span class="line"><span class="bullet">+</span> Target IP:          1.14.71.254</span><br><span class="line"><span class="bullet">+</span> Target Hostname:    node4.anna.nssctf.cn</span><br><span class="line"><span class="bullet">+</span> Target Port:        20997</span><br><span class="line"><span class="section">+ Start Time:         2026-03-30 12:22:36 (GMT-4)</span></span><br><span class="line"><span class="section">---------------------------------------------------------------------------</span></span><br><span class="line"><span class="bullet">+</span> Server: Apache/2.4.38 (Debian)</span><br><span class="line"><span class="bullet">+</span> Retrieved x-powered-by header: PHP/7.2.34</span><br><span class="line"><span class="bullet">+</span> The anti-clickjacking X-Frame-Options header is not present.</span><br><span class="line"><span class="bullet">+</span> No CGI Directories found (use &#x27;-C all&#x27; to force check all possible dirs)</span><br><span class="line"><span class="bullet">+</span> Server leaks inodes via ETags, header found with file /nikto-test-RsO2MeDi.html, fields: 0xW/16 0x64e404377169b </span><br><span class="line"><span class="bullet">+</span> OSVDB-397: HTTP method &#x27;PUT&#x27; allows clients to save files on the web server.</span><br><span class="line"><span class="bullet">+</span> DEBUG HTTP verb may show server debugging information. See http://msdn.microsoft.com/en-us/library/e8z01xdh%28VS.80%29.aspx for details.</span><br></pre></td></tr></table></figure>
+
+<p>我们很容易看到 php 的版本是 7.2，并且携带大概这么多漏洞</p>
+<p>那我们需要重点叙述的，就是 PUT 方法允许上传文件带来的危害</p>
+<h1 id="PUT-传马"><a href="#PUT-传马" class="headerlink" title="PUT 传马"></a>PUT 传马</h1><p>PUT 是 HTTP 协议中的一种请求方法，原本设计用于向服务器上传文件。当 Web 服务器配置不当（如开启了 WebDAV 且未做权限限制），攻击者可以直接通过 PUT 请求上传恶意脚本文件（webshell），从而获得服务器权限。</p>
+<p>一般的题，要么直接不允许 PUT，要么限制 PUT 写入的目录，或者直接限制 PUT 写入的内容，加 WAF 等等。</p>
+<p>但有的题目他打开了 PUT 却没有这些限制，就可以利用这个方法传马。</p>
+<p>正如上面这个题吧，它允许了 PUT 请求，我们就可以这样</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">PUT</span> <span class="string">/1.php</span> <span class="string">HTTP/1.1</span></span><br><span class="line"><span class="attr">Host:</span> <span class="string">node4.anna.nssctf.cn:20997</span></span><br><span class="line"><span class="attr">Cache-Control:</span> <span class="string">max-age=0</span></span><br><span class="line"><span class="attr">Upgrade-Insecure-Requests:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">User-Agent:</span> <span class="string">Mozilla/5.0</span> <span class="string">(Windows</span> <span class="string">NT</span> <span class="number">10.0</span><span class="string">;</span> <span class="string">Win64;</span> <span class="string">x64)</span> <span class="string">AppleWebKit/537.36</span> <span class="string">(KHTML,</span> <span class="string">like</span> <span class="string">Gecko)</span> <span class="string">Chrome/115.0.5790.102</span> <span class="string">Safari/537.36</span></span><br><span class="line"><span class="attr">Accept:</span> <span class="string">text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span></span><br><span class="line"><span class="attr">Accept-Encoding:</span> <span class="string">gzip,</span> <span class="string">deflate</span></span><br><span class="line"><span class="attr">Accept-Language:</span> <span class="string">zh-CN,zh;q=0.9</span></span><br><span class="line"><span class="attr">Connection:</span> <span class="string">close</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">&lt;?php</span> <span class="string">phpinfo();?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在请求体里写内容，然后利用 PUT 写入当前目录下 1.php</p>
+<p>正常 URL 访问，就会发现可以 RCE 了</p>
+<p>可以注意到的是，这里返回 201，表示创建成功</p>
+<p><img src="/img/R9BIbnLTtokPHSxHUQOcDfUDnDe.png"></p>
+<p>我们访问 1.php，该执行的代码就执行了</p>
+<p><img src="/img/UBRobSgaho2eUtxyzGwcAYJYnZf.png"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>实战中 PUT 传马一般通过 nikto 扫描，如果 PUT 传马不受限，通常存在可以直接写入 shell 的情况</p>
+<p>本章结束**🎆**</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://hnu-legend1440.com">legend1440</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://hnu-legend1440.com/2026/04/04/%E6%89%B6%E6%91%87%C2%B7%E4%B8%83-nikto%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8EPUT%E4%BC%A0%E9%A9%AC/">http://hnu-legend1440.com/2026/04/04/%E6%89%B6%E6%91%87%C2%B7%E4%B8%83-nikto%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8EPUT%E4%BC%A0%E9%A9%AC/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://hnu-legend1440.com" target="_blank">拂云观 · legend1440</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://q.qlogo.cn/headimg_dl?dst_uin=1535548287&amp;spec=640&amp;img_type=jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/04/03/%E6%89%B6%E6%91%87%C2%B7%E5%85%AD-python%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93%E9%97%AE%E9%A2%98/" title="扶摇·六--python原型链污染问题"><img class="cover" src="/img/jpg040403.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">扶摇·六--python原型链污染问题</div></div><div class="info-2"><div class="info-item-1">又到了喜闻乐见的 python 安全部分，原型链污染也是相当重要的内容，别着急，咱们慢慢前行。 绪论&#x2F;前置知识含义Python 中的原型链污染（Prototype Pollution）是指通过修改对象原型链中的属性，对程序的行为产生意外影响或利用漏洞进行攻击的一种技术。 严格来说，Python 并不存在“原型链污染”（Prototype Pollution）。该术语源于 JavaScript 等基于原型（prototype-based）的语言。Python 是基于类（class-based）的面向对象语言，没有“原型链”机制。 实际上 Python 原型链污染和 Nodejs 原型链污染的根本原理也差不多，Nodejs 是对键值对的控制来进行污染，而 Python 则是对类属性值的污染，且只能对类的属性来进行污染不能够污染类的方法。 Python 对象模型这个说了好多遍了，每次都要拿出来说，那就再说一次吧 Python 中一切皆对象，每个对象都有以下关键属性： 1234567891011# 查看一个对象的所有属性obj = &quot;hello&quot;print(...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://q.qlogo.cn/headimg_dl?dst_uin=1535548287&amp;spec=640&amp;img_type=jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">legend1440</div><div class="author-info-description">前进中的CTF-web现役队员</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">32</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" href="http://hnu-legend1440.com/2026/03/15/%E6%9D%A8%E6%A1%83%E7%9B%91%E7%8B%B1%C2%B7%E8%BF%9B%E6%9C%8D%E6%B5%81%E7%A8%8B%E6%8C%87%E5%BC%95/"><i class="fa fa-star"></i><span>杨桃监狱Minecraft服务器</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://www.hnusec.com/" target="_blank" title="HnuSec"><i class="far fa-star"></i></a><a class="social-icon" href="http://hnu-legend1440.com" target="_blank" title="1535548287"><i class="fab fa-qq"></i></a><a class="social-icon" href="https://space.bilibili.com/652601966?spm_id_from=333.788.0.0" target="_blank" title="BiliBili"><i class="fa fa-play"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">平芜尽处是春山</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#nikto-%E5%B7%A5%E5%85%B7%E7%AE%80%E4%BB%8B"><span class="toc-text">nikto 工具简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#nikto-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">nikto 的使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PUT-%E4%BC%A0%E9%A9%AC"><span class="toc-text">PUT 传马</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/04/04/%E6%89%B6%E6%91%87%C2%B7%E4%B8%83-nikto%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8EPUT%E4%BC%A0%E9%A9%AC/" title="扶摇·七--nikto的使用与PUT传马"><div style="background: /img/png040402"></div></a><div class="content"><a class="title" href="/2026/04/04/%E6%89%B6%E6%91%87%C2%B7%E4%B8%83-nikto%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8EPUT%E4%BC%A0%E9%A9%AC/" title="扶摇·七--nikto的使用与PUT传马">扶摇·七--nikto的使用与PUT传马</a><time datetime="2026-04-04T11:00:00.000Z" title="发表于 2026-04-04 19:00:00">2026-04-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/03/%E6%89%B6%E6%91%87%C2%B7%E5%85%AD-python%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93%E9%97%AE%E9%A2%98/" title="扶摇·六--python原型链污染问题"><img src="/img/jpg040403.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="扶摇·六--python原型链污染问题"/></a><div class="content"><a class="title" href="/2026/04/03/%E6%89%B6%E6%91%87%C2%B7%E5%85%AD-python%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93%E9%97%AE%E9%A2%98/" title="扶摇·六--python原型链污染问题">扶摇·六--python原型链污染问题</a><time datetime="2026-04-03T15:00:00.000Z" title="发表于 2026-04-03 23:00:00">2026-04-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/03/20/%E6%89%B6%E6%91%87%C2%B7%E4%BA%94-python-Flask%E5%86%85%E5%AD%98%E9%A9%AC%E9%97%AE%E9%A2%98/" title="扶摇·五--python_Flask内存马问题"><img src="/img/jpg040402.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="扶摇·五--python_Flask内存马问题"/></a><div class="content"><a class="title" href="/2026/03/20/%E6%89%B6%E6%91%87%C2%B7%E4%BA%94-python-Flask%E5%86%85%E5%AD%98%E9%A9%AC%E9%97%AE%E9%A2%98/" title="扶摇·五--python_Flask内存马问题">扶摇·五--python_Flask内存马问题</a><time datetime="2026-03-20T11:00:00.000Z" title="发表于 2026-03-20 19:00:00">2026-03-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By legend1440</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
