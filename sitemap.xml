@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://hnu-legend1440.com/2026/04/04/CVE-2022-47615-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/</loc>
+    <loc>http://hnu-legend1440.com/2026/04/04/CVE-2021-41773-Apache%E8%B7%AF%E5%BE%84%E9%81%8D%E5%8E%86RCE%E6%BC%8F%E6%B4%9E/</loc>
     
     <lastmod>2026-04-04</lastmod>
     
@@ -11,7 +11,16 @@
   </url>
   
   <url>
-    <loc>http://hnu-legend1440.com/2026/04/04/CVE-2024-2961-%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96RCE%E9%97%AE%E9%A2%98/</loc>
+    <loc>http://hnu-legend1440.com/2026/03/17/CVE-2024-2961-%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96RCE%E9%97%AE%E9%A2%98/</loc>
+    
+    <lastmod>2026-04-04</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://hnu-legend1440.com/2026/04/04/CVE-2022-47615-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/</loc>
     
     <lastmod>2026-04-04</lastmod>
     
@@ -434,14 +443,14 @@
   </url>
   
   <url>
-    <loc>http://hnu-legend1440.com/categories/training/</loc>
+    <loc>http://hnu-legend1440.com/categories/WP/</loc>
     <lastmod>2026-04-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://hnu-legend1440.com/categories/WP/</loc>
+    <loc>http://hnu-legend1440.com/categories/training/</loc>
     <lastmod>2026-04-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
