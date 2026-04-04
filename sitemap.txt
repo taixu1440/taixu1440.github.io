@@ -1,3 +1,4 @@
+http://hnu-legend1440.com/2026/04/04/CVE-2024-2961-%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96RCE%E9%97%AE%E9%A2%98/
 http://hnu-legend1440.com/2026/04/01/%E8%B5%9B%E9%A2%98%E5%A4%8D%E7%8E%B0-%E7%9F%BF%E5%B1%B1%E7%BB%88%E7%AB%AFWeb%E6%94%BB%E9%98%B2%E8%AE%AD%E7%BB%83/
 http://hnu-legend1440.com/2026/03/29/ThinkPHP-V5-RCE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/
 http://hnu-legend1440.com/2026/03/27/%E8%B5%9B%E9%A2%98%E5%A4%8D%E7%8E%B0-NSSROUND%E9%9B%86%E4%B8%AD%E5%A4%8D%E7%8E%B0-%E7%AC%AC%E4%B8%80%E6%9C%9F/
@@ -44,7 +45,7 @@ http://hnu-legend1440.com/puzzles/index.html
 http://hnu-legend1440.com/schedule/index.html
 http://hnu-legend1440.com/
 http://hnu-legend1440.com/categories/puzzles/
-http://hnu-legend1440.com/categories/WP/
 http://hnu-legend1440.com/categories/training/
+http://hnu-legend1440.com/categories/WP/
 http://hnu-legend1440.com/categories/schedule/
 http://hnu-legend1440.com/categories/server/
