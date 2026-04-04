@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://hnu-legend1440.com/2026/04/04/CVE-2022-47615-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/</loc>
+    
+    <lastmod>2026-04-04</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://hnu-legend1440.com/2026/04/04/CVE-2024-2961-%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96RCE%E9%97%AE%E9%A2%98/</loc>
     
     <lastmod>2026-04-04</lastmod>
